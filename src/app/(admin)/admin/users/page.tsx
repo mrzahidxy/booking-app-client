@@ -1,14 +1,15 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Badge } from "@/components/ui/badge";
 import { StatusUpdateDialog } from "./user-role-update.component";
 import { DynamicTable } from "@/components/ui/dynamic-data-table.component";
 import { Suspense } from "react";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
 const UserPage = (props: Props) => {
+  const router = useRouter();
   // Table columns
   const columns: ColumnDef<any>[] = [
     {
@@ -34,19 +35,7 @@ const UserPage = (props: Props) => {
         let date = new Date(row?.original?.createdAt);
         return date.toLocaleString();
       },
-    },
-    {
-      accessorKey: "action",
-      header: "Action",
-      cell: ({ row }) => {
-        return (
-          <div className="text-2xl cursor-pointer">
-            {/* Pass refetch to refresh data when status is updated */}
-            <StatusUpdateDialog id={row.original.id} />
-          </div>
-        );
-      },
-    },
+    }
   ];
 
   return (
@@ -56,6 +45,8 @@ const UserPage = (props: Props) => {
         url="/users"
         title="Users"
         queryKey="usersList"
+        // handleAdd={() => {router.push("/admin/users/add")}}
+        // buttonText="Add User"
       />
     </Suspense>
   );

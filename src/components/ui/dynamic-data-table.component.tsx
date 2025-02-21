@@ -22,7 +22,7 @@ interface DynamicTableProps<TData> {
   title?: string;
   buttonText?: string;
   queryKey: string;
-  handleAdd: () => void
+  handleAdd?: () => void
 }
 
 

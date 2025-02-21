@@ -25,7 +25,6 @@ const Sidebar = (props: Props) => {
       href: "/admin/users",
       label: "User",
       icon: <FiUser />,
-      children: [{ href: "/admin/users", label: "All Users" }],
     },
     {
       href: "",
