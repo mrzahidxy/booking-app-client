@@ -18,21 +18,21 @@ import DefaultLoader from "../common/DefaultLoacer.component";
 
 interface DynamicTableProps<TData> {
   url: string;
-  addUrl?: string;
   columns: ColumnDef<TData>[];
   title?: string;
   buttonText?: string;
   queryKey: string;
+  handleAdd: () => void
 }
 
 
 export function DynamicTable<TData>({
   url,
-  addUrl,
   columns,
   title,
   buttonText,
   queryKey,
+  handleAdd
 }: DynamicTableProps<TData>) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -65,7 +65,7 @@ export function DynamicTable<TData>({
   // Display error state
   if (isError) return <div>Error fetching data: {error.message}</div>;
 
-  const { collection: tableData, pagination } = data?.data;
+  const { collection: tableData, pagination } = data?.data || {};
 
   // Display no data state
   if (!tableData || tableData.length === 0) {
@@ -85,8 +85,8 @@ export function DynamicTable<TData>({
       {title && <h1 className="text-2xl font-bold">{title}</h1>}
 
       {/* Add Button */}
-      {buttonText && addUrl && (
-        <Button className="self-end" onClick={() => router.push(addUrl)}>
+      {buttonText && handleAdd && (
+        <Button className="self-end" onClick={handleAdd}>
           {buttonText}
         </Button>
       )}
