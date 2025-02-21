@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Search, MenuIcon, Heart, ShoppingBag } from "lucide-react";
+import { MenuIcon, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,67 +10,69 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export function Navbar() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const { push } = useRouter();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      push("/auth/login");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
+        {/* Mobile Menu Button */}
         <div className="md:hidden">
           <Button variant="ghost" size="icon">
             <MenuIcon className="h-5 w-5" />
           </Button>
         </div>
+
+        {/* Logo */}
         <Link href="/" className="flex items-center space-x-2 ml-4 md:ml-0">
           <span className="text-xl font-bold">TripAdvisor</span>
         </Link>
-        <nav className="hidden md:flex items-center space-x-6 mx-6">
-          <DropdownMenu>
-            <DropdownMenuTrigger className="text-sm font-medium">
-              Discover
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem>Restaurants</DropdownMenuItem>
-              <DropdownMenuItem>Hotels</DropdownMenuItem>
-              <DropdownMenuItem>Things to Do</DropdownMenuItem>
-              <DropdownMenuItem>Vacation Rentals</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          {/* <Link href="/trips" className="text-sm font-medium">
-            Trips
-          </Link> */}
-          <Link href="/reviews" className="text-sm font-medium">
-            Review
-          </Link>
-          <Link href="/alerts" className="text-sm font-medium">
-            Alerts
-          </Link>
-        </nav>
+
+        {/* Right Section */}
         <div className="flex items-center space-x-4 ml-auto">
-          <Button variant="ghost" size="icon">
-            <Search className="h-5 w-5" />
-          </Button>
+          {/* Favorites Button */}
           <Button variant="ghost" size="icon">
             <Heart className="h-5 w-5" />
           </Button>
-          <Button variant="ghost" size="icon">
-            <ShoppingBag className="h-5 w-5" />
-          </Button>
 
-          {session ? (
+          {status === "loading" ? (
+            // Loading state
+            <span className="text-sm font-medium">Loading...</span>
+          ) : session ? (
             <DropdownMenu>
               <DropdownMenuTrigger className="text-sm font-medium">
                 {session.user?.name ?? "User"}
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Settings</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => signOut()}>Logout</DropdownMenuItem>
+                {session.user?.role ? (
+                  <DropdownMenuItem onClick={() => push("/admin")}>
+                    Admin Panel
+                  </DropdownMenuItem>
+                ) : (
+                  <DropdownMenuItem onClick={() => push("/user")}>
+                    User Panel
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuItem onClick={handleSignOut}>Logout</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Link href="/auth/login">Sign in</Link>
+            // Sign-in link for unauthenticated users
+            <Link href="/auth/login" className="text-sm font-medium">
+              Sign in
+            </Link>
           )}
         </div>
       </div>
