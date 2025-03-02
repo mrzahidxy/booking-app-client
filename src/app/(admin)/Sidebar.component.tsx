@@ -33,8 +33,8 @@ const Sidebar = (props: Props) => {
       children: [
         { href: "/admin/role-menu-permission/roles", label: "Roles" },
         { href: "/admin/role-menu-permission/permissions", label: "Permissions" },
-        { href: "/admin/roles", label: "Assign Permission" },
-        { href: "/admin/roles", label: "Assign Role" },
+        { href: "/admin/role-menu-permission/assigned-permissions", label: "Assign Permission" },
+        { href: "/admin/role-menu-permission/assigned-role", label: "Assign Role" },
       ],
     },
   ];
