@@ -28,17 +28,15 @@ const RolePage = () => {
   // Table columns
   const columns: ColumnDef<any>[] = [
     {
-      accessorKey: "roleName",
+      accessorKey: "name",
       header: "Name",
     },
     {
-      accessorKey: "permissions",
+      accessorKey: "role",
       header: "Permission",
       cell: ({ row }) => (
         <ul>
-          {row?.original?.permissions?.map((p: string) => (
-            <li key={p}>{p}</li>
-          ))}
+          {row?.original?.Role?.name}
         </ul>
       ),
     },
@@ -51,7 +49,7 @@ const RolePage = () => {
           showView={false}
           onEdit={(id) =>
             router.push(
-              `/admin/role-menu-permission/assigned-permissions/edit/${id}`
+              `/admin/role-menu-permission/assigned-role/edit/${id}`
             )
           }
           showDelete={false}
@@ -64,14 +62,14 @@ const RolePage = () => {
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <DynamicTable
+    <DynamicTable
         columns={columns}
-        url="/role-permission/assigned-permissions/"
-        title="Assigned Permissions"
-        queryKey="assigned-permissions-list"
-        buttonText="Assign Permission"
+        url="/role-permission/assigned-roles/"
+        title="Assigned Roles"
+        queryKey="assigned-roles-list"
+        buttonText="Assign Role"
         handleAdd={() =>
-          router.push("/admin/role-menu-permission/assigned-permissions/add")
+          router.push("/admin/role-menu-permission/assigned-role/add")
         }
       />
     </Suspense>
