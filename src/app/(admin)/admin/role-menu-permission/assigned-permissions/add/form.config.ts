@@ -2,7 +2,6 @@ import * as yup from "yup";
 
 // Product Schema Validation
 export const AssignedPermissionSchema = yup.object({
-  id: yup.number().nullable(),
   roleId: yup.number().min(1, "Select a role").required(),
   permissionIds: yup.array().of(yup.number()).min(1, "Select at least one permission").required(),
 });

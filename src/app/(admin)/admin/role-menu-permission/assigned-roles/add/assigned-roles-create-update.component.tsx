@@ -1,40 +1,31 @@
 "use client";
 
 import { Formik, FormikHelpers } from "formik";
-import {
-  AssignedRoleCreate,
-  AssignedRoleSchema,
-  InitialValues,
-} from "./form.config";
+import { AssignedRoleCreate, AssignedRoleSchema, InitialValues } from "./form.config";
 import privateRequest from "@/healper/privateRequest";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
-
-import { Card } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
+import { Card } from "@/components/ui/card";
 import { AssignedRoleForm } from "./assigned-roles-form.component";
 
-const fetchAssignedRolesById = async (id: string) => {
-  if (!id) return null;
-  const response = await privateRequest.get(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/role-permission/assigned-roles/${id}`
-  );
+const fetchAssignedRoleById = async (id: string) => {
+  const response = await privateRequest.get(`/role-permission/assigned-roles/${id}`);
   return response.data;
 };
 
 export const AssignedRolesCreateUpdate = ({ id }: { id?: string }) => {
   const { toast } = useToast();
-  const queryClient = useQueryClient();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
-  // Fetch data using react-query
   const { data } = useQuery({
-    queryKey: ["role-list", id],
-    queryFn: () => fetchAssignedRolesById(id!),
-    enabled: parseInt(id as string) > 0,
+    queryKey: ["assigned-role-details", id],
+    queryFn: () => fetchAssignedRoleById(id!),
+    enabled: !!id,
   });
 
-  const submitRoleUpdate = useMutation({
+  const mutation = useMutation({
     mutationFn: async (values: AssignedRoleCreate) => {
       return await privateRequest.post(
         `/role-permission/assigned-roles/${values.userId}`,
@@ -48,13 +39,10 @@ export const AssignedRolesCreateUpdate = ({ id }: { id?: string }) => {
     { resetForm, setSubmitting }: FormikHelpers<AssignedRoleCreate>
   ) => {
     try {
-      await submitRoleUpdate.mutateAsync(values);
-      toast({
-        title: "Success",
-        description: "Role assigned successfully!",
-      });
+      await mutation.mutateAsync(values);
+      toast({ title: "Success", description: "Role assigned successfully!" });
       resetForm();
-      router.push("/admin/role-menu-permission/assigned-role");
+      router.push("/admin/role-menu-permission/assigned-roles");
       queryClient.invalidateQueries({ queryKey: ["assigned-roles-list"] });
     } catch (err: any) {
       toast({
@@ -63,7 +51,7 @@ export const AssignedRolesCreateUpdate = ({ id }: { id?: string }) => {
         variant: "destructive",
       });
     } finally {
-      setSubmitting(false); 
+      setSubmitting(false);
     }
   };
 
@@ -72,8 +60,8 @@ export const AssignedRolesCreateUpdate = ({ id }: { id?: string }) => {
       initialValues={
         id
           ? {
-              roleId: data?.data?.Role?.id,
-              userId: data?.data?.id,
+              roleId: data?.data?.Role?.id ?? 0,
+              userId: data?.data?.id ?? 0,
             }
           : InitialValues
       }

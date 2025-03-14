@@ -1,59 +1,78 @@
 "use client";
 
-import { Formik } from "formik";
+import { Formik, FormikHelpers } from "formik";
 import { RoleCreateUpdateForm } from "./role-form.component";
 import { InitialValues, RoleCreate, RoleSchema } from "./form.config";
 import privateRequest from "@/healper/privateRequest";
-import { useQuery } from "@tanstack/react-query";
-import queryClient from "@/app/config/queryClient";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
 
 export const RoleCreateUpdate = ({
   roleId,
-  handelModal,
+  onClose,
 }: {
-  roleId: string;
-  handelModal: () => void;
+  roleId?: number | null;
+  onClose: () => void;
 }) => {
-  const fetchData = async (id: string) => {
-    const response = await privateRequest.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/role-permission/roles/${id}`
-    );
-    return response.data;
-  };
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
-  // Fetch data using react-query
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["role-list", roleId],
-    queryFn: () => fetchData(roleId),
-    enabled: +roleId > 0,
+    queryKey: ["role-details", roleId],
+    queryFn: async () => {
+      const response = await privateRequest.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/role-permission/roles/${roleId}`
+      );
+      return response.data;
+    },
+    enabled: !!roleId,
   });
 
-  // Display loading state
-  if (isLoading) return <div>Loading...</div>;
+  const roleMutation = useMutation({
+    mutationFn: async (values: RoleCreate) => {
+      return values.id
+        ? privateRequest.put(`/role-permission/roles/${values.id}`, { name: values.name })
+        : privateRequest.post("/role-permission/roles", { name: values.name });
+    },
+    onSuccess: () => {
+      toast({ title: "Success", description: "Role saved successfully!" });
+      queryClient.invalidateQueries({ queryKey: ["rolesList"] });
+      onClose();
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error?.response?.data?.message || "Failed to save role",
+        variant: "destructive",
+      });
+    },
+  });
 
-  // Display error state
-  if (isError) return <div>Error fetching data: {error.message}</div>;
-
-  const handleSubmit = async (values: RoleCreate) => {
-    values?.id
-      ? await privateRequest.put(`/role-permission/roles/${values?.id}`, {
-          name: values.name,
-        })
-      : await privateRequest.post("/role-permission/roles", {
-          name: values.name,
-        });
-
-    handelModal();
-    queryClient.invalidateQueries({ queryKey: ["rolesList"] });
+  const handleSubmit = async (
+    values: RoleCreate,
+    { setSubmitting, resetForm }: FormikHelpers<RoleCreate>
+  ) => {
+    try {
+      await roleMutation.mutateAsync(values);
+      resetForm();
+    } finally {
+      setSubmitting(false);
+    }
   };
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error fetching data: {error.message}</div>;
 
   return (
     <Formik
       initialValues={
-        roleId ? { name: data?.data?.name, id: data?.data?.id } : InitialValues
+        roleId
+          ? { name: data?.data?.name || "", id: data?.data?.id }
+          : InitialValues
       }
       validationSchema={RoleSchema}
       onSubmit={handleSubmit}
+      enableReinitialize
     >
       <RoleCreateUpdateForm />
     </Formik>

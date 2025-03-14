@@ -6,17 +6,18 @@ import { Suspense, useState } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { RoleCreateUpdate } from "./add/role-create-update.component";
 import TableActionButtons from "@/components/common/table-actions.component";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import privateRequest from "@/healper/privateRequest";
-import queryClient from "@/app/config/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 const RolePage = () => {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedRoleId, setSelectedRoleId] = useState<number | null>(null);
 
@@ -25,25 +26,30 @@ const RolePage = () => {
     setIsDialogOpen(true);
   };
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: async (id: number) => {
-      return await privateRequest.delete(`/role-permission/roles/${id}`);
-    },
+  const handleAdd = () => {
+    setSelectedRoleId(null);
+    setIsDialogOpen(true);
+  };
+
+  const { mutate: deleteRole, isPending: isDeleting } = useMutation({
+    mutationFn: (id: number) => privateRequest.delete(`/role-permission/roles/${id}`),
     onSuccess: () => {
+      toast({ title: "Success", description: "Role deleted successfully!" });
       queryClient.invalidateQueries({ queryKey: ["rolesList"] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error?.response?.data?.message || "Failed to delete role",
+        variant: "destructive",
+      });
     },
   });
 
-  const handleDelete = async (id: number) => {
-    mutate(id);
-  };
+  const handleDelete = (id: number) => deleteRole(id);
 
-  // Table columns
   const columns: ColumnDef<any>[] = [
-    {
-      accessorKey: "name",
-      header: "Name",
-    },
+    { accessorKey: "name", header: "Name" },
     {
       accessorKey: "action",
       header: "Action",
@@ -51,13 +57,18 @@ const RolePage = () => {
         <TableActionButtons
           id={row.original.id}
           showView={false}
-          onEdit={(id) => handleEdit(+id)}
-          onDelete={(id) => handleDelete(+id)}
-          loading={isPending}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          loading={isDeleting}
         />
       ),
     },
   ];
+
+  const handleModalClose = () => {
+    setSelectedRoleId(null);
+    setIsDialogOpen(false);
+  };
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -67,22 +78,14 @@ const RolePage = () => {
         title="Roles"
         queryKey="rolesList"
         buttonText="Add Role"
-        handleAdd={() => setIsDialogOpen(true)}
+        handleAdd={handleAdd}
       />
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="p-8">
           <DialogHeader>
-            <DialogTitle>Add Role</DialogTitle>
-            <DialogDescription>
-              <RoleCreateUpdate
-                roleId={String(selectedRoleId)}
-                handelModal={() => {
-                  setSelectedRoleId(null);
-                  setIsDialogOpen(false);
-                }}
-              />
-            </DialogDescription>
+            <DialogTitle>{selectedRoleId ? "Edit Role" : "Add Role"}</DialogTitle>
+            <RoleCreateUpdate roleId={selectedRoleId} onClose={handleModalClose} />
           </DialogHeader>
         </DialogContent>
       </Dialog>

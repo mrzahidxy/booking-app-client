@@ -4,40 +4,23 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DynamicTable } from "@/components/ui/dynamic-data-table.component";
 import { Suspense } from "react";
 import TableActionButtons from "@/components/common/table-actions.component";
-import { useMutation } from "@tanstack/react-query";
-import privateRequest from "@/healper/privateRequest";
-import queryClient from "@/app/config/queryClient";
 import { useRouter } from "next/navigation";
 
-const RolePage = () => {
+const AssignedPermissionsPage = () => {
   const router = useRouter();
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: async (id: number) => {
-      return await privateRequest.delete(`/role-permission/roles/${id}`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["rolesList"] });
-    },
-  });
-
-  const handleDelete = async (id: number) => {
-    mutate(id);
-  };
-
-  // Table columns
   const columns: ColumnDef<any>[] = [
     {
       accessorKey: "roleName",
-      header: "Name",
+      header: "Role Name",
     },
     {
       accessorKey: "permissions",
-      header: "Permission",
+      header: "Permissions",
       cell: ({ row }) => (
         <ul>
-          {row?.original?.permissions?.map((p: string) => (
-            <li key={p}>{p}</li>
+          {row.original.permissions?.map((permission: string) => (
+            <li key={permission}>{permission}</li>
           ))}
         </ul>
       ),
@@ -48,15 +31,13 @@ const RolePage = () => {
       cell: ({ row }) => (
         <TableActionButtons
           id={row.original.roleId}
+          showDelete={false}
           showView={false}
           onEdit={(id) =>
             router.push(
               `/admin/role-menu-permission/assigned-permissions/edit/${id}`
             )
           }
-          showDelete={false}
-          // onDelete={(id) => handleDelete(+id)}
-          loading={isPending}
         />
       ),
     },
@@ -78,4 +59,4 @@ const RolePage = () => {
   );
 };
 
-export default RolePage;
+export default AssignedPermissionsPage;

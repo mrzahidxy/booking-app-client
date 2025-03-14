@@ -1,60 +1,91 @@
 "use client";
 
-import { Formik } from "formik";
+import { Formik, FormikHelpers } from "formik";
 import { PermissionCreateUpdateForm } from "./permission-form.component";
 import { InitialValues, PermissionCreate, PermissionSchema } from "./form.config";
 import privateRequest from "@/healper/privateRequest";
-import { useQuery } from "@tanstack/react-query";
-import queryClient from "@/app/config/queryClient";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
 
 export const PermissionCreateUpdate = ({
-  permissionId,
+  permissionId = "",
   handelModal,
 }: {
-  permissionId: string;
+  permissionId?: string;
   handelModal: () => void;
 }) => {
-  const fetchData = async (id: string) => {
-    const response = await privateRequest.get(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/role-permission/permissions/${id}`
-    );
-    return response.data;
-  };
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
-  // Fetch data using react-query
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["permission-list", permissionId],
-    queryFn: () => fetchData(permissionId),
-    enabled: +permissionId > 0,
+    queryKey: ["permission-details", permissionId],
+    queryFn: async () => {
+      const response = await privateRequest.get(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/role-permission/permissions/${permissionId}`
+      );
+      return response.data;
+    },
+    staleTime: 0,
+    enabled: !!permissionId,
   });
 
-
-  // Display loading state
-  if (isLoading) return <div>Loading...</div>;
-
-  // Display error state
-  if (isError) return <div>Error fetching data: {error.message}</div>;
-
-  const handleSubmit = async (values: PermissionCreate) => {
-    values?.id
-      ? await privateRequest.put(`/role-permission/permissions/${values?.id}`, {
-          name: values.name,
-        })
-      : await privateRequest.post("/role-permission/permissions", {
+  const mutation = useMutation({
+    mutationFn: async (values: PermissionCreate) => {
+      if (values?.id) {
+        return await privateRequest.put(
+          `/role-permission/permissions/${values.id}`,
+          { name: values.name }
+        );
+      } else {
+        return await privateRequest.post("/role-permission/permissions", {
           name: values.name,
         });
+      }
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "Permission saved successfully!",
+      });
+      queryClient.invalidateQueries({ queryKey: ["permissionsList"] });
+      handelModal();
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error?.response?.data?.message || "Failed to save permission",
+        variant: "destructive",
+      });
+    },
+  });
 
-    handelModal();
-    queryClient.invalidateQueries({ queryKey: ["permissionsList"] });
+  const handleSubmit = async (
+    values: PermissionCreate,
+    { setSubmitting, resetForm }: FormikHelpers<PermissionCreate>
+  ) => {
+    try {
+      await mutation.mutateAsync(values);
+      resetForm();
+    } catch {
+      // Errors handled in mutation
+    } finally {
+      setSubmitting(false);
+    }
   };
+
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error fetching data: {error.message}</div>;
 
   return (
     <Formik
       initialValues={
-        permissionId ? { name: data?.data?.name, id: data?.data?.id } : InitialValues
+        permissionId
+          ? { name: data?.data?.name ?? "", id: data?.data?.id ?? undefined }
+          : InitialValues
       }
       validationSchema={PermissionSchema}
       onSubmit={handleSubmit}
+      enableReinitialize
     >
       <PermissionCreateUpdateForm />
     </Formik>
