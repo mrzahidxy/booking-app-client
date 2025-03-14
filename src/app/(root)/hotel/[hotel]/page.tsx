@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { MapPin, Star, Wifi, Car, Coffee, ChevronLeft } from "lucide-react";
+import { MapPin, Star, Wifi, Car, Coffee, ChevronLeft, Bed, BadgeInfo } from "lucide-react";
 import axios from "axios";
 
 
@@ -60,7 +60,7 @@ export default async function HotelDetailPage({ params }: PageProps) {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Left Column - Images and Details */}
           <div className="lg:col-span-2 space-y-8">
-            <HotelImageGallery images={[hotelData.image]} />
+            <HotelImageGallery images={hotelData.image} />
 
             {/* Hotel Details */}
             <Tabs defaultValue="overview" className="w-full">
@@ -75,26 +75,20 @@ export default async function HotelDetailPage({ params }: PageProps) {
                     About this hotel
                   </h3>
                   <p>
-                    Located in the heart of Dhaka, Grand Apartment offers modern
-                    accommodations with stunning city views. The property
-                    features free WiFi throughout and is just 10 minutes walk
-                    from major attractions.
+                    {hotelData.description}
                   </p>
                 </div>
               </TabsContent>
               <TabsContent value="amenities" className="grid grid-cols-2 gap-4">
-                <div className="flex items-center gap-2">
-                  <Wifi className="h-4 w-4" />
-                  <span>Free WiFi</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Car className="h-4 w-4" />
-                  <span>Free Parking</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Coffee className="h-4 w-4" />
-                  <span>Restaurant</span>
-                </div>
+                {
+                  hotelData?.amenities?.map((amenity: any) => (
+                    <div className="flex items-center gap-2" key={amenity}>
+                      <BadgeInfo className="h-4 w-4" />
+                      <span>{amenity}</span>
+                    </div>
+                  ))
+                }
+               
               </TabsContent>
               <TabsContent value="reviews">
                 <Review id={hotelData.id} type="hotel" />

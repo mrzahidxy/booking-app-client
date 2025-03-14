@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getSession } from "next-auth/react";
+import { getSession, signOut } from "next-auth/react";
 
 export const publicRequest = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
@@ -14,12 +14,26 @@ privateRequest.interceptors.request.use(
   async (config) => {
     const session = await getSession()
 
-    config.headers.Authorization = `${session?.user?.token}`;
+    if (session?.user?.token) {
+      config.headers.Authorization = `${session?.user?.token}`;
+    }
 
     return config;
   },
   (error) => {
-    // return Promise.reject(error);
+    return Promise.reject(error);
+  }
+);
+
+
+// ✅ Response Interceptor: Auto Sign Out on 401
+privateRequest.interceptors.response.use(
+  (response) => response, // If response is successful, return it
+  async (error) => {
+    if (error.response?.status === 401) {
+      await signOut({ callbackUrl: "/auth/login" });
+    }
+    return Promise.reject(error);
   }
 );
 

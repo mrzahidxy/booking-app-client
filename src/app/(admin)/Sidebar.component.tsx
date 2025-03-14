@@ -2,11 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  FiBarChart2,
-  FiUser,
-  FiChevronDown,
-} from "react-icons/fi";
+import { FiBarChart2, FiUser, FiChevronDown } from "react-icons/fi";
 import { useState } from "react";
 
 type Props = {};
@@ -32,9 +28,26 @@ const Sidebar = (props: Props) => {
       icon: <FiUser />,
       children: [
         { href: "/admin/role-menu-permission/roles", label: "Roles" },
-        { href: "/admin/role-menu-permission/permissions", label: "Permissions" },
-        { href: "/admin/role-menu-permission/assigned-permissions", label: "Assign Permission" },
-        { href: "/admin/role-menu-permission/assigned-role", label: "Assign Role" },
+        {
+          href: "/admin/role-menu-permission/permissions",
+          label: "Permissions",
+        },
+        {
+          href: "/admin/role-menu-permission/assigned-permissions",
+          label: "Assign Permission",
+        },
+        {
+          href: "/admin/role-menu-permission/assigned-roles",
+          label: "Assign Role",
+        },
+      ],
+    },
+    {
+      href: "",
+      label: "Hotel",
+      icon: <FiUser />,
+      children: [
+        { href: "/admin/hotels", label: "Hotels" },
       ],
     },
   ];
@@ -57,7 +70,15 @@ const Sidebar = (props: Props) => {
               onClick={() => children && toggleSection(label)}
             >
               {icon}
-              <span>{label}</span>
+              <Link
+                key={href}
+                href={href}
+                className={`block p-2 transition duration-100 ease-in-out ${
+                  pathname === href ? "text-blue-500" : "hover:text-blue-500"
+                }`}
+              >
+                {label}
+              </Link>
               {children && (
                 <FiChevronDown
                   className={`ml-auto transform ${
