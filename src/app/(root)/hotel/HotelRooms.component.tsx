@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Check } from "lucide-react";
 import { useState } from "react";
-import { BookingModal } from "./BookingModal.component";
+import { BookingModal } from "./booking/BookingModal.component";
 
 export default function HotelRooms({ rooms }: any) {
   const [selectedRoom, setSelectedRoom] = useState<any>(null);
