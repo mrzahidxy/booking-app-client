@@ -36,7 +36,7 @@ export function BookingModal({ isOpen, onClose, room }: BookingModalProps) {
   // 🔹 Form Submission Mutation
   const mutation = useMutation({
     mutationFn: async (values: BookingCreate) =>
-      privateRequest.post(`/hotels/book-room`, values),
+      privateRequest.post(`/bookings/room`, values),
   });
 
   const handleBooking = async (
