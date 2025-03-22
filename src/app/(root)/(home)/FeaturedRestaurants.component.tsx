@@ -26,7 +26,7 @@ export default async function FeaturedRestaurants() {
     <section className="py-16 bg-secondary/10">
       <div className="container mx-auto px-4">
         <h3 className="text-2xl font-bold mb-8">Featured Restaurants</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 justify-center gap-6">
           {restaurants?.map((restaurant: any, i: any) => (
             <Link href={`/restaurant/${restaurant?.id}`} key={i}>
               <Card key={i} className="overflow-hidden">

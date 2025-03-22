@@ -16,7 +16,7 @@ type Order = {
   user: { name: string };
 };
 
-const OrdersPage = (props: Props) => {
+const BookingPage = (props: Props) => {
   const session = useSession();
   const userId = session?.data?.user?.id;
 
@@ -31,12 +31,16 @@ const OrdersPage = (props: Props) => {
       },
     },
     {
-      accessorKey: "netAmount",
-      header: "Amount",
+      accessorKey: "room.hotel.name",
+      header: "Hotel",
     },
     {
-      accessorKey: "address",
-      header: "Address",
+      accessorKey: "totalPrice",
+      header: "Total Price",
+    },
+    {
+      accessorKey: "bookingDate",
+      header: "Booking Date",
     },
     {
       accessorKey: "status",
@@ -46,21 +50,21 @@ const OrdersPage = (props: Props) => {
 
   return (
     <div className="container">
-      <h4 className="font-semibold text-xl">Orders List</h4>
+      <h4 className="font-semibold text-xl">Booking List</h4>
 
       <Suspense fallback={<div>Loading...</div>}>
         {userId ? (
           <DynamicTable
-            url={`/orders/users/me`}
+            url={`/bookings`}
             columns={columns}
-            queryKey="userOrderList"
+            queryKey="bookings-list"
           />
         ) : (
-          <p className="text-gray-700">No orders found.</p>
+          <p className="text-gray-700">No bookings found.</p>
         )}
       </Suspense>
     </div>
   );
 };
 
-export default OrdersPage;
+export default BookingPage;

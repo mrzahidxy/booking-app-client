@@ -26,12 +26,12 @@ export default async function PopularHotels() {
     <section className="py-16">
       <div className="container mx-auto px-4">
         <h3 className="text-2xl font-bold mb-8">Popular Hotels</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {hotels.map((hotel: any) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 justify-center gap-6">
+          {hotels?.collection?.map((hotel: any) => (
             <Link href={`/hotel/${hotel?.id}`}  key={hotel?.name}>
               <Card className="overflow-hidden">
                 <Image
-                  src={hotel?.image}
+                  src={hotel?.image[0] ?? ""}
                   alt="Hotel"
                   width={400}
                   height={300}
@@ -45,10 +45,10 @@ export default async function PopularHotels() {
                       {hotel?.rating}
                     </Badge>
                   </div>
-                  <p className="text-muted-foreground text-sm mb-2">
+                   <p className="text-muted-foreground text-sm mb-2">
                     {hotel?.location}
-                  </p>
-                  {/* <p className="text-sm mb-4">From $199 per night</p> */}
+                  </p> 
+          
                   <Button className="w-full">Book Now</Button>
                 </CardContent>
               </Card>

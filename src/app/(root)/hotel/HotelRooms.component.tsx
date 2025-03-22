@@ -3,11 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Check } from "lucide-react";
 import { useState } from "react";
-import { BookingModal } from "./BookingModal.component";
+import { BookingModal } from "./booking/BookingModal.component";
 
 export default function HotelRooms({ rooms }: any) {
   const [selectedRoom, setSelectedRoom] = useState<any>(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+
   return (
     <>
       {rooms.map((room: any) => (
@@ -17,14 +18,12 @@ export default function HotelRooms({ rooms }: any) {
               <div>
                 <h4 className="font-semibold">{room.roomType} Room</h4>
                 <ul className="text-sm text-muted-foreground space-y-1 mt-2">
-                  <li className="flex items-center">
-                    <Check className="h-4 w-4 mr-2" />
-                    Free cancellation
-                  </li>
-                  <li className="flex items-center">
-                    <Check className="h-4 w-4 mr-2" />
-                    Breakfast included
-                  </li>
+                  {room.amenities.map((amenity: any) => (
+                    <li key={amenity} className="flex items-center">
+                      <Check className="h-4 w-4 mr-2" />
+                      {amenity}
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
@@ -33,12 +32,15 @@ export default function HotelRooms({ rooms }: any) {
               <p className="text-sm text-muted-foreground">per night</p>
             </div>
 
-            <Button className="w-full"
-                  onClick={() => {
-                    setSelectedRoom(room)
-                    setIsBookingModalOpen(true)
-                  }}
-            >Select Room</Button>
+            <Button
+              className="w-full"
+              onClick={() => {
+                setSelectedRoom(room);
+                setIsBookingModalOpen(true);
+              }}
+            >
+              Select Room
+            </Button>
           </CardContent>
         </Card>
       ))}
