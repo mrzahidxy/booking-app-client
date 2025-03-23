@@ -22,6 +22,17 @@ const fetchRestaurants = async (slug: string): Promise<any> => {
 export default async function FeaturedRestaurants() {
   const restaurants = await fetchRestaurants("restaurants");
 
+  if (restaurants.length === 0) {
+    return (
+      <section className="py-16 bg-secondary/10">
+        <div className="container mx-auto px-4">
+          <h3 className="text-2xl font-bold mb-8">Featured Restaurants</h3>
+          <p>No Restaurants found</p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-16 bg-secondary/10">
       <div className="container mx-auto px-4">

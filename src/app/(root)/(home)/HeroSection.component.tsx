@@ -8,7 +8,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const SearchForm = () => (
-  <div className="bg-background w-1/2 mx-auto p-4 rounded-lg shadow-lg flex flex-wrap gap-4">
+  <div className="bg-transparent w-1/2 mx-auto p-4 rounded-lg shadow-lg flex flex-wrap gap-4">
     {/* Destination Input */}
     <div className="flex-1 min-w-[250px]">
       <Input
@@ -58,19 +58,18 @@ const SearchForm = () => (
     </Popover> */}
 
     {/* Search Button */}
-    <Button className="bg-blue-600 hover:bg-blue-700 text-white min-w-[120px]">
-      <Search className="mr-2 h-4 w-4" />
-      Search
+    <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+      <Search className="h-4 w-4" />
     </Button>
   </div>
 );
 
 const HeroSection = () => (
-  <section className="text-primary-foreground pb-24 pt-8 bg-no-repeat bg-cover bg-center"
-  style={{ backgroundImage: "url('images/main-banner.jpg')" }}>
+  <section className="bg-gray-900 text-primary-foreground pb-24 pt-8 bg-no-repeat bg-cover bg-center opacity-95"
+  style={{ backgroundImage: "url('/images/main-banner.jpg')" }}>
 
     {/* Tabs */}
-    <Tabs defaultValue="hotels" className="py-4">
+    <Tabs defaultValue="hotels" className="p-4 ">
       <TabsList className="bg-transparent border-b border-primary-foreground/20">
         {[
           { value: "hotels", label: "Hotels", icon: Hotel },

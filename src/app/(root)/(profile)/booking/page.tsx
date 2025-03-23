@@ -50,6 +50,10 @@ const BookingPage = (props: Props) => {
 
   return (
     <div className="container">
+      <div className="flex flex-col py-2 mb-2 font-medium">
+        <span>{session?.data?.user?.name}</span>
+        <span>{session?.data?.user?.email}</span>
+      </div>
       <h4 className="font-semibold text-xl">Booking List</h4>
 
       <Suspense fallback={<div>Loading...</div>}>

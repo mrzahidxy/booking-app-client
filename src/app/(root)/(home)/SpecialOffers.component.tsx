@@ -7,7 +7,8 @@ export default function SpecialOffers() {
     <section className="py-16">
       <div className="container mx-auto px-4">
         <h3 className="text-2xl font-bold mb-8">Special Offers</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <span>    Currently there are no special offers</span>
+        {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card className="bg-primary text-primary-foreground">
             <CardContent className="p-6">
               <h4 className="text-xl font-semibold mb-2">Hotel Deal</h4>
@@ -26,7 +27,7 @@ export default function SpecialOffers() {
               <Button>Reserve Now</Button>
             </CardContent>
           </Card>
-        </div>
+        </div> */}
       </div>
     </section>
   );

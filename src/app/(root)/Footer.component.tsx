@@ -6,7 +6,7 @@ export function Footer() {
       <div className="container py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div>
-            <h3 className="font-semibold mb-4">About TripAdvisor</h3>
+            <h3 className="font-semibold mb-4">About Bookinn.</h3>
             <ul className="space-y-2">
               <li>
                 <a href="#" className="text-sm text-muted-foreground hover:text-primary">
@@ -100,7 +100,7 @@ export function Footer() {
         </div>
         <div className="mt-12 pt-8 border-t">
           <p className="text-center text-sm text-muted-foreground">
-            © {new Date().getFullYear()} TripAdvisor LLC All rights reserved.
+            © {new Date().getFullYear()} Bookinn. LLC All rights reserved.
           </p>
         </div>
       </div>
