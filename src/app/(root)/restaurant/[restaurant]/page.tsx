@@ -6,10 +6,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { MapPin, Star, Utensils, Users, ChevronLeft } from "lucide-react";
-import axios from "axios";
 import RestaurantResarvetion from "../ResturantResarvetion.component";
 import RestaurantImageGallery from "../RestaurantImageGallery.component";
 import { Review } from "@/components/common/review.component";
+import { publicRequest } from "@/healper/privateRequest";
 
 interface Restaurant {
   id: number;
@@ -35,9 +35,8 @@ const restaurantData: Restaurant = {
 
 // Fetch data
 const fetchHotelDetails = async (slug: string): Promise<any> => {
-  const endpoint = `${process.env.NEXT_PUBLIC_BASE_URL}/restaurants/${slug}`;
   try {
-    const response = await axios.get(endpoint);
+    const response = await publicRequest.get(`/restaurants/${slug}`);
 
     return response.data.data;
   } catch (error) {

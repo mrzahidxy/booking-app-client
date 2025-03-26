@@ -1,12 +1,11 @@
 import HotelCard from "@/components/common/HotelCard.component";
-import axios from "axios";
+import { publicRequest } from "@/healper/privateRequest";
 
 
 // Fetch data
 const fetchHotels = async (slug: string): Promise<any> => {
-  const endpoint = `${process.env.NEXT_PUBLIC_BASE_URL}/hotels`;
   try {
-    const response = await axios.get(endpoint);
+    const response = await publicRequest.get('/hotels');
 
     return response.data.data;
   } catch (error) {

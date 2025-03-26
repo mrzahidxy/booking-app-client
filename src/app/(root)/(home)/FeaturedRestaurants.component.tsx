@@ -1,16 +1,15 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import axios from "axios";
+import { publicRequest } from "@/healper/privateRequest";
 import { Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 // Fetch data
 const fetchRestaurants = async (slug: string): Promise<any> => {
-  const endpoint = `${process.env.NEXT_PUBLIC_BASE_URL}/restaurants`;
   try {
-    const response = await axios.get(endpoint);
+    const response = await publicRequest.get("/restaurants");
 
     return response.data.data;
   } catch (error) {

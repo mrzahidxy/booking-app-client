@@ -4,18 +4,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { MapPin, Star, Wifi, Car, Coffee, ChevronLeft, Bed, BadgeInfo } from "lucide-react";
-import axios from "axios";
+
 
 
 import HotelImageGallery from "../HotelImageGallery.component";
 import HotelRooms from "../HotelRooms.component";
 import { Review } from "@/components/common/review.component";
+import { publicRequest } from "@/healper/privateRequest";
 
 // Fetch data
 const fetchHotelDetails = async (slug: string): Promise<any> => {
-  const endpoint = `${process.env.NEXT_PUBLIC_BASE_URL}/hotels/${slug}`;
   try {
-    const response = await axios.get(endpoint);
+    const response = await publicRequest.get(`/hotels/${slug}`);
 
     return response.data.data;
   } catch (error) {
