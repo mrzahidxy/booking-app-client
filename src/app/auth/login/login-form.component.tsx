@@ -18,7 +18,7 @@ export function LogInForm() {
         <CardDescription>
           Enter your credentials to access your account
         </CardDescription>
-        <span>zahid@example.com; Pass12344</span>
+        <span>user@example.com; password123</span>
       </CardHeader>
       <CardContent>
         <Form>

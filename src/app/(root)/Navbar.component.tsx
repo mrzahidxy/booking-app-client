@@ -25,6 +25,7 @@ export function Navbar() {
     }
   };
 
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
@@ -37,7 +38,7 @@ export function Navbar() {
 
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2 ml-4 md:ml-0">
-          <span className="text-xl font-bold">TripAdvisor</span>
+          <span className="text-xl font-bold">Bookinn.</span>
         </Link>
 
         {/* Right Section */}
@@ -47,28 +48,34 @@ export function Navbar() {
             <Heart className="h-5 w-5" />
           </Button>
 
-          {status === "loading" ? (
+          {status === "loading" && (
             // Loading state
             <span className="text-sm font-medium">Loading...</span>
-          ) : session ? (
+          )}
+
+          {status === "authenticated" && (
             <DropdownMenu>
               <DropdownMenuTrigger className="text-sm font-medium">
                 {session.user?.name ?? "User"}
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                {session.user?.role ? (
+                {session.user?.role === "Admin" ? (
                   <DropdownMenuItem onClick={() => push("/admin")}>
                     Admin Panel
                   </DropdownMenuItem>
                 ) : (
-                  <DropdownMenuItem onClick={() => push("/user")}>
+                  <DropdownMenuItem onClick={() => push("/booking")}>
                     User Panel
                   </DropdownMenuItem>
                 )}
-                <DropdownMenuItem onClick={handleSignOut}>Logout</DropdownMenuItem>
+                <DropdownMenuItem onClick={handleSignOut}>
+                  Logout
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          ) : (
+          )}
+
+          {status === "unauthenticated" && (
             // Sign-in link for unauthenticated users
             <Link href="/auth/login" className="text-sm font-medium">
               Sign in
