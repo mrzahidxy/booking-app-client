@@ -19,7 +19,7 @@ const fetchRestaurants = async (slug: string): Promise<any> => {
 };
 
 export default async function FeaturedRestaurants() {
-  const restaurants = await fetchRestaurants("restaurants");
+  const restaurants = await fetchRestaurants("restaurants") ?? [];
 
   if (restaurants.length === 0) {
     return (

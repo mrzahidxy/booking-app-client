@@ -1,1 +1,1 @@
-export const AppTitle = "Ecommerce App"
+export const AppTitle = "Book Inn"
