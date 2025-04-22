@@ -1,7 +1,4 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -11,27 +8,6 @@ import RestaurantImageGallery from "../RestaurantImageGallery.component";
 import { Review } from "@/components/common/review.component";
 import { publicRequest } from "@/healper/privateRequest";
 
-interface Restaurant {
-  id: number;
-  name: string;
-  location: string;
-  image: string;
-  cuisine: string;
-  ratings: number;
-  seats: number;
-  menu: string;
-}
-
-const restaurantData: Restaurant = {
-  id: 1,
-  name: "Gourmet Fusion",
-  location: "123 Culinary Street, Foodie City",
-  image: "/placeholder.svg?height=400&width=600",
-  cuisine: "International",
-  ratings: 4.7,
-  seats: 50,
-  menu: "Appetizers\n- Bruschetta: $8\n- Calamari: $10\n\nMain Courses\n- Grilled Salmon: $22\n- Beef Tenderloin: $28\n\nDesserts\n- Tiramisu: $8\n- Crème Brûlée: $9",
-};
 
 // Fetch data
 const fetchHotelDetails = async (slug: string): Promise<any> => {
@@ -51,8 +27,6 @@ export default async function RestaurantDetailPage({
   params: { restaurant: string };
 }) {
   const restaurantData = await fetchHotelDetails(params?.restaurant);
-
-  console.log("restaurantData", restaurantData);
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -83,7 +57,7 @@ export default async function RestaurantDetailPage({
           {/* Left Column - Images and Details */}
           <div className="lg:col-span-2 space-y-8">
             {/* Image Gallery */}
-            <RestaurantImageGallery images={[restaurantData.image]} />
+            <RestaurantImageGallery images={restaurantData.image} />
 
             {/* Restaurant Details */}
             <Tabs defaultValue="overview" className="w-full">
@@ -97,12 +71,7 @@ export default async function RestaurantDetailPage({
                   <h3 className="text-lg font-semibold mb-2">
                     About this restaurant
                   </h3>
-                  <p>
-                    {restaurantData.name} offers a unique dining experience with
-                    its {restaurantData.cuisine} cuisine. Located in the heart
-                    of Foodie City, our restaurant provides a cozy atmosphere
-                    perfect for both intimate dinners and group celebrations.
-                  </p>
+                  <p>{restaurantData.description}</p>
                   <div className="flex items-center gap-4 mt-4">
                     <div className="flex items-center">
                       <Utensils className="h-4 w-4 mr-2" />
@@ -119,7 +88,17 @@ export default async function RestaurantDetailPage({
                 <div className="prose prose-sm max-w-none">
                   <h3 className="text-lg font-semibold mb-2">Menu</h3>
                   <pre className="whitespace-pre-wrap">
-                    {restaurantData.menu}
+                    {JSON.parse(restaurantData.menu).map(
+                      (
+                        item: { name: string; price: string },
+                        index: number
+                      ) => (
+                        <div key={index}>
+                          <span className="font-bold">{item.name}:</span>{" "}
+                          {item.price}
+                        </div>
+                      )
+                    )}
                   </pre>
                 </div>
               </TabsContent>
@@ -130,7 +109,9 @@ export default async function RestaurantDetailPage({
           </div>
 
           {/* Right Column - Booking */}
-          <RestaurantResarvetion restaurantData={restaurantData} />
+          <RestaurantResarvetion
+            restaurantData={{ slug: params?.restaurant, ...restaurantData }}
+          />
         </div>
       </main>
     </div>

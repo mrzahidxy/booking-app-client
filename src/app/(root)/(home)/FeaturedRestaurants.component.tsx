@@ -19,9 +19,12 @@ const fetchRestaurants = async (slug: string): Promise<any> => {
 };
 
 export default async function FeaturedRestaurants() {
-  const restaurants = await fetchRestaurants("restaurants") ?? [];
+  const restaurants = await fetchRestaurants("restaurants");
 
-  if (restaurants.length === 0) {
+
+  console.log("restaurants",restaurants)
+
+  if (restaurants?.collection.length === 0) {
     return (
       <section className="py-16 bg-secondary/10">
         <div className="container mx-auto px-4">
@@ -37,11 +40,11 @@ export default async function FeaturedRestaurants() {
       <div className="container mx-auto px-4">
         <h3 className="text-2xl font-bold mb-8">Featured Restaurants</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 justify-center gap-6">
-          {restaurants?.map((restaurant: any, i: any) => (
+          {restaurants?.collection?.map((restaurant: any, i: any) => (
             <Link href={`/restaurant/${restaurant?.id}`} key={i}>
               <Card key={i} className="overflow-hidden">
                 <Image
-                  src={restaurant?.image}
+                  src={restaurant?.image[0]}
                   alt="Restaurant"
                   width={400}
                   height={300}
@@ -58,10 +61,10 @@ export default async function FeaturedRestaurants() {
                   <p className="text-muted-foreground text-sm mb-2">
                     {restaurant?.cuisine} • $$$ • {restaurant?.location}
                   </p>
-                  <div className="flex gap-2 mb-4">
+                  {/* <div className="flex gap-2 mb-4">
                     <Badge variant="outline">Fine Dining</Badge>
                     <Badge variant="outline">Romantic</Badge>
-                  </div>
+                  </div> */}
                   <Button className="w-full">Reserve a Table</Button>
                 </CardContent>
               </Card>

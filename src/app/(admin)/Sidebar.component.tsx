@@ -48,6 +48,7 @@ const Sidebar = (props: Props) => {
       icon: <FiUser />,
       children: [
         { href: "/admin/hotels", label: "Hotels" },
+        { href: "/admin/restaurants", label: "Resstaurants" },
       ],
     },
   ];
