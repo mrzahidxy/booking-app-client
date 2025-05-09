@@ -6,12 +6,12 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import privateRequest, { publicRequest } from "@/healper/privateRequest";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import {  useState } from "react";
+import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import queryClient from "@/app/config/queryClient";
 import { useRouter } from "next/navigation";
 
-const TIME_SLOTS = ["noon", "evening", "late-night"];
+const TIME_SLOTS = ["MORNING", "AFTERNOON", "EVENING", "NIGHT"];
 
 const fetchRestaurantAvailability = async ({
   restaurantId,
@@ -49,6 +49,7 @@ export default function RestaurantResarvetion({ restaurantData }: any) {
     enabled: !!restaurantData.id,
     staleTime: 0,
     refetchOnMount: true,
+    refetchInterval: 600000,
   });
 
   // Make a reservation
@@ -89,9 +90,9 @@ export default function RestaurantResarvetion({ restaurantData }: any) {
               <Clock className="h-4 w-4 mr-2" />
               <span>Open Now</span>
             </div>
-            <span className="text-sm text-muted-foreground">
+            {/* <span className="text-sm text-muted-foreground">
               11:00 AM - 10:00 PM
-            </span>
+            </span> */}
           </div>
           <Separator />
           <div className="space-y-2">
@@ -133,14 +134,7 @@ export default function RestaurantResarvetion({ restaurantData }: any) {
               value={timeSlot}
               className="w-full p-2 border rounded-md"
             >
-              {[
-                "11:00 AM",
-                "12:00 PM",
-                "1:00 PM",
-                "6:00 PM",
-                "7:00 PM",
-                "8:00 PM",
-              ].map((time) => (
+              {TIME_SLOTS.map((time) => (
                 <option key={time} value={time}>
                   {time}
                 </option>
@@ -148,20 +142,22 @@ export default function RestaurantResarvetion({ restaurantData }: any) {
             </select>
           </div>
 
-          {isLoading ? (
-            <p>Loading...</p>
-          ) : isError ? (
-            <p>Error fetching data.</p>
-          ) : (
-            <p> {data.availAbality} seat(s) available</p>
-          )}
+          {(() => {
+            if (isLoading) {
+              return <p>Loading...</p>;
+            }
+            if (isError) {
+              return <p>Error fetching data.</p>;
+            }
+            return <p>{data.availAbality} seat(s) available</p>;
+          })()}
 
           <Button
             className="w-full"
             disabled={!data?.isAvailable}
             onClick={() => mutation.mutate()}
           >
-            Reserve a Table
+            {mutation.isPending ? "Processing..." : "Reserve a Table"}
           </Button>
         </CardContent>
       </Card>

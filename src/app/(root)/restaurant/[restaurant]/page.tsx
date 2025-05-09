@@ -40,7 +40,7 @@ export default async function RestaurantDetailPage({
             <Separator orientation="vertical" className="h-6" />
             <Badge variant="secondary" className="flex items-center">
               <Star className="h-3 w-3 mr-1 fill-yellow-400 stroke-yellow-400" />
-              {restaurantData.ratings}
+              {restaurantData?.ratings}
             </Badge>
           </div>
           <h1 className="text-2xl font-bold mb-2">{restaurantData.name}</h1>

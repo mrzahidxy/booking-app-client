@@ -58,7 +58,7 @@ const Sidebar = (props: Props) => {
   };
 
   return (
-    <div className="h-screen border w-[260px] bg-white">
+    <div className="h-screen border w-[260px] bg-white text-sm">
       <div className="flex flex-col font-semibold">
         {links.map(({ href, label, icon, children }) => (
           <div key={label}>
