@@ -6,6 +6,7 @@ import { Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+export const revalidate = 10; 
 // Fetch data
 const fetchRestaurants = async (slug: string): Promise<any> => {
   try {
@@ -20,9 +21,6 @@ const fetchRestaurants = async (slug: string): Promise<any> => {
 
 export default async function FeaturedRestaurants() {
   const restaurants = await fetchRestaurants("restaurants");
-
-
-  console.log("restaurants",restaurants)
 
   if (restaurants?.collection.length === 0) {
     return (
