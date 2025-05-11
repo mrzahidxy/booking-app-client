@@ -1,7 +1,6 @@
 import HotelCard from "@/components/common/HotelCard.component";
 import { publicRequest } from "@/healper/privateRequest";
 
-export const revalidate = 10; 
 // Fetch data
 const fetchHotels = async (slug: string): Promise<any> => {
   try {
