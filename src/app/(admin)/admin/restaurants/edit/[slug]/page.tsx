@@ -1,5 +1,5 @@
-import { HotelCreateUpdate } from "../../add/restuarant-create-update.component";
 import CommonLayout from "@/components/common/CommonLayout.component";
+import { HotelCreateUpdate } from "../../../hotels/add/hotels-create-update.component";
 
 export default function UpdateHotel({
   params,
