@@ -10,7 +10,7 @@ import { publicRequest } from "@/healper/privateRequest";
 
 
 // Fetch data
-const fetchHotelDetails = async (slug: string): Promise<any> => {
+const fetchRestaurantDetails = async (slug: string): Promise<any> => {
   try {
     const response = await publicRequest.get(`/restaurants/${slug}`);
 
@@ -26,7 +26,7 @@ export default async function RestaurantDetailPage({
 }: {
   params: { restaurant: string };
 }) {
-  const restaurantData = await fetchHotelDetails(params?.restaurant);
+  const restaurantData = await fetchRestaurantDetails(params?.restaurant);
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}

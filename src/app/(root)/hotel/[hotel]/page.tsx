@@ -11,12 +11,12 @@ import HotelImageGallery from "../HotelImageGallery.component";
 import HotelRooms from "../HotelRooms.component";
 import { Review } from "@/components/common/review.component";
 import { publicRequest } from "@/healper/privateRequest";
+import { THotel } from "@/models/hotel";
 
 // Fetch data
-const fetchHotelDetails = async (slug: string): Promise<any> => {
+const fetchHotelDetails = async (slug: string): Promise<THotel | null> => {
   try {
     const response = await publicRequest.get(`/hotels/${slug}`);
-
     return response.data.data;
   } catch (error) {
     console.error(error);
@@ -47,10 +47,10 @@ export default async function HotelDetailPage({ params }: PageProps) {
               {hotelData?.ratings}
             </Badge>
           </div>
-          <h1 className="text-2xl font-bold mb-2">{hotelData.name}</h1>
+          <h1 className="text-2xl font-bold mb-2">{hotelData?.name}</h1>
           <p className="text-muted-foreground flex items-center">
             <MapPin className="h-4 w-4 mr-2" />
-            {hotelData.location}
+            {hotelData?.location}
           </p>
         </div>
       </header>
@@ -60,7 +60,7 @@ export default async function HotelDetailPage({ params }: PageProps) {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Left Column - Images and Details */}
           <div className="lg:col-span-2 space-y-8">
-            <HotelImageGallery images={hotelData.image} />
+            <HotelImageGallery images={hotelData?.image!} />
 
             {/* Hotel Details */}
             <Tabs defaultValue="overview" className="w-full">
@@ -75,7 +75,7 @@ export default async function HotelDetailPage({ params }: PageProps) {
                     About this hotel
                   </h3>
                   <p>
-                    {hotelData.description}
+                    {hotelData?.description}
                   </p>
                 </div>
               </TabsContent>
@@ -91,7 +91,7 @@ export default async function HotelDetailPage({ params }: PageProps) {
                
               </TabsContent>
               <TabsContent value="reviews">
-                <Review id={hotelData.id} type="hotel" />
+                <Review id={hotelData?.id!} type="hotel" />
               </TabsContent>
             </Tabs>
           </div>
@@ -106,7 +106,7 @@ export default async function HotelDetailPage({ params }: PageProps) {
                 {/* <Calendar mode="range" className="rounded-md border" /> */}
                 <Separator />
                 {/* Room Types */}
-                <HotelRooms rooms={hotelData.rooms} />
+                <HotelRooms rooms={hotelData?.rooms} />
               </CardContent>
             </Card>
           </div>

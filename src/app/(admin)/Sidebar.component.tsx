@@ -51,6 +51,11 @@ const Sidebar = (props: Props) => {
         { href: "/admin/restaurants", label: "Resstaurants" },
       ],
     },
+    {
+      href: "/admin/booking",
+      label: "Booking",
+      icon: <FiUser />,
+    },
   ];
 
   const toggleSection = (label: string) => {

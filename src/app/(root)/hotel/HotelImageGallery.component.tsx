@@ -8,6 +8,7 @@ import { useState } from "react";
 
 export default function HotelImageGallery({ images }: { images: string[] }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
 
   return (
     <>

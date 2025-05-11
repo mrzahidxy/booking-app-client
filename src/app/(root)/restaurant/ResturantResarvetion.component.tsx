@@ -10,6 +10,7 @@ import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import queryClient from "@/app/config/queryClient";
 import { useRouter } from "next/navigation";
+import { set } from "date-fns";
 
 const TIME_SLOTS = ["MORNING", "AFTERNOON", "EVENING", "NIGHT"];
 
@@ -46,10 +47,10 @@ export default function RestaurantResarvetion({ restaurantData }: any) {
         date,
         timeSlot,
       }),
-    enabled: !!restaurantData.id,
+    enabled: !!restaurantData.id && !!date,
     staleTime: 0,
     refetchOnMount: true,
-    refetchInterval: 600000,
+    refetchInterval: 200000,
   });
 
   // Make a reservation
@@ -67,7 +68,10 @@ export default function RestaurantResarvetion({ restaurantData }: any) {
         description: `Restaurant reservation successfully!`,
       });
       router.refresh();
-      queryClient.invalidateQueries({ queryKey: ["restaurants-list"] });
+      setPartySize(1);
+      setDate(new Date().toISOString().split("T")[0]);
+      setTimeSlot(TIME_SLOTS[0]);
+      // queryClient.invalidateQueries({ queryKey: ["restaurants-list"] });
     },
     onError: () => {
       toast({

@@ -14,7 +14,7 @@ export type BookingCreate = yup.InferType<typeof BookingSchema>;
 export const InitialBookingValues: BookingCreate = {
   roomId: null,
   bookingDate: "",
-  quantity: null,
+  quantity: 1,
 };
 
 // 🔹 API Response Interface

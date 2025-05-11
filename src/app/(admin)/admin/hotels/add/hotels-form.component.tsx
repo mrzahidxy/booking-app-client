@@ -31,7 +31,7 @@ export const HotelForm = () => {
           }}
         />
 
-        <FormikArrayInput
+        <FormikInputField
           name="amenities"
           inputFieldProps={{
             label: "Hotel Amenities (comma-separated)",
@@ -87,8 +87,18 @@ export const HotelForm = () => {
                       }}
                     />
 
-                    <FormikArrayInput
-                       name={`rooms.${index}.amenities`}
+                    <FormikInputField
+                      name={`rooms.${index}.quantity`}
+                      inputFieldProps={{
+                        label: "Quantity",
+                        placeholder: "Enter room quantity",
+                        inputClassName: "outlined-none py-3",
+                        type: "number",
+                      }}
+                    />
+
+                    <FormikInputField
+                      name={`rooms.${index}.amenities`}
                       inputFieldProps={{
                         label: "Hotel Amenities (comma-separated)",
                         placeholder: "E.g., Free WiFi, Swimming Pool, Spa",

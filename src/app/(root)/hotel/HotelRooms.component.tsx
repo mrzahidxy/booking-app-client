@@ -3,11 +3,53 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Check } from "lucide-react";
 import { useState } from "react";
-import { BookingModal } from "./booking/BookingModal.component";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { BookingCreate, InitialBookingValues } from "./booking/form.config";
+import { Formik, FormikHelpers } from "formik";
+import { useMutation } from "@tanstack/react-query";
+import privateRequest from "@/healper/privateRequest";
+import { toast } from "@/hooks/use-toast";
+import { BookingForm } from "./booking/BookingForm.component";
 
 export default function HotelRooms({ rooms }: any) {
   const [selectedRoom, setSelectedRoom] = useState<any>(null);
-  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const mutation = useMutation({
+    mutationFn: async (values: BookingCreate) =>
+      privateRequest.post(`/bookings/room`, values),
+  });
+
+  const handleBooking = async (
+    values: BookingCreate,
+    { resetForm, setSubmitting }: FormikHelpers<BookingCreate>
+  ) => {
+    try {
+      await mutation.mutateAsync({
+        bookingDate: values.bookingDate,
+        quantity: values.quantity,
+        roomId: selectedRoom.id,
+      });
+
+      toast({ title: "Success", description: `Room booked successfully!` });
+      resetForm();
+      setOpen(false);
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: err?.response?.data?.message || "Something went wrong!",
+        variant: "destructive",
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
 
   return (
     <>
@@ -36,7 +78,7 @@ export default function HotelRooms({ rooms }: any) {
               className="w-full"
               onClick={() => {
                 setSelectedRoom(room);
-                setIsBookingModalOpen(true);
+                setOpen(true);
               }}
             >
               Select Room
@@ -47,14 +89,22 @@ export default function HotelRooms({ rooms }: any) {
 
       {/* Booking Modal */}
       {selectedRoom && (
-        <BookingModal
-          isOpen={isBookingModalOpen}
-          onClose={() => {
-            setIsBookingModalOpen(false);
-            setSelectedRoom(null);
-          }}
-          room={selectedRoom}
-        />
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogContent className="sm:max-w-[350px]">
+            <DialogHeader>
+              <DialogTitle>Book {selectedRoom.roomType} Room</DialogTitle>
+              <DialogDescription>
+                Complete your booking details below
+              </DialogDescription>
+            </DialogHeader>
+            <Formik
+              initialValues={InitialBookingValues}
+              onSubmit={handleBooking}
+            >
+              <BookingForm room={selectedRoom} />
+            </Formik>
+          </DialogContent>
+        </Dialog>
       )}
     </>
   );

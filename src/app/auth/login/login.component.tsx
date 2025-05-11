@@ -30,7 +30,7 @@ export const Login = () => {
     if (res?.error) {
       toast({
         title: "Error",
-        description: res?.error,
+        description: "Invalid credentials",
         variant: "destructive",
       });
     }
@@ -70,15 +70,15 @@ export const Login = () => {
           </Formik>
         </CardContent>
 
-        <CardFooter className="text-xs">
+        <CardFooter className="flex text-xs">
           <Link
             href="/forgot-password"
-            className="text-violet-600 hover:underline"
+            className="flex-1 text-violet-600 hover:underline"
           >
             Forgot your password?
           </Link>
 
-          <div className="">
+          <div className="flex-1">
             Not a member?{" "}
             <Link
               href="/auth/signup"

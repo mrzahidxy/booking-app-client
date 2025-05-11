@@ -7,7 +7,7 @@ export const HotelSchema = yup.object({
   location: yup.string().required("Location is required"),
   image: yup.mixed().nullable(), // ✅ Image can be optional (nullable)
   description: yup.string().nullable(),
-  amenities: yup.array().of(yup.string()).nullable(), // ✅ Store amenities as an array
+  amenities: yup.string().nullable(), // ✅ Store amenities as an array
   rooms: yup
     .array()
     .of(
@@ -16,6 +16,8 @@ export const HotelSchema = yup.object({
         roomType: yup.string().required("Room type is required"),
         price: yup.number().positive("Price must be positive").required("Price is required"),
         image: yup.mixed().nullable(),
+        quantity: yup.number().required("Quantity is required"),
+        amemnities: yup.string().nullable(),
       })
     )
     .nullable(), // ✅ Allows optional rooms array
@@ -31,13 +33,15 @@ export const InitialValues: HotelCreate = {
   location: "",
   image: [],
   description: "",
-  amenities: [],
+  amenities: '',
   rooms: [
     {
       roomId: null,
       roomType: "",
       price: 0,
       image: [],
+      quantity: 0,
+      amemnities: '',
     },
   ],
 };
