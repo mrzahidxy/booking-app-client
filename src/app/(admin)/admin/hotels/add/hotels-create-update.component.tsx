@@ -30,7 +30,7 @@ export const HotelCreateUpdate = ({ id }: { id?: string }) => {
 
   // 🔹 Handle Form Submission (Create/Update)
   const mutation = useMutation({
-    mutationFn: async (values: HotelCreate) =>
+    mutationFn: async (values: any) =>
       id
         ? privateRequest.put(`/hotels/${id}`, values)
         : privateRequest.post(`/hotels`, values),
@@ -41,7 +41,21 @@ export const HotelCreateUpdate = ({ id }: { id?: string }) => {
     { resetForm, setSubmitting }: FormikHelpers<HotelCreate>
   ) => {
     try {
-       await mutation.mutateAsync(values);
+      await mutation.mutateAsync({
+        name: values.name,
+        location: values.location,
+        image: values.image,
+        description: values.description,
+        amenities: values?.amenities?.split(","),
+        rooms: values.rooms?.map((room: any) => ({
+          roomId: room.roomId,
+          roomType: room.roomType,
+          price: room.price,
+          image: room.image,
+          quantity: room.quantity,
+          amemnities: values?.amenities?.split(","),
+        })),
+      });
 
       toast({
         title: "Success",

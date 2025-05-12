@@ -58,6 +58,7 @@ export const FormikArrayInput: React.FC<FormikArrayInputProps> = ({
             .map((item) => item.trim()) // Trim spaces
             .filter((item) => item !== ""); // Remove empty items
 
+            console.log("value",value)
           setFieldValue(name, value);
         };
 
@@ -68,7 +69,7 @@ export const FormikArrayInput: React.FC<FormikArrayInputProps> = ({
             placeholder={inputFieldProps?.placeholder || "Enter comma-separated values"}
             disabled={inputFieldProps?.disabled}
             onChange={handleChange}
-            // defaultValue={field.value?.join(", ")} // Show array as string
+            value={field.value?.join(", ")}
             error={!!(touched && error)}
             helperText={touched && error ? error : inputFieldProps?.helperText}
           />

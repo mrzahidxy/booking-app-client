@@ -67,11 +67,6 @@ export function DynamicTable<TData>({
 
   const { collection: tableData, pagination } = data?.data || {};
 
-  // Display no data state
-  if (!tableData || tableData.length === 0) {
-    return <div>No data available</div>;
-  }
-
   // Handle pagination changes
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= pagination.totalPages) {

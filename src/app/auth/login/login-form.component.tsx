@@ -12,15 +12,8 @@ import Link from "next/link";
 
 export function LogInForm() {
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Welcome back</CardTitle>
-        <CardDescription>
-          Enter your credentials to access your account
-        </CardDescription>
-        <span>user@example.com; password123</span>
-      </CardHeader>
-      <CardContent>
+    <div className="w-full">
+   
         <Form>
           <div className="flex flex-col gap-1">
             <FormikInputField
@@ -46,27 +39,7 @@ export function LogInForm() {
             </div>
           </div>
         </Form>
-      </CardContent>
-      <CardFooter className="flex flex-col space-y-4">
-        <div className="text-sm text-center">
-          <Link
-            href="/forgot-password"
-            className="text-violet-600 hover:underline"
-          >
-            Forgot your password?
-          </Link>
-        </div>
-        <div className="text-sm text-center">
-          Not a member?{" "}
-          <Link
-            href="/auth/signup"
-            className="text-violet-600 hover:underline font-semibold"
-          >
-            Join
-          </Link>{" "}
-          to unlock the best of products.
-        </div>
-      </CardFooter>
-    </Card>
+    
+    </div>
   );
 }

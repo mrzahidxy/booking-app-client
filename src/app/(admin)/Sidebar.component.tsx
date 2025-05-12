@@ -48,7 +48,13 @@ const Sidebar = (props: Props) => {
       icon: <FiUser />,
       children: [
         { href: "/admin/hotels", label: "Hotels" },
+        { href: "/admin/restaurants", label: "Resstaurants" },
       ],
+    },
+    {
+      href: "/admin/booking",
+      label: "Booking",
+      icon: <FiUser />,
     },
   ];
 
@@ -57,7 +63,7 @@ const Sidebar = (props: Props) => {
   };
 
   return (
-    <div className="h-screen border w-[260px] bg-white">
+    <div className="h-screen border w-[260px] bg-white text-sm">
       <div className="flex flex-col font-semibold">
         {links.map(({ href, label, icon, children }) => (
           <div key={label}>

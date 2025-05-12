@@ -1,5 +1,3 @@
-"use client";
-
 import { Form, FieldArray } from "formik";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import { FormikInputField, FormikSubmitButton } from "@/components/form";
@@ -8,16 +6,16 @@ import { Button } from "@/components/ui/button";
 import { PlusCircle, Trash } from "lucide-react";
 import { FormikArrayInput } from "@/components/form/formik-array-input.component";
 
-export const HotelForm = () => {
+export const RestaurantForm = () => {
   return (
     <Form>
+      {/* 🔹 Restaurant Details */}
       <CardContent className="space-y-6">
-        {/* 🔹 Hotel Details */}
         <FormikInputField
           name="name"
           inputFieldProps={{
-            label: "Hotel Name",
-            placeholder: "Enter hotel name",
+            label: "Restaurant Name",
+            placeholder: "Enter restaurant name",
             inputClassName: "outlined-none py-3",
           }}
         />
@@ -25,17 +23,17 @@ export const HotelForm = () => {
         <FormikInputField
           name="description"
           inputFieldProps={{
-            label: "Hotel Description",
-            placeholder: "Enter hotel description",
+            label: "Restaurant Description",
+            placeholder: "Enter restaurant description",
             inputClassName: "outlined-none py-3",
           }}
         />
 
-        <FormikInputField
-          name="amenities"
+        <FormikArrayInput
+          name="cuisine"
           inputFieldProps={{
-            label: "Hotel Amenities (comma-separated)",
-            placeholder: "E.g., Free WiFi, Swimming Pool, Spa",
+            label: "Cuisines",
+            placeholder: "E.g., Italian, Chinese, Bengali",
             inputClassName: "outlined-none py-3",
           }}
         />
@@ -44,75 +42,60 @@ export const HotelForm = () => {
           name="location"
           inputFieldProps={{
             label: "Location",
-            placeholder: "Enter hotel location",
+            placeholder: "Enter restaurant location",
             inputClassName: "outlined-none py-3",
           }}
         />
 
-        {/* 🔹 Hotel Image */}
+        <FormikInputField
+          name="seats"
+          inputFieldProps={{
+            label: "Seats",
+            placeholder: "Enter menu seats",
+            inputClassName: "outlined-none py-3",
+            type: "number",
+          }}
+        />
+
+        {/* 🔹 Restaurant Images */}
         <FormikImageUploadField
           name="image"
-          inputFieldProps={{ label: "Upload Hotel Image" }}
+          inputFieldProps={{ label: "Images" }}
           allowMultiple
         />
 
-        {/* 🔹 Rooms Section */}
-        <FieldArray name="rooms">
+        {/* 🔹 Menus Section */}
+        <FieldArray name="menu">
           {({ push, remove, form }) => (
             <div className="space-y-6">
-              <label className="text-lg font-medium">Rooms</label>
+              <label className="text-lg font-medium">Menus</label>
 
-              {form.values.rooms?.length > 0 ? (
-                form.values.rooms?.map((room: any, index: number) => (
+              {form.values.menu?.length > 0 ? (
+                form.values.menu.map((menu: any, index: number) => (
                   <div
                     key={index}
                     className="border p-4 rounded-md relative space-y-4"
                   >
                     <FormikInputField
-                      name={`rooms.${index}.roomType`}
+                      name={`menu.${index}.name`}
                       inputFieldProps={{
-                        label: "Room Type",
-                        placeholder: "E.g.,   SINGLE, DOUBLE, TWIN, TRIPLE",
+                        label: "Menu Name",
+                        placeholder: "E.g., Beef Burger, Pasta, etc.",
                         inputClassName: "outlined-none py-3",
                       }}
                     />
 
                     <FormikInputField
-                      name={`rooms.${index}.price`}
+                      name={`menu.${index}.price`}
                       inputFieldProps={{
                         label: "Price",
-                        placeholder: "Enter room price",
+                        placeholder: "Enter menu price",
                         inputClassName: "outlined-none py-3",
                         type: "number",
                       }}
                     />
 
-                    <FormikInputField
-                      name={`rooms.${index}.quantity`}
-                      inputFieldProps={{
-                        label: "Quantity",
-                        placeholder: "Enter room quantity",
-                        inputClassName: "outlined-none py-3",
-                        type: "number",
-                      }}
-                    />
-
-                    <FormikInputField
-                      name={`rooms.${index}.amenities`}
-                      inputFieldProps={{
-                        label: "Hotel Amenities (comma-separated)",
-                        placeholder: "E.g., Free WiFi, Swimming Pool, Spa",
-                        inputClassName: "outlined-none py-3",
-                      }}
-                    />
-
-                    <FormikImageUploadField
-                      name={`rooms.${index}.image`}
-                      inputFieldProps={{ label: "Upload Room Image" }}
-                      allowMultiple
-                    />
-
-                    {/* Remove Room Button */}
+                    {/* Remove Menu Button */}
                     <Button
                       variant="destructive"
                       size="sm"
@@ -125,16 +108,17 @@ export const HotelForm = () => {
                 ))
               ) : (
                 <p className="text-sm text-muted-foreground">
-                  No rooms added. Click below to add rooms.
+                  No menus added. Click below to add menus.
                 </p>
               )}
 
-              {/* Add Room Button */}
+              {/* Add Menu Button */}
               <Button
                 variant="outline"
-                onClick={() => push({ roomType: "", price: "", image: "" })}
+                type="button"
+                onClick={() => push({ name: "", price: 0 })}
               >
-                <PlusCircle className="h-5 w-5 mr-2" /> Add Room
+                <PlusCircle className="h-5 w-5 mr-2" /> Add Menu
               </Button>
             </div>
           )}
