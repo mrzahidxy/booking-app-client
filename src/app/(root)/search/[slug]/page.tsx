@@ -1,10 +1,11 @@
 import { Suspense } from "react";
-import SearchComponent from "./Search.conponent";
+import SearchComponent from "../Search.conponent";
 
-const SearchPage = () => {
+
+const SearchPage = ({ params }: { params: { slug: string } }) => {
   return (
     <Suspense fallback={<div className="text-center py-10">Loading...</div>}>
-      <SearchComponent />
+      <SearchComponent type={params.slug} />
     </Suspense>
   );
 };
