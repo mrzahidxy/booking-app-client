@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { NotificationDropdown } from "./notification/NotificationDropdow.component";
 
 export function Navbar() {
   const { data: session, status } = useSession();
@@ -75,6 +76,7 @@ export function Navbar() {
             </DropdownMenu>
           )}
 
+          <NotificationDropdown/> 
           {status === "unauthenticated" && (
             // Sign-in link for unauthenticated users
             <Link href="/auth/login" className="text-sm font-medium">
