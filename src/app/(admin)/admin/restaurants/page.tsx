@@ -69,7 +69,7 @@ const RestaurantListPage = () => {
       cell: ({ row }) => (
         <TableActionButtons
           id={row.original.id}
-          onEdit={(id) => router.push(`/admin/hotels/edit/${id}`)}
+          onEdit={(id) => router.push(`/admin/restaurants/edit/${id}`)}
           onDelete={(id) => handleDelete(Number(id))}
           loading={isPending}
         />

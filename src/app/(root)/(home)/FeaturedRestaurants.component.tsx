@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 // Fetch data
-const fetchRestaurants = async (slug: string): Promise<any> => {
+const fetchRestaurants = async (): Promise<any> => {
   try {
     const response = await publicRequest.get("/restaurants");
 
@@ -19,7 +19,7 @@ const fetchRestaurants = async (slug: string): Promise<any> => {
 };
 
 export default async function FeaturedRestaurants() {
-  const restaurants = await fetchRestaurants("restaurants");
+  const restaurants = await fetchRestaurants()
 
 
   if (restaurants?.collection.length === 0) {
@@ -37,8 +37,8 @@ export default async function FeaturedRestaurants() {
     <section className="py-16 bg-secondary/10">
       <div className="container mx-auto px-4">
         <h3 className="text-2xl font-bold mb-8">Featured Restaurants</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 justify-center gap-6">
-          {restaurants?.collection?.map((restaurant: any, i: any) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 justify-center gap-6">
+          {restaurants?.collection?.slice(0, 5).map((restaurant: any, i: any) => (
             <Link href={`/restaurant/${restaurant?.id}`} key={i}>
               <Card key={i} className="overflow-hidden">
                 <Image

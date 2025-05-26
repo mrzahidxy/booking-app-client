@@ -1,14 +1,18 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import HotelCard from "@/components/common/HotelCard.component";
 import { HotelAPIResponse } from "@/models/hotel";
 import { publicRequest } from "@/healper/privateRequest";
 
-const fetchHotels = async (query: string): Promise<any> => {
+const fetchSearchResults = async (query: string, type: string): Promise<any> => {
+  const endpoint =
+    type === "hotels"
+      ? `hotels/search/result?${query}`
+      : `restaurants/search/result?${query}`;
   try {
-    const response = await publicRequest.get(`hotels/search/result?${query}`);
+    const response = await publicRequest.get(endpoint);
 
     return response.data;
   } catch (error) {
@@ -17,22 +21,23 @@ const fetchHotels = async (query: string): Promise<any> => {
   }
 };
 
-const SearchComponent = () => {
-  const params = useSearchParams();
+const SearchComponent = ({ type }: { type: string }) => {
+  const queries = useSearchParams();
   const queryString = new URLSearchParams();
-  params.forEach((value, key) => {
+  queries.forEach((value, key) => {
     if (value) queryString.append(key, value);
   });
 
-  const { data: hotels, isLoading: loading } = useQuery<HotelAPIResponse>({
+  const { data: hotels, isLoading: loading, error } = useQuery<HotelAPIResponse>({
     queryKey: ["hotels", queryString],
-    queryFn: () => fetchHotels(queryString.toString()),
+    queryFn: () => fetchSearchResults(queryString.toString(), type),
     enabled: !!queryString,
     staleTime: 0,
-    refetchOnMount: params.has("name") || params.has("location"),
+    refetchOnMount: queries.has("name") || queries.has("location"),
   });
 
   if (loading) return <div className="text-center py-10">Loading...</div>;
+  if(error) return <div className="text-center py-10">Error</div>;
 
   return (
     <div className="container py-8">

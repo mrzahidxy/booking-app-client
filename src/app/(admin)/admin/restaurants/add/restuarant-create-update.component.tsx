@@ -30,15 +30,24 @@ export const RestaurantCreateUpdate = ({ id }: { id?: string }) => {
   const mutation = useMutation({
     mutationFn: async (values: RestaurantCreate) =>
       id
-        ? privateRequest.put(`/restaurants/${id}`, values)
-        : privateRequest.post(`/restaurants`, values),
+        ? privateRequest.put(`/restaurants/${id}`, {
+            ...values,
+            cuisine: values.cuisine.split(","),
+            timeSlots: values.timeSlots.split(","),
+            menu: JSON.stringify(values.menu),
+          })
+        : privateRequest.post(`/restaurants`,  {
+            ...values,
+            cuisine: values.cuisine.split(","),
+            timeSlots: values.timeSlots.split(","),
+            menu: JSON.stringify(values.menu),
+          }),
   });
 
   const handleSubmit = async (
     values: RestaurantCreate,
     { resetForm, setSubmitting }: FormikHelpers<RestaurantCreate>
   ) => {
-    console.log("restuarants",values)
     try {
       await mutation.mutateAsync(values);
       toast({
@@ -46,7 +55,7 @@ export const RestaurantCreateUpdate = ({ id }: { id?: string }) => {
         description: `Restaurant ${id ? "updated" : "created"} successfully!`,
       });
       resetForm();
-      router.push("/admin/restaurants");
+      // router.push("/admin/restaurants");
       queryClient.invalidateQueries({ queryKey: ["restaurants-list"] });
     } catch (err: any) {
       toast({
@@ -59,6 +68,8 @@ export const RestaurantCreateUpdate = ({ id }: { id?: string }) => {
     }
   };
 
+
+
   return (
     <Formik
       initialValues={
@@ -68,9 +79,10 @@ export const RestaurantCreateUpdate = ({ id }: { id?: string }) => {
               location: data.location || "",
               image: Array.isArray(data.image) ? data.image : [],
               description: data.description || "",
-              cuisine: Array.isArray(data.cuisine) ? data.cuisine : [],
+              cuisine: data.cuisine?.join(",") || "",
               seats: data.seats || 0,
-              menu: data.menu || "",
+              menu: JSON.parse(data.menu) || [],
+              timeSlots: data.timeSlots?.join(",") || "",
             }
           : InitialValues
       }

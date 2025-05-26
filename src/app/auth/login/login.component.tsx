@@ -16,6 +16,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
+import privateRequest from "@/healper/privateRequest";
 
 export const Login = () => {
   const router = useRouter();
@@ -38,9 +39,15 @@ export const Login = () => {
 
   useEffect(() => {
     if (status === "authenticated") {
+      const fcmToken = localStorage.getItem("fcm_token");
+      if (!fcmToken) return;
+
+      privateRequest.put("/users/fcm", {
+        fcmToken: localStorage.getItem("fcm_token"),
+      });
       router.push("/");
     }
-  }, [session]);
+  }, [status]);
 
   return (
     <div
@@ -57,7 +64,7 @@ export const Login = () => {
           <CardTitle>Welcome back</CardTitle>
           <CardDescription className="flex flex-col gap-1 text-xs">
             <span>Enter your credentials to access your account</span>
-          <span>user@example.com; password123</span>
+            <span>user@example.com; password123</span>
           </CardDescription>
         </CardHeader>
         <CardContent>

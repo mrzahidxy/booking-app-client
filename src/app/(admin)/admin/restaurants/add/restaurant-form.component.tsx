@@ -1,12 +1,14 @@
-import { Form, FieldArray } from "formik";
+import { Form, FieldArray, useFormikContext } from "formik";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import { FormikInputField, FormikSubmitButton } from "@/components/form";
 import { FormikImageUploadField } from "@/components/form/formik-image-upload.component";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Trash } from "lucide-react";
-import { FormikArrayInput } from "@/components/form/formik-array-input.component";
+import { RestaurantCreate } from "./form.config";
 
 export const RestaurantForm = () => {
+
+  // console.log("values", values);
   return (
     <Form>
       {/* 🔹 Restaurant Details */}
@@ -29,11 +31,20 @@ export const RestaurantForm = () => {
           }}
         />
 
-        <FormikArrayInput
+        <FormikInputField
           name="cuisine"
           inputFieldProps={{
             label: "Cuisines",
             placeholder: "E.g., Italian, Chinese, Bengali",
+            inputClassName: "outlined-none py-3",
+          }}
+        />
+
+        <FormikInputField
+          name="timeSlots"
+          inputFieldProps={{
+            label: "Time Slots",
+            placeholder: "E.g., MORNING, AFTERNOON, EVENING, NIGHT",
             inputClassName: "outlined-none py-3",
           }}
         />
