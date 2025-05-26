@@ -1,5 +1,14 @@
 import * as yup from "yup";
 
+export enum TimeSlotType {
+  MORNING = "MORNING",
+  NOON = "NOON",
+  AFTERNOON = "AFTERNOON",
+  EVENING = "EVENING",
+  NIGHT = "NIGHT",
+}
+
+
 const menuItemSchema = yup.object({
   name: yup.string().required("Menu item name is required"),
   price: yup
@@ -14,8 +23,11 @@ export const RestaurantSchema = yup.object({
   name: yup.string().required("Restaurant Name is required"),
   location: yup.string().required("Location is required"),
   image: yup.mixed().nullable(),
-  cuisine: yup.array(yup.string()).nullable(),
+  cuisine: yup.string().required("Cuisine is required"),
   menu: yup.array().of(menuItemSchema).nullable(), // optional if you allow empty menus
+  timeSlots: yup
+    .string()
+    .required("Time slots are required")
 });
 
 // 🔹 Type Definitions
@@ -27,8 +39,9 @@ export const InitialValues: RestaurantCreate = {
   name: "",
   location: "",
   image: [],
-  cuisine: [],
+  cuisine: "",
   menu: [],
+  timeSlots: "",
 };
 
 // 🔹 API Response Interface
