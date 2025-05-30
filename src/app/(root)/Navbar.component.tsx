@@ -65,7 +65,7 @@ export function Navbar() {
                     Admin Panel
                   </DropdownMenuItem>
                 ) : (
-                  <DropdownMenuItem onClick={() => push("/booking")}>
+                  <DropdownMenuItem onClick={() => push("/profile")}>
                     User Panel
                   </DropdownMenuItem>
                 )}

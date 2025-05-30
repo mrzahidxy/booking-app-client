@@ -28,10 +28,10 @@ const Sidebar = (props: Props) => {
       icon: <FiUser />,
       children: [
         { href: "/admin/role-menu-permission/roles", label: "Roles" },
-        {
-          href: "/admin/role-menu-permission/permissions",
-          label: "Permissions",
-        },
+        // {
+        //   href: "/admin/role-menu-permission/permissions",
+        //   label: "Permissions",
+        // },
         {
           href: "/admin/role-menu-permission/assigned-permissions",
           label: "Assign Permission",
