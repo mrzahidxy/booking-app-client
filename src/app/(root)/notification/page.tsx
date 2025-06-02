@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Check, Bell, BellOff } from "lucide-react";
 import { useState } from "react";
-import privateRequest, { publicRequest } from "@/healper/privateRequest";
+import privateRequest from "@/healper/privateRequest";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AxiosError } from "axios";
 import queryClient from "@/app/config/queryClient";
@@ -27,7 +27,7 @@ import { Notification } from "@/models";
 
 // Fetch data using react-query
 const fetchNotifications = async (page: number, limit: number) => {
-  const response = await publicRequest.get(
+  const response = await privateRequest.get(
     `/notifications?page=${page}&limit=${limit}`
   );
   return response.data;
@@ -59,7 +59,7 @@ export default function NotificationsPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["notifications", currentPage],
+        queryKey: ["notifications"],
       });
     },
     onError: (err) => {

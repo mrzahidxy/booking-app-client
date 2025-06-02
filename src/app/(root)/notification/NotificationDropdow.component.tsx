@@ -21,7 +21,7 @@ import {
   useInfiniteQuery,
   useMutation,
 } from "@tanstack/react-query";
-import privateRequest, { publicRequest } from "@/healper/privateRequest";
+import privateRequest from "@/healper/privateRequest";
 import { AxiosError } from "axios";
 import queryClient from "@/app/config/queryClient";
 import { toast } from "@/hooks/use-toast";
@@ -31,7 +31,7 @@ const fetchNotifications = async (
   page: number,
   limit: number
 ): Promise<NotificationPage> => {
-  const res = await publicRequest.get(
+  const res = await privateRequest.get(
     `/notifications?page=${page}&limit=${limit}`
   );
   return res.data.data;
