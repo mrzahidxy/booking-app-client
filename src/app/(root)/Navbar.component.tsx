@@ -12,19 +12,71 @@ import {
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { NotificationDropdown } from "./notification/NotificationDropdow.component";
+import { useToast } from "@/hooks/use-toast";
+import useFCMToken from "@/hooks/useFCMToekn";
+import { useEffect } from "react";
+import { getToken, onMessage } from "firebase/messaging";
+import { messaging } from "@/firebase-config";
+import privateRequest from "@/healper/privateRequest";
 
 export function Navbar() {
   const { data: session, status } = useSession();
   const { push } = useRouter();
 
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      push("/auth/login");
-    } catch (error) {
-      console.error("Error signing out:", error);
+  const { toast } = useToast();
+  const { fcmToken, storeFCMToken } = useFCMToken();
+
+  useEffect(() => {
+    const requestPermission = async () => {
+      const permission = await Notification.requestPermission();
+      if (permission === "granted") {
+        const currentFCMToken = await getToken(messaging, {
+          vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
+        });
+        if (currentFCMToken) {
+          storeFCMToken(currentFCMToken);
+        } else {
+          console.log("No registration token available.");
+        }
+      } else {
+        console.log("Notification permission denied.");
+      }
+    };
+
+    if (!fcmToken) {
+      requestPermission();
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    onMessage(messaging, (payload) => {
+      toast({
+        title: payload.notification?.title,
+        description: payload.notification?.body,
+      });
+    });
+  }, []);
+
+    const handleSignOut = async () => {
+      try {
+        await signOut();
+        push("/auth/login");
+      } catch (error) {
+        console.error("Error signing out:", error);
+      }
+    };
+
+    useEffect(() => {
+      if (status === "authenticated") {
+        const fcmToken = localStorage.getItem("fcm_token");
+        if (!fcmToken) return;
+
+        privateRequest.put("/users/fcm", {
+          fcmToken: localStorage.getItem("fcm_token"),
+        });
+      }
+    }, [status]);
+
 
 
   return (

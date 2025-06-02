@@ -16,7 +16,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
-import privateRequest from "@/healper/privateRequest";
 
 export const Login = () => {
   const router = useRouter();
@@ -39,12 +38,6 @@ export const Login = () => {
 
   useEffect(() => {
     if (status === "authenticated") {
-      const fcmToken = localStorage.getItem("fcm_token");
-      if (!fcmToken) return;
-
-      privateRequest.put("/users/fcm", {
-        fcmToken: localStorage.getItem("fcm_token"),
-      });
       router.push("/");
     }
   }, [status]);

@@ -16,6 +16,18 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
+
+// const firebaseConfig = {
+//   apiKey:"AIzaSyA6Mk4yhJF6PB8eAD26TZzdVhxaJFAmXdo",
+//   authDomain: "booking-notify-7cf1f.firebaseapp.com",
+//   projectId: "booking-notify-7cf1f",
+//   storageBucket:"booking-notify-7cf1f.firebasestorage.app",
+//   messagingSenderId: 835722769802,
+//   appId: "1:835722769802:web:e5f1433819b420804bc473",
+//   measurementId: "G-4DLPW1HECY",
+// };
+
+
 firebase.initializeApp(firebaseConfig);
 
 const messaging = firebase.messaging();
