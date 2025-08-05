@@ -3,11 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Form, useFormikContext } from "formik";
 import { House } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BookingCreate } from "./form.config";
 import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import { publicRequest } from "@/healper/privateRequest";
+import PayButton from "@/components/common/PayButton.component";
 
 const fetchAvailability = async ({
   roomId,
@@ -24,8 +25,14 @@ const fetchAvailability = async ({
   return response.data.data;
 };
 
-export function BookingForm({ room }: { room: any }) {
-  const { values, setFieldValue, isSubmitting } = useFormikContext<BookingCreate>();
+interface BookingFormProps {
+  room: any;
+  bookingId?: number;
+}
+
+export function BookingForm({ room, bookingId }: BookingFormProps) {
+  const { values, setFieldValue, isSubmitting } =
+    useFormikContext<BookingCreate>();
   const [step, setStep] = useState(1);
 
   const { data, isLoading } = useQuery({
@@ -42,6 +49,11 @@ export function BookingForm({ room }: { room: any }) {
     refetchInterval: 20000,
   });
 
+  useEffect(() => {
+    if (bookingId) {
+      setStep(3);
+    }
+  }, [bookingId]);
 
   return (
     <Form>
@@ -93,13 +105,15 @@ export function BookingForm({ room }: { room: any }) {
             <Button
               type="button"
               onClick={() => setStep(2)}
-              disabled={data?.availAbality < values.quantity! || !values?.bookingDate}
+              disabled={
+                data?.availAbality < values.quantity! || !values?.bookingDate
+              }
               className="w-full mt-2"
             >
               Next
             </Button>
           </>
-        ) : (
+        ) : step === 2 ? (
           <>
             {/* Booking Summary */}
             <div className="space-y-4">
@@ -150,6 +164,8 @@ export function BookingForm({ room }: { room: any }) {
               </Button>
             </div>
           </>
+        ) : (
+          <PayButton bookingId={bookingId!} />
         )}
       </div>
     </Form>
