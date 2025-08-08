@@ -22,6 +22,7 @@ const HeroSection = () => {
   };
 
 
+  console.log("Hello", process.env.NEXT_PUBLIC_BASE_URL)
   return (
     <section
       className="bg-gray-900 text-primary-foreground pb-24 pt-8 bg-no-repeat bg-cover bg-center opacity-95"
