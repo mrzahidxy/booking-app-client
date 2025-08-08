@@ -48,6 +48,7 @@ export function Navbar() {
     }
   }, []);
 
+  // Handle incoming notifications
   useEffect(() => {
     onMessage(messaging, (payload) => {
       toast({
@@ -57,27 +58,24 @@ export function Navbar() {
     });
   }, []);
 
-    const handleSignOut = async () => {
-      try {
-        await signOut();
-        push("/auth/login");
-      } catch (error) {
-        console.error("Error signing out:", error);
-      }
-    };
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      push("/auth/login");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
 
-    useEffect(() => {
-      if (status === "authenticated") {
-        const fcmToken = localStorage.getItem("fcm_token");
-        if (!fcmToken) return;
+  useEffect(() => {
+    if (status === "authenticated") {
+      if (!fcmToken) return;
 
-        privateRequest.put("/users/fcm", {
-          fcmToken: localStorage.getItem("fcm_token"),
-        });
-      }
-    }, [status]);
-
-
+      privateRequest.put("/users/fcm", {
+        fcmToken: fcmToken,
+      });
+    }
+  }, [status]);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -107,28 +105,30 @@ export function Navbar() {
           )}
 
           {status === "authenticated" && (
-            <DropdownMenu>
-              <DropdownMenuTrigger className="text-sm font-medium">
-                {session.user?.name ?? "User"}
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {session.user?.role === "Admin" ? (
-                  <DropdownMenuItem onClick={() => push("/admin")}>
-                    Admin Panel
+            <>
+              <NotificationDropdown />
+              <DropdownMenu>
+                <DropdownMenuTrigger className="text-sm font-medium">
+                  {session.user?.name ?? "User"}
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  {session.user?.role === "Admin" ? (
+                    <DropdownMenuItem onClick={() => push("/admin")}>
+                      Admin Panel
+                    </DropdownMenuItem>
+                  ) : (
+                    <DropdownMenuItem onClick={() => push("/profile")}>
+                      User Panel
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuItem onClick={handleSignOut}>
+                    Logout
                   </DropdownMenuItem>
-                ) : (
-                  <DropdownMenuItem onClick={() => push("/profile")}>
-                    User Panel
-                  </DropdownMenuItem>
-                )}
-                <DropdownMenuItem onClick={handleSignOut}>
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
           )}
 
-          <NotificationDropdown/> 
           {status === "unauthenticated" && (
             // Sign-in link for unauthenticated users
             <Link href="/auth/login" className="text-sm font-medium">

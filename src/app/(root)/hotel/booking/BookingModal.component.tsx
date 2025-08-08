@@ -77,7 +77,7 @@ export function BookingModal({ isOpen, onClose, room }: BookingModalProps) {
         </DialogHeader>
 
         <Formik initialValues={InitialBookingValues} onSubmit={handleBooking}>
-          <BookingForm room={room} bookingId={bookingId} />
+          <BookingForm room={room} bookingId={bookingId!} />
         </Formik>
       </DialogContent>
     </Dialog>
