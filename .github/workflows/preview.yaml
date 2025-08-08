@@ -35,7 +35,8 @@ jobs:
         run: |
           source .vercel/.env.preview.local
 
-          FIREBASE_CFG=$(jq -n \
+          # Build a compact JSON snippet
+          FIREBASE_CFG=$(jq -c -n \
             --arg apiKey     "$NEXT_PUBLIC_FIREBASE_API_KEY" \
             --arg authDomain "$NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN" \
             --arg projectId  "$NEXT_PUBLIC_FIREBASE_PROJECT_ID" \
@@ -44,7 +45,8 @@ jobs:
             '{ apiKey: $apiKey, authDomain: $authDomain, projectId: $projectId, messagingSenderId: $senderId, appId: $appId }'
           )
 
-          sed -i "s|__FIREBASE_CONFIG__|$FIREBASE_CFG|" public/firebase-messaging-sw.js
+          # Use '@' as our sed delimiter and quote the replacement
+          sed -i "s@__FIREBASE_CONFIG__@${FIREBASE_CFG}@g" public/firebase-messaging-sw.js
 
       - name: Build project artifacts
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
