@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -8,17 +7,13 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { format } from "date-fns";
-import { House } from "lucide-react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import privateRequest from "@/healper/privateRequest";
-import { Form, Formik, FormikHelpers } from "formik";
+import { Formik, FormikHelpers } from "formik";
 import { toast } from "@/hooks/use-toast";
-import { FormikCalendarField } from "@/components/form/formik-calender.component";
 import { BookingCreate, InitialBookingValues } from "./form.config";
 import { BookingForm } from "./BookingForm.component";
+import { useState } from "react";
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -31,7 +26,7 @@ interface BookingModalProps {
 }
 
 export function BookingModal({ isOpen, onClose, room }: BookingModalProps) {
-  const [step, setStep] = useState(1);
+  const [bookingId, setBookingId] = useState<number | null>(null);
 
   // 🔹 Form Submission Mutation
   const mutation = useMutation({
@@ -44,15 +39,14 @@ export function BookingModal({ isOpen, onClose, room }: BookingModalProps) {
     { resetForm, setSubmitting }: FormikHelpers<BookingCreate>
   ) => {
     try {
-      await mutation.mutateAsync({
+      const response = await mutation.mutateAsync({
         bookingDate: values.bookingDate,
         quantity: values.quantity,
         roomId: room.id,
       });
 
-      toast({ title: "Success", description: `Room booked successfully!` });
-      resetForm();
-      onClose();
+      setBookingId(response.data.id);
+
     } catch (err: any) {
       toast({
         title: "Error",
@@ -64,6 +58,14 @@ export function BookingModal({ isOpen, onClose, room }: BookingModalProps) {
     }
   };
 
+
+  // const handlePayment = async () => {
+  //     toast({ title: "Success", description: `Room booked successfully!` });
+  //     resetForm();
+  //     onClose();
+  // };
+
+  console.log('data', mutation.data);
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[350px]">
@@ -75,7 +77,7 @@ export function BookingModal({ isOpen, onClose, room }: BookingModalProps) {
         </DialogHeader>
 
         <Formik initialValues={InitialBookingValues} onSubmit={handleBooking}>
-          <BookingForm room={room} />
+          <BookingForm room={room} bookingId={bookingId!} />
         </Formik>
       </DialogContent>
     </Dialog>

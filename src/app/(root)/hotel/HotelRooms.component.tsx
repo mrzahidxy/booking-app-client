@@ -16,10 +16,15 @@ import { useMutation } from "@tanstack/react-query";
 import privateRequest from "@/healper/privateRequest";
 import { toast } from "@/hooks/use-toast";
 import { BookingForm } from "./booking/BookingForm.component";
+import { useSession } from "next-auth/react";
 
 export default function HotelRooms({ rooms }: any) {
+  const {status} = useSession();
   const [selectedRoom, setSelectedRoom] = useState<any>(null);
   const [open, setOpen] = useState(false);
+  const [bookingId, setBookingId] = useState<number | null>(null);
+
+  // booking room creation
   const mutation = useMutation({
     mutationFn: async (values: BookingCreate) =>
       privateRequest.post(`/bookings/room`, values),
@@ -30,15 +35,17 @@ export default function HotelRooms({ rooms }: any) {
     { resetForm, setSubmitting }: FormikHelpers<BookingCreate>
   ) => {
     try {
-      await mutation.mutateAsync({
+      const response = await mutation.mutateAsync({
         bookingDate: values.bookingDate,
         quantity: values.quantity,
         roomId: selectedRoom.id,
       });
 
+      setBookingId(response.data.data.id);
+
       toast({ title: "Success", description: `Room booked successfully!` });
       resetForm();
-      setOpen(false);
+      // setOpen(false);
     } catch (err: any) {
       toast({
         title: "Error",
@@ -76,6 +83,7 @@ export default function HotelRooms({ rooms }: any) {
 
             <Button
               className="w-full"
+              disabled={status === "unauthenticated"}
               onClick={() => {
                 setSelectedRoom(room);
                 setOpen(true);
@@ -101,7 +109,7 @@ export default function HotelRooms({ rooms }: any) {
               initialValues={InitialBookingValues}
               onSubmit={handleBooking}
             >
-              <BookingForm room={selectedRoom} />
+              <BookingForm room={selectedRoom} bookingId={bookingId!} />
             </Formik>
           </DialogContent>
         </Dialog>

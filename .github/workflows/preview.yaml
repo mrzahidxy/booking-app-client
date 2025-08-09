@@ -1,24 +1,55 @@
-name: Vercel Preview Deploment
+name: Vercel Preview Deployment
 
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
 on:
+  # Manual “Run workflow” button
+  workflow_dispatch: {}
+  # Automatically trigger on pushes to the dev branch
   push:
-    branches-ignore:
-      - main
+    branches:
+      - dev-deployment
 
 jobs:
-  deploy:
+  deploy-preview:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: install Vercel CLI
-        run: npm install --global vercel@latest
-      - name: pull Vercel environment information
-        run: vercel pull --yes --environment=preview  --token=${{ secrets.VERCEL_TOKEN }}
-      - name: build project artifacts
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies & Vercel CLI
+        run: |
+          npm ci
+          npm install --global vercel@latest
+
+      - name: Pull Preview env vars
+        run: |
+          vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+      - name: Inject Firebase config into SW
+        shell: bash
+        run: |
+          source .vercel/.env.preview.local
+
+          # Build a compact JSON snippet
+          FIREBASE_CFG=$(jq -c -n \
+            --arg apiKey     "$NEXT_PUBLIC_FIREBASE_API_KEY" \
+            --arg authDomain "$NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN" \
+            --arg projectId  "$NEXT_PUBLIC_FIREBASE_PROJECT_ID" \
+            --arg senderId   "$NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID" \
+            --arg appId      "$NEXT_PUBLIC_FIREBASE_APP_ID" \
+            '{ apiKey: $apiKey, authDomain: $authDomain, projectId: $projectId, messagingSenderId: $senderId, appId: $appId }'
+          )
+
+          # Use '@' as our sed delimiter and quote the replacement
+          sed -i "s@__FIREBASE_CONFIG__@${FIREBASE_CFG}@g" public/firebase-messaging-sw.js
+
+      - name: Build project artifacts
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
-      - name: deploy project artifacts to Vercel
+
+      - name: Deploy to Vercel Preview
         run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
