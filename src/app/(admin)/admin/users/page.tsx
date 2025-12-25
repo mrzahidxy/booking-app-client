@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { StatusUpdateDialog } from "./user-role-update.component";
+import { StatusUpdateDialog } from "@/components/features/admin/users/user-role-update.component";
 import { DynamicTable } from "@/components/ui/dynamic-data-table.component";
 import { Suspense } from "react";
 import { useRouter } from "next/navigation";

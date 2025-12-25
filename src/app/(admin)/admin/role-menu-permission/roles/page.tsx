@@ -9,11 +9,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { RoleCreateUpdate } from "./add/role-create-update.component";
+import { RoleCreateUpdate } from "@/components/features/admin/role-menu-permission/roles/add/role-create-update.component";
 import TableActionButtons from "@/components/common/table-actions.component";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import privateRequest from "@/healper/privateRequest";
-import { useToast } from "@/hooks/use-toast";
+import privateRequest from "@/shared/lib/api";
+import { useToast } from "@/shared/hooks/use-toast";
 
 const RolePage = () => {
   const { toast } = useToast();

@@ -1,4 +1,4 @@
-import { RestaurantCreateUpdate } from "./restuarant-create-update.component";
+import { RestaurantCreateUpdate } from "@/components/features/admin/restaurants/add/restuarant-create-update.component";
 import CommonLayout from "@/components/common/CommonLayout.component";
 
 export default function AddRestaurant() {

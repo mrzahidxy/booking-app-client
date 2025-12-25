@@ -1,6 +1,6 @@
-import privateRequest from "@/healper/privateRequest";
+import privateRequest from "@/shared/lib/api";
 import { Button } from "../ui/button";
-import { stripeClient } from "@/lib/stripe-client";
+import { stripeClient } from "@/shared/lib/stripe-client";
 
 export default function PayButton({ bookingId }: { bookingId: number }) {
   const handlePayment = async () => {

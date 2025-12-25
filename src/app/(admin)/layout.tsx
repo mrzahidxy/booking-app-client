@@ -3,8 +3,8 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { Navbar } from "../(root)/Navbar.component";
-import Sidebar from "./Sidebar.component";
+import { Navbar } from "@/components/common/Navbar.component";
+import Sidebar from "@/components/features/admin/Sidebar.component";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function DashboardLayout({

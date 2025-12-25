@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { StatusUpdateDialog } from "./booking-status-update.component";
+import { StatusUpdateDialog } from "@/components/features/admin/booking/booking-status-update.component";
 import { DynamicTable } from "@/components/ui/dynamic-data-table.component";
 import { Suspense } from "react";
 

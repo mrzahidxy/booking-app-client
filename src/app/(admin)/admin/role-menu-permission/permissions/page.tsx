@@ -13,9 +13,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import TableActionButtons from "@/components/common/table-actions.component";
-import { PermissionCreateUpdate } from "./add/permission-create-update.component";
-import privateRequest from "@/healper/privateRequest";
-import { useToast } from "@/hooks/use-toast";
+import { PermissionCreateUpdate } from "@/components/features/admin/role-menu-permission/permissions/add/permission-create-update.component";
+import privateRequest from "@/shared/lib/api";
+import { useToast } from "@/shared/hooks/use-toast";
 
 const PermissionPage = () => {
   const { toast } = useToast();

@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
-import privateRequest from "@/healper/privateRequest";
+import privateRequest from "@/shared/lib/api";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Pagination,

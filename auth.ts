@@ -18,28 +18,37 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           throw new Error("Email and Password are required");
         }
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/login`, {
+        const authBaseUrl =
+          process.env.NEXT_PUBLIC_BASE_URL ||
+          "https://booking-app-api-rzro.onrender.com/api";
+
+        const res = await fetch(`${authBaseUrl}/auth/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             email: credentials.email,
             password: credentials.password,
           }),
-        });;
+        });
 
-        const json = await res.json();
+        const json = await res.json().catch(() => null);
 
-        if (res.ok && json.data) {
-          const user = json.data;
+        if (res.ok && json?.data) {
+          const data = json.data;
+          const user = data.user ?? data;
+          const token =
+            data.token ?? data.access_token ?? data.accessToken ?? user?.token;
 
-          // Return the user object which will be stored in the JWT
-          return {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            token: user.token,
-          };
+          if (user && token) {
+            // Return the user object which will be stored in the JWT
+            return {
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              role: user.role ?? user.typeName ?? user.type,
+              token: token,
+            };
+          }
         }
 
         return null;
