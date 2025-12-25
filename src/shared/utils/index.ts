@@ -6,4 +6,3 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export * from "./constants"
-export * from "./data"

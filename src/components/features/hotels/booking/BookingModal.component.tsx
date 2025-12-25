@@ -59,12 +59,6 @@ export function BookingModal({ isOpen, onClose, room }: BookingModalProps) {
   };
 
 
-  // const handlePayment = async () => {
-  //     toast({ title: "Success", description: `Room booked successfully!` });
-  //     resetForm();
-  //     onClose();
-  // };
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[350px]">

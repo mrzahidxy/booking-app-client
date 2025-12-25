@@ -55,7 +55,6 @@ export const RestaurantCreateUpdate = ({ id }: { id?: string }) => {
         description: `Restaurant ${id ? "updated" : "created"} successfully!`,
       });
       resetForm();
-      // router.push("/admin/restaurants");
       queryClient.invalidateQueries({ queryKey: ["restaurants-list"] });
     } catch (err: any) {
       toast({

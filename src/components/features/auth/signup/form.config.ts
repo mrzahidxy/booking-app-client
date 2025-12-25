@@ -21,8 +21,3 @@ type SignInResponse = {
   refresh_token: string;
   user: User;
 };
-
-// export type SignInApiResponse = ReturnType<
-//   typeof usePost<SignInRequest, SignInResponse>
-// >;
-// export type SignInApiError = SignInApiResponse["error"];

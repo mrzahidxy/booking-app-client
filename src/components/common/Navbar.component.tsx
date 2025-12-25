@@ -39,11 +39,7 @@ export function Navbar() {
         });
         if (currentFCMToken) {
           storeFCMToken(currentFCMToken);
-        } else {
-          console.log("No registration token available.");
         }
-      } else {
-        console.log("Notification permission denied.");
       }
     };
 

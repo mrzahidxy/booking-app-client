@@ -1,9 +1,6 @@
 import { FormikInputField, FormikSubmitButton } from "@/components/common/form";
 import { Form } from "formik";
 
-
-// import { SignInApiError } from "./form.config";
-
 interface SignInormProps {
   error?: any;
 }
@@ -14,7 +11,6 @@ export function SignUpForm({ error }: SignInormProps) {
       <div className="flex flex-col gap-4">
         <FormikInputField
           name="name"
-          // apiError={error?.validationErrors?.username}
           inputFieldProps={{
             label: "Full name",
             placeholder: "Jane Doe",
@@ -24,7 +20,6 @@ export function SignUpForm({ error }: SignInormProps) {
         />
         <FormikInputField
           name="email"
-          // apiError={error?.validationErrors?.username}
           inputFieldProps={{
             label: "Email",
             placeholder: "you@example.com",
@@ -34,7 +29,6 @@ export function SignUpForm({ error }: SignInormProps) {
         />
         <FormikInputField
           name="password"
-          // apiError={error?.validationErrors?.password}
           inputFieldProps={{
             label: "Password",
             placeholder: "Create a password",

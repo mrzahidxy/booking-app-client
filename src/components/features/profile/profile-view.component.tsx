@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query"
 import { useSession } from "next-auth/react"
 import { fetchCurrentUser } from "@/features/users/api"
 import { Button } from "@/components/ui/button"
-import { Edit, Settings } from "lucide-react"
+import { Edit } from "lucide-react"
 import DefaultLoader from "@/components/common/DefaultLoacer.component"
 import { useState } from "react"
 
@@ -59,10 +59,6 @@ export const ProfileView = () => {
           <p className="text-muted-foreground mt-1">Manage your personal information and account settings</p>
         </div>
         <div className="flex gap-2">
-          {/* <Button variant="outline" size="sm">
-            <Settings className="h-4 w-4 mr-2" />
-            Settings
-          </Button> */}
           <Button onClick={() => setIsEditing(true)} size="sm">
             <Edit className="h-4 w-4 mr-2" />
             Edit Profile

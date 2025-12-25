@@ -58,7 +58,6 @@ export const FormikArrayInput: React.FC<FormikArrayInputProps> = ({
             .map((item) => item.trim()) // Trim spaces
             .filter((item) => item !== ""); // Remove empty items
 
-            console.log("value",value)
           setFieldValue(name, value);
         };
 

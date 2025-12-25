@@ -7,7 +7,7 @@ import {
   CardDescription,
   CardTitle,
 } from "@/components/ui/card";
-import { Check, Bell, BellOff } from "lucide-react";
+import { Bell, BellOff } from "lucide-react";
 import { useState } from "react";
 import privateRequest from "@/shared/lib/api";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -71,10 +71,6 @@ export default function NotificationsPage() {
     },
   });
 
-  // const handleMarkAllAsRead = () => {
-  //   console.log("Marking all notifications as read");
-  // };
-
   const handleMarkAsRead = (id: string) => {
     mutate({ id: id });
   };
@@ -87,10 +83,6 @@ export default function NotificationsPage() {
     <div className="container py-10 max-w-4xl">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold">Notifications</h1>
-        {/* <Button onClick={handleMarkAllAsRead}>
-          <Check className="mr-2 h-4 w-4" />
-          Mark all as read
-        </Button> */}
       </div>
 
       <Tabs defaultValue="all" className="w-full">

@@ -1,14 +1,11 @@
-import { Form, FieldArray, useFormikContext } from "formik";
+import { Form, FieldArray } from "formik";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import { FormikInputField, FormikSubmitButton } from "@/components/common/form";
 import { FormikImageUploadField } from "@/components/common/form/formik-image-upload.component";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Trash } from "lucide-react";
-import { RestaurantCreate } from "./form.config";
 
 export const RestaurantForm = () => {
-
-  // console.log("values", values);
   return (
     <Form>
       {/* 🔹 Restaurant Details */}
