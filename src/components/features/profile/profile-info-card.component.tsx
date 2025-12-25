@@ -10,15 +10,15 @@ interface UserData {
   name?: string
   email: string
   phone?: string
-  createdAt: string
-  updateAt: string
-  Role?: {
+  createdAt?: string
+  updateAt?: string
+  role?: {
     id: number
     name: string
   }
   bookings?: any[]
-  Review?: any[]
-  Notification?: any[]
+  review?: any[]
+  notification?: any[]
 }
 
 interface ProfileInfoCardProps {
@@ -95,7 +95,7 @@ export const ProfileInfoCard = ({ userData }: ProfileInfoCardProps) => {
             <label className="text-sm font-medium text-muted-foreground">Role</label>
             <div>
               <Badge variant="secondary" className="text-sm">
-                {userData?.Role?.name ?? "User"}
+                {userData?.role?.name ?? "User"}
               </Badge>
             </div>
           </div>
@@ -107,14 +107,18 @@ export const ProfileInfoCard = ({ userData }: ProfileInfoCardProps) => {
               <Calendar className="h-4 w-4" />
               Member Since
             </label>
-            <p className="text-lg">{formatDate(userData?.createdAt)}</p>
+            <p className="text-lg">
+              {userData?.createdAt ? formatDate(userData.createdAt) : "—"}
+            </p>
           </div>
 
           <Separator />
 
           <div className="space-y-2">
             <label className="text-sm font-medium text-muted-foreground">Last Updated</label>
-            <p className="text-lg">{formatDate(userData?.updateAt)}</p>
+            <p className="text-lg">
+              {userData?.updateAt ? formatDate(userData.updateAt) : "—"}
+            </p>
           </div>
         </CardContent>
       </Card>

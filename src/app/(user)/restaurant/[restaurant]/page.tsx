@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -19,20 +20,38 @@ export default async function RestaurantDetailPage({
       return null;
     }
   );
+
+  if (!restaurantData) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-16 text-center">
+          <h1 className="text-2xl font-semibold mb-2">Restaurant not found</h1>
+          <p className="text-muted-foreground mb-6">
+            We couldn't load this restaurant. Please try again.
+          </p>
+          <Button asChild>
+            <Link href="/">Back to home</Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center gap-4 mb-4">
-            <Button variant="ghost" size="sm">
-              <ChevronLeft className="h-4 w-4 mr-2" />
-              Back to search
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/search/restaurants">
+                <ChevronLeft className="h-4 w-4 mr-2" />
+                Back to search
+              </Link>
             </Button>
             <Separator orientation="vertical" className="h-6" />
             <Badge variant="secondary" className="flex items-center">
               <Star className="h-3 w-3 mr-1 fill-yellow-400 stroke-yellow-400" />
-              {restaurantData?.ratings}
+              {restaurantData?.ratings ?? 0}
             </Badge>
           </div>
           <h1 className="text-2xl font-bold mb-2">{restaurantData.name}</h1>

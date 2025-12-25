@@ -4,7 +4,11 @@ import * as yup from "yup";
 export const BookingSchema = yup.object({
   roomId: yup.number().nullable(),
   bookingDate: yup.string().required("Booking Date is required"), // Ensuring valid date type
-  quantity: yup.number().nullable(), // Ensure quantity is a number if provided
+  quantity: yup
+    .number()
+    .required("Number of rooms is required")
+    .min(1, "Minimum 1 room")
+    .max(4, "Maximum 4 rooms"),
 });
 
 // 🔹 Type Definitions

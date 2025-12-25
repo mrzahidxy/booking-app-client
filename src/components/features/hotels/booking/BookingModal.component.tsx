@@ -11,7 +11,7 @@ import { useMutation } from "@tanstack/react-query";
 import privateRequest from "@/shared/lib/api";
 import { Formik, FormikHelpers } from "formik";
 import { toast } from "@/shared/hooks/use-toast";
-import { BookingCreate, InitialBookingValues } from "./form.config";
+import { BookingCreate, BookingSchema, InitialBookingValues } from "./form.config";
 import { BookingForm } from "./BookingForm.component";
 import { useState } from "react";
 
@@ -65,7 +65,6 @@ export function BookingModal({ isOpen, onClose, room }: BookingModalProps) {
   //     onClose();
   // };
 
-  console.log('data', mutation.data);
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[350px]">
@@ -76,7 +75,13 @@ export function BookingModal({ isOpen, onClose, room }: BookingModalProps) {
           </DialogDescription>
         </DialogHeader>
 
-        <Formik initialValues={InitialBookingValues} onSubmit={handleBooking}>
+        <Formik
+          initialValues={InitialBookingValues}
+          validationSchema={BookingSchema}
+          onSubmit={handleBooking}
+          validateOnBlur
+          validateOnChange
+        >
           <BookingForm room={room} bookingId={bookingId!} />
         </Formik>
       </DialogContent>

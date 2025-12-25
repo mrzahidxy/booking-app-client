@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { BookOpen, MessageSquare, Bell } from "lucide-react"
+import Link from "next/link"
 
 interface UserData {
   bookings?: any[]
@@ -22,6 +23,7 @@ export const ProfileStatsCard = ({ userData }: ProfileStatsCardProps) => {
       description: "Completed bookings",
       color: "text-blue-600",
       bgColor: "bg-blue-50",
+      href: "/booking",
     },
     {
       title: "Reviews Written",
@@ -30,6 +32,7 @@ export const ProfileStatsCard = ({ userData }: ProfileStatsCardProps) => {
       description: "Reviews submitted",
       color: "text-green-600",
       bgColor: "bg-green-50",
+      href: "/reviews",
     },
     {
       title: "Notifications",
@@ -38,6 +41,7 @@ export const ProfileStatsCard = ({ userData }: ProfileStatsCardProps) => {
       description: "Total notifications",
       color: "text-orange-600",
       bgColor: "bg-orange-50",
+      href: "/notification",
     },
   ]
 
@@ -51,7 +55,12 @@ export const ProfileStatsCard = ({ userData }: ProfileStatsCardProps) => {
           {stats.map((stat, index) => {
             const Icon = stat.icon
             return (
-              <div key={index} className={`p-4 rounded-lg border ${stat.bgColor} transition-all hover:shadow-md`}>
+              <Link
+                key={index}
+                href={stat.href}
+                className={`p-4 rounded-lg border ${stat.bgColor} transition-all hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary`}
+                aria-label={`View ${stat.title.toLowerCase()}`}
+              >
                 <div className="flex items-center justify-between">
                   <div>
                     <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
@@ -60,7 +69,7 @@ export const ProfileStatsCard = ({ userData }: ProfileStatsCardProps) => {
                   </div>
                   <Icon className={`h-8 w-8 ${stat.color}`} />
                 </div>
-              </div>
+              </Link>
             )
           })}
         </div>

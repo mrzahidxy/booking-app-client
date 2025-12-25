@@ -6,15 +6,18 @@ import { Star } from "lucide-react";
 import { Button } from "../ui/button";
 
 export default function HotelCard({ hotel }: { hotel: any }) {
+  const imageSrc = hotel?.image?.[0] ?? "/images/main-banner.jpg";
+
   return (
     <Link href={`/hotel/${hotel?.id}`} key={hotel?.name}>
       <Card className="overflow-hidden h-[400px] flex flex-col justify-between">
         <Image
-          src={hotel?.image[0] ?? ""}
+          src={imageSrc}
           alt="Hotel"
           width={400}
           height={200}
           className="w-full h-[200px] object-cover"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 20vw"
         />
 
         <CardContent className="p-4 flex flex-col justify-between flex-1">
@@ -25,7 +28,7 @@ export default function HotelCard({ hotel }: { hotel: any }) {
               </h4>
               <Badge variant="secondary" className="flex items-center">
                 <Star className="h-3 w-3 mr-1 fill-current" />
-                {hotel?.rating}
+                {hotel?.rating ?? hotel?.ratings ?? 0}
               </Badge>
             </div>
             <p className="text-muted-foreground text-sm mb-3 line-clamp-2">

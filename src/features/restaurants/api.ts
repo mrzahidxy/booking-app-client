@@ -46,24 +46,24 @@ export const searchRestaurants = async (params: RestaurantSearchParams) => {
 };
 
 export const checkRestaurantAvailability = async (params: {
-  restaurantId: string;
+  restaurantId: number;
   partySize: number;
   date: string;
   timeSlot: string;
 }) => {
-  const response = await publicRequest.get("/restaurants/reservation/check", {
+  const response = await publicRequest.get("/bookings/check-restaurant", {
     params,
   });
   return response.data.data;
 };
 
 export const createRestaurantReservation = async (payload: {
-  restaurantId: string;
+  restaurantId: number;
   partySize: number;
   bookingDate: string;
   timeSlot: string;
 }) => {
-  return privateRequest.post("/restaurants/reservation", payload);
+  return privateRequest.post("/bookings/restaurant", payload);
 };
 
 export const createRestaurant = async (payload: RestaurantPayload) => {

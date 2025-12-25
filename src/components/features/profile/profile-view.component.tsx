@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query"
 import { useSession } from "next-auth/react"
-import privateRequest from "@/shared/lib/api"
+import { fetchCurrentUser } from "@/features/users/api"
 import { Button } from "@/components/ui/button"
 import { Edit, Settings } from "lucide-react"
 import DefaultLoader from "@/components/common/DefaultLoacer.component"
@@ -13,11 +13,6 @@ import { ProfileEdit } from "./profile-edit.component"
 import { ProfileInfoCard } from "./profile-info-card.component"
 import { ProfileStatsCard } from "./profile-stats-card.component"
 
-const fetchUserProfile = async (userId: string) => {
-  const response = await privateRequest.get(`/users/${userId}`)
-  return response.data.data
-}
-
 export const ProfileView = () => {
   const { data: session } = useSession()
   const [isEditing, setIsEditing] = useState(false)
@@ -26,7 +21,7 @@ export const ProfileView = () => {
   // Fetch user profile data
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["user-profile", userId],
-    queryFn: () => fetchUserProfile(userId),
+    queryFn: () => fetchCurrentUser(),
     enabled: !!userId,
     staleTime: 0,
     refetchOnMount: true,

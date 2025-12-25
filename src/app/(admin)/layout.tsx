@@ -17,10 +17,17 @@ export default function DashboardLayout({
   const userRole = data?.user?.role;
 
   useEffect(() => {
-    if (status === "unauthenticated" && userRole !== "ADMIN") {
-      router.push("/auth/login");
+    if (status === "loading") {
+      return;
     }
-  }, [status, userRole]);
+    if (status !== "authenticated") {
+      router.replace("/auth/login");
+      return;
+    }
+    if (userRole !== "ADMIN") {
+      router.replace("/");
+    }
+  }, [status, userRole, router]);
 
 
   return (

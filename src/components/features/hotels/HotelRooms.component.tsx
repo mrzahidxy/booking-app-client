@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Check } from "lucide-react";
+import { Check, Lock } from "lucide-react";
 import { useState } from "react";
 import {
   Dialog,
@@ -10,7 +10,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { BookingCreate, InitialBookingValues } from "./booking/form.config";
+import {
+  BookingCreate,
+  BookingSchema,
+  InitialBookingValues,
+} from "./booking/form.config";
 import { Formik, FormikHelpers } from "formik";
 import { useMutation } from "@tanstack/react-query";
 import privateRequest from "@/shared/lib/api";
@@ -58,47 +62,64 @@ export default function HotelRooms({ rooms }: any) {
   };
 
 
+  if (!rooms?.length) {
+    return (
+      <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
+        No rooms available for this hotel yet.
+      </div>
+    );
+  }
+
   return (
     <>
-      {rooms.map((room: any) => (
-        <Card key={room.id}>
-          <CardContent className="p-4">
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <h4 className="font-semibold">{room.roomType} Room</h4>
-                <ul className="text-sm text-muted-foreground space-y-1 mt-2">
-                  {room.amenities.map((amenity: any) => (
-                    <li key={amenity} className="flex items-center">
-                      <Check className="h-4 w-4 mr-2" />
-                      {amenity}
-                    </li>
-                  ))}
-                </ul>
+      <div className="grid gap-4">
+        {rooms.map((room: any) => (
+          <Card key={room.id}>
+            <CardContent className="p-4 space-y-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h4 className="font-semibold">{room.roomType} Room</h4>
+                  <ul className="text-sm text-muted-foreground space-y-1 mt-2">
+                    {room.amenities.map((amenity: any) => (
+                      <li key={amenity} className="flex items-center">
+                        <Check className="h-4 w-4 mr-2" />
+                        {amenity}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="text-left sm:text-right">
+                  <p className="text-2xl font-semibold">${room.price}</p>
+                  <p className="text-sm text-muted-foreground">per night</p>
+                </div>
               </div>
-            </div>
-            <div className="text-right">
-              <p className="text-2xl font-bold">${room.price}</p>
-              <p className="text-sm text-muted-foreground">per night</p>
-            </div>
 
-            <Button
-              className="w-full"
-              disabled={status === "unauthenticated"}
-              onClick={() => {
-                setSelectedRoom(room);
-                setOpen(true);
-              }}
-            >
-              Select Room
-            </Button>
-          </CardContent>
-        </Card>
-      ))}
+              <Button
+                className="w-full"
+                disabled={status === "unauthenticated"}
+                onClick={() => {
+                  setSelectedRoom(room);
+                  setOpen(true);
+                }}
+              >
+                {status === "unauthenticated" ? (
+                  <>
+                    <Lock className="h-4 w-4 mr-2" />
+                    Sign in to book
+                  </>
+                ) : (
+                  "Select Room"
+                )}
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
       {/* Booking Modal */}
       {selectedRoom && (
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogContent className="sm:max-w-[350px]">
+          <DialogContent className="sm:max-w-[380px]">
             <DialogHeader>
               <DialogTitle>Book {selectedRoom.roomType} Room</DialogTitle>
               <DialogDescription>
@@ -107,9 +128,12 @@ export default function HotelRooms({ rooms }: any) {
             </DialogHeader>
             <Formik
               initialValues={InitialBookingValues}
+              validationSchema={BookingSchema}
               onSubmit={handleBooking}
+              validateOnBlur
+              validateOnChange
             >
-              <BookingForm room={selectedRoom} bookingId={bookingId!} />
+              <BookingForm room={selectedRoom} bookingId={bookingId ?? undefined} />
             </Formik>
           </DialogContent>
         </Dialog>

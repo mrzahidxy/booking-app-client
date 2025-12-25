@@ -4,7 +4,7 @@ import * as yup from "yup";
 
 export const SignInSchema = yup.object({
   name: yup.string().label("Username").min(1).max(50).required(),
-  email: yup.string().label("Email").required(),
+  email: yup.string().label("Email").email().required(),
   password: yup.string().label("Password").min(4).required(),
 });
 

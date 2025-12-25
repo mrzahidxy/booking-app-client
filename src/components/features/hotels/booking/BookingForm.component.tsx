@@ -2,8 +2,8 @@ import { FormikCalendarField } from "@/components/common/form/formik-calender.co
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Form, useFormikContext } from "formik";
-import { House } from "lucide-react";
-import { useEffect, useState } from "react";
+import { House, Loader2 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { BookingCreate } from "./form.config";
 import { format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
@@ -20,7 +20,7 @@ export function BookingForm({ room, bookingId }: BookingFormProps) {
     useFormikContext<BookingCreate>();
   const [step, setStep] = useState(1);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["availability", room.id, values.quantity, values.bookingDate],
     queryFn: () =>
       checkRoomAvailability({
@@ -33,6 +33,22 @@ export function BookingForm({ room, bookingId }: BookingFormProps) {
     refetchOnMount: true,
     refetchInterval: 20000,
   });
+
+  const availabilityText = useMemo(() => {
+    if (!values.bookingDate) {
+      return "Select a date to check availability.";
+    }
+    if (isError) {
+      return "Unable to check availability right now.";
+    }
+    if (isLoading) {
+      return "Checking availability...";
+    }
+    if (typeof data?.availAbality === "number") {
+      return `${data.availAbality} rooms available`;
+    }
+    return "Availability unavailable.";
+  }, [data?.availAbality, isLoading, values.bookingDate]);
 
   useEffect(() => {
     if (bookingId) {
@@ -59,6 +75,7 @@ export function BookingForm({ room, bookingId }: BookingFormProps) {
                   type="button"
                   variant="outline"
                   size="icon"
+                  aria-label="Decrease number of rooms"
                   onClick={() =>
                     setFieldValue("quantity", Math.max(1, values.quantity! - 1))
                   }
@@ -73,6 +90,7 @@ export function BookingForm({ room, bookingId }: BookingFormProps) {
                   type="button"
                   variant="outline"
                   size="icon"
+                  aria-label="Increase number of rooms"
                   onClick={() =>
                     setFieldValue("quantity", Math.min(4, values.quantity! + 1))
                   }
@@ -82,16 +100,29 @@ export function BookingForm({ room, bookingId }: BookingFormProps) {
               </div>
             </div>
 
-            <div>
-              Available Rooms:{" "}
-              <span>{isLoading ? "Loading..." : data?.availAbality}</span>
+            <div
+              className="rounded-md border bg-muted/30 px-3 py-2 text-sm text-muted-foreground"
+              aria-live="polite"
+            >
+              {isLoading ? (
+                <span className="inline-flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Checking availability...
+                </span>
+              ) : (
+                availabilityText
+              )}
             </div>
 
             <Button
               type="button"
               onClick={() => setStep(2)}
               disabled={
-                data?.availAbality < values.quantity! || !values?.bookingDate
+                !values?.bookingDate ||
+                isLoading ||
+                isError ||
+                (typeof data?.availAbality === "number" &&
+                  data.availAbality < values.quantity!)
               }
               className="w-full mt-2"
             >
@@ -118,7 +149,7 @@ export function BookingForm({ room, bookingId }: BookingFormProps) {
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Guests</span>
+                    <span className="text-muted-foreground">Rooms</span>
                     <span className="font-medium">{values.quantity}</span>
                   </div>
                   <div className="flex justify-between">

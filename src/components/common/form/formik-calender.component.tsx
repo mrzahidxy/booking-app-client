@@ -3,6 +3,7 @@
 import { Field, FieldProps, useFormikContext } from "formik";
 import { Calendar } from "@/components/ui/calendar";
 import { FieldContainer } from "./field-container.component";
+import { format } from "date-fns";
 
 type CalendarFieldProps = {
   placeholder?: string;
@@ -73,7 +74,9 @@ export const FormikCalendarField: React.FC<FormikCalendarFieldProps> = ({
           <CalendarField
             {...inputFieldProps}
             value={value}
-            onSelect={(date) => setFieldValue(name, date)}
+            onSelect={(date) =>
+              setFieldValue(name, date ? format(date, "yyyy-MM-dd") : "")
+            }
             error={!!(touched && error)}
             helperText={helperText}
             disabled={inputFieldProps?.disabled || isSubmitting}

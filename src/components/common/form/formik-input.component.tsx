@@ -12,6 +12,8 @@ type InputFieldProps = {
   helperText?: string;
   error?: boolean;
   inputClassName?: string;
+  id?: string;
+  name?: string;
 };
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -24,15 +26,23 @@ const InputField: React.FC<InputFieldProps> = ({
   inputClassName = "",
   ...rest
 }) => {
+  const fieldId = rest.id ?? rest.name;
+
   return (
     <FieldContainer>
-      {label && <label>{label}</label>}
+      {label && (
+        <label htmlFor={fieldId} className="text-sm font-medium text-foreground">
+          {label}
+        </label>
+      )}
 
       {type === "textarea" ? (
         <Textarea
           placeholder={placeholder}
           className={inputClassName}
           disabled={disabled}
+          id={fieldId}
+          aria-invalid={error}
           {...rest}
         />
       ) : (
@@ -41,6 +51,8 @@ const InputField: React.FC<InputFieldProps> = ({
           placeholder={placeholder}
           className={inputClassName}
           disabled={disabled}
+          id={fieldId}
+          aria-invalid={error}
           {...rest}
         />
       )}

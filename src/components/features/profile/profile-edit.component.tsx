@@ -2,7 +2,7 @@
 
 import { Formik, type FormikHelpers } from "formik"
 import { type UserProfileUpdate, UserProfileSchema, UserProfileInitialValues } from "./form.config"
-import privateRequest from "@/shared/lib/api"
+import { fetchCurrentUser, updateCurrentUser } from "@/features/users/api"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useToast } from "@/shared/hooks/use-toast"
 import { useSession } from "next-auth/react"
@@ -14,11 +14,6 @@ interface ProfileEditProps {
   onCancel: () => void
 }
 
-const fetchUserProfile = async (userId: string) => {
-  const response = await privateRequest.get(`/users/${userId}`)
-  return response.data.data
-}
-
 export const ProfileEdit = ({ onCancel }: ProfileEditProps) => {
   const { toast } = useToast()
   const { data: session } = useSession()
@@ -28,7 +23,7 @@ export const ProfileEdit = ({ onCancel }: ProfileEditProps) => {
   // Fetch user profile data
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["user-profile", userId],
-    queryFn: () => fetchUserProfile(userId),
+    queryFn: () => fetchCurrentUser(),
     enabled: !!userId,
     staleTime: 0,
     refetchOnMount: true,
@@ -37,11 +32,15 @@ export const ProfileEdit = ({ onCancel }: ProfileEditProps) => {
   // Handle form submission
   const mutation = useMutation({
     mutationFn: async (values: UserProfileUpdate) => {
-      return await privateRequest.put(`/users/${userId}`, values)
+      const { id: _id, ...payload } = values
+      return await updateCurrentUser(payload)
     },
   })
 
-  const handleSubmit = async (values: UserProfileUpdate, { setSubmitting }: FormikHelpers<UserProfileUpdate>) => {
+  const handleSubmit = async (
+    values: UserProfileUpdate,
+    { setSubmitting }: FormikHelpers<UserProfileUpdate>
+  ) => {
     try {
       await mutation.mutateAsync(values)
       toast({

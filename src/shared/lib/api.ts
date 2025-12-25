@@ -9,6 +9,17 @@ const privateRequest = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
 });
 
+const normalizeError = (error: unknown) => {
+  if (axios.isAxiosError(error)) {
+    const rawMessage =
+      error.response?.data?.message ?? error.message ?? "Request failed";
+    const message =
+      typeof rawMessage === "string" ? rawMessage : JSON.stringify(rawMessage);
+    return Promise.reject(Object.assign(error, { userMessage: message }));
+  }
+  return Promise.reject(error);
+};
+
 // Interceptor to add Authorization header
 privateRequest.interceptors.request.use(
   async (config) => {
@@ -35,8 +46,13 @@ privateRequest.interceptors.response.use(
     if (error.response?.status === 401) {
       await signOut({ callbackUrl: "/auth/login" });
     }
-    return Promise.reject(error);
+    return normalizeError(error);
   }
+);
+
+publicRequest.interceptors.response.use(
+  (response) => response,
+  (error) => normalizeError(error)
 );
 
 export default privateRequest;

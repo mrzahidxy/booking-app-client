@@ -1,53 +1,135 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
+import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import HotelCard from "@/components/common/HotelCard.component";
-import { HotelAPIResponse } from "@/entities/hotel";
-import { searchHotels } from "@/features/hotels/api";
-import { searchRestaurants } from "@/features/restaurants/api";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import Image from "next/image";
+import Link from "next/link";
+import type { Hotel } from "@/entities/hotel";
+import type { Restaurant } from "@/entities/restaurant";
+import type { SearchParams, SearchType } from "@/features/search/types";
+import { searchCatalog } from "@/features/search/api";
 
-const fetchSearchResults = async (query: string, type: string): Promise<any> => {
-  try {
-    return type === "hotels"
-      ? await searchHotels(query)
-      : await searchRestaurants(query);
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-};
-
-const SearchComponent = ({ type }: { type: string }) => {
+const SearchComponent = ({ type }: { type: SearchType }) => {
   const queries = useSearchParams();
-  const queryString = new URLSearchParams();
-  queries.forEach((value, key) => {
-    if (value) queryString.append(key, value);
-  });
+  const queryKey = queries.toString();
 
-  const { data: hotels, isLoading: loading, error } = useQuery<HotelAPIResponse>({
-    queryKey: ["hotels", queryString],
-    queryFn: () => fetchSearchResults(queryString.toString(), type),
-    enabled: !!queryString,
+  const searchParams = useMemo<SearchParams>(() => {
+    const params = new URLSearchParams(queryKey);
+    const rawQuery = params.get("query");
+    const name = params.get("name");
+    const location = params.get("location");
+    const query =
+      rawQuery ?? [name, location].filter(Boolean).join(" ");
+
+    return {
+      query: query?.trim() ?? "",
+      page: Number(params.get("page")) || 1,
+      limit: Number(params.get("limit")) || 10,
+    };
+  }, [queryKey]);
+
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["search", type, searchParams],
+    queryFn: () => searchCatalog(type, searchParams),
+    enabled: searchParams.query.length > 0,
     staleTime: 0,
-    refetchOnMount: queries.has("name") || queries.has("location"),
   });
 
-  if (loading) return <div className="text-center py-10">Loading...</div>;
-  if(error) return <div className="text-center py-10">Error</div>;
+  if (!searchParams.query) {
+    return (
+      <div className="container py-8">
+        <h2 className="text-2xl font-semibold mb-4">Search Results</h2>
+        <p className="text-sm text-muted-foreground">
+          Enter a search term to see results.
+        </p>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="container py-8" aria-busy="true">
+        <h2 className="text-2xl font-semibold mb-4">Search Results</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <Skeleton key={index} className="h-[360px] w-full" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    const errorMessage =
+      error && typeof error === "object" && "userMessage" in error
+        ? String((error as { userMessage?: string }).userMessage)
+        : "We couldn't load results. Please try again.";
+    return (
+      <div className="container py-8">
+        <h2 className="text-2xl font-semibold mb-4">Search Results</h2>
+        <div className="rounded-md border border-destructive/30 bg-destructive/10 p-4">
+          <p role="alert" className="text-sm text-destructive">
+            {errorMessage}
+          </p>
+          <Button variant="outline" className="mt-3" onClick={() => refetch()}>
+            Retry
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  const collection = data?.collection ?? [];
+
+  if (collection.length === 0) {
+    return (
+      <div className="container py-8">
+        <h2 className="text-2xl font-semibold mb-4">Search Results</h2>
+        <p className="text-sm text-muted-foreground">No results found.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container py-8">
       <h2 className="text-2xl font-semibold mb-4">Search Results</h2>
-      {hotels?.data?.collection?.length === 0 ? (
-        <p>No hotels found.</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 justify-center gap-6">
-          {hotels?.data?.collection?.map((hotel) => (
-            <HotelCard key={hotel?.id} hotel={hotel} />
-          ))}
-        </div>
-      )}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+        {type === "hotels"
+          ? (collection as Hotel[]).map((hotel) => (
+              <HotelCard key={hotel.id} hotel={hotel} />
+            ))
+          : (collection as Restaurant[]).map((restaurant) => (
+              <Link href={`/restaurant/${restaurant.id}`} key={restaurant.id}>
+                <Card className="overflow-hidden">
+                  <Image
+                    src={restaurant.image?.[0] ?? "/images/main-banner.jpg"}
+                    alt={restaurant.name ?? "Restaurant"}
+                    width={400}
+                    height={240}
+                    className="h-48 w-full object-cover"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 20vw"
+                  />
+                  <CardContent className="p-4">
+                    <h4 className="font-semibold">{restaurant.name}</h4>
+                    <p className="text-muted-foreground text-sm">
+                      {restaurant.location}
+                    </p>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+      </div>
     </div>
   );
 };

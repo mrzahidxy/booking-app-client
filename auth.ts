@@ -19,8 +19,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
 
         const authBaseUrl =
-          process.env.NEXT_PUBLIC_BASE_URL ||
-          "https://booking-app-api-rzro.onrender.com/api";
+          process.env.NEXT_PUBLIC_BASE_URL;
 
         const res = await fetch(`${authBaseUrl}/auth/login`, {
           method: "POST",
@@ -57,6 +56,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
 
   callbacks: {
+    async authorized({ request, auth }) {
+      const { pathname } = request.nextUrl;
+      if (pathname.startsWith("/admin")) {
+        return auth?.user?.role === "ADMIN";
+      }
+      return true;
+    },
     // Handle JWT
     async jwt({ token, user }) {
       if (user) {
@@ -76,9 +82,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         name: token.name as string,
         email: token.email as string,
         role: token.role as string,
-        token: token.token as string, 
+        token: token.token as string,
       };
-      return session; 
+      return session;
     },
   },
 });
