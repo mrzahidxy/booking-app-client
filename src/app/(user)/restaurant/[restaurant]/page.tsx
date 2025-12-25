@@ -49,8 +49,8 @@ export default async function RestaurantDetailPage({
               </Link>
             </Button>
             <Separator orientation="vertical" className="h-6" />
-            <Badge variant="secondary" className="flex items-center">
-              <Star className="h-3 w-3 mr-1 fill-yellow-400 stroke-yellow-400" />
+            <Badge className="flex items-center border-emerald-200 bg-emerald-50 text-emerald-700">
+              <Star className="h-3 w-3 mr-1 fill-emerald-500 text-emerald-500" />
               {restaurantData?.ratings ?? 0}
             </Badge>
           </div>

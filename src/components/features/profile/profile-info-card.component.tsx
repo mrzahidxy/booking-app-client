@@ -2,8 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { User, Mail, Phone, Calendar, Shield, Hash } from "lucide-react"
+import { Calendar, Hash, Mail, Phone, Shield, User } from "lucide-react"
 
 interface UserData {
   id: number
@@ -39,30 +38,26 @@ export const ProfileInfoCard = ({ userData }: ProfileInfoCardProps) => {
       {/* Personal Information Card */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <User className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-3">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+              <User className="h-5 w-5" />
+            </span>
             Personal Information
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
+        <CardContent className="divide-y">
+          <div className="py-3 space-y-2">
             <label className="text-sm font-medium text-muted-foreground">Full Name</label>
             <p className="text-lg font-medium">{userData?.name ?? "Not provided"}</p>
           </div>
-
-          <Separator />
-
-          <div className="space-y-2">
+          <div className="py-3 space-y-2">
             <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <Mail className="h-4 w-4" />
               Email Address
             </label>
             <p className="text-lg">{userData?.email}</p>
           </div>
-
-          <Separator />
-
-          <div className="space-y-2">
+          <div className="py-3 space-y-2">
             <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <Phone className="h-4 w-4" />
               Phone Number
@@ -75,34 +70,30 @@ export const ProfileInfoCard = ({ userData }: ProfileInfoCardProps) => {
       {/* Account Information Card */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Shield className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-3">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-50 text-orange-500">
+              <Shield className="h-5 w-5" />
+            </span>
             Account Information
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
+        <CardContent className="divide-y">
+          <div className="py-3 space-y-2">
             <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <Hash className="h-4 w-4" />
               User ID
             </label>
             <p className="text-lg font-mono">#{userData?.id}</p>
           </div>
-
-          <Separator />
-
-          <div className="space-y-2">
+          <div className="py-3 space-y-2">
             <label className="text-sm font-medium text-muted-foreground">Role</label>
             <div>
-              <Badge variant="secondary" className="text-sm">
+              <Badge className="bg-primary/10 text-primary hover:bg-primary/15">
                 {userData?.role?.name ?? "User"}
               </Badge>
             </div>
           </div>
-
-          <Separator />
-
-          <div className="space-y-2">
+          <div className="py-3 space-y-2">
             <label className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <Calendar className="h-4 w-4" />
               Member Since
@@ -111,10 +102,7 @@ export const ProfileInfoCard = ({ userData }: ProfileInfoCardProps) => {
               {userData?.createdAt ? formatDate(userData.createdAt) : "—"}
             </p>
           </div>
-
-          <Separator />
-
-          <div className="space-y-2">
+          <div className="py-3 space-y-2">
             <label className="text-sm font-medium text-muted-foreground">Last Updated</label>
             <p className="text-lg">
               {userData?.updateAt ? formatDate(userData.updateAt) : "—"}

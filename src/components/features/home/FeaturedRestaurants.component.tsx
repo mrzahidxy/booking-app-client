@@ -64,9 +64,12 @@ export default function FeaturedRestaurants() {
   }
 
   return (
-    <section className="py-16 bg-secondary/10">
+    <section className="py-16 bg-secondary/40">
       <div className="container mx-auto px-4">
-        <h3 className="text-2xl font-bold mb-8">Featured Restaurants</h3>
+        <div className="flex items-center justify-between mb-8">
+          <h3 className="text-2xl font-bold">Featured Restaurants</h3>
+          <span className="text-sm text-muted-foreground">Handpicked spots</span>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
           {restaurants.map((restaurant) => {
             const cuisine = Array.isArray(restaurant.cuisine)
@@ -75,7 +78,7 @@ export default function FeaturedRestaurants() {
 
             return (
               <Link href={`/restaurant/${restaurant.id}`} key={restaurant.id}>
-                <Card className="overflow-hidden">
+                <Card className="overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
                   <Image
                     src={restaurant.image?.[0] ?? "/images/main-banner.jpg"}
                     alt={restaurant.name ?? "Restaurant"}
@@ -87,15 +90,17 @@ export default function FeaturedRestaurants() {
                   <CardContent className="p-4">
                     <div className="flex justify-between items-start mb-2">
                       <h4 className="font-semibold">{restaurant.name}</h4>
-                      <Badge variant="secondary" className="flex items-center">
-                        <Star className="h-3 w-3 mr-1 fill-current" />
+                      <Badge className="flex items-center border-emerald-200 bg-emerald-50 text-emerald-700">
+                        <Star className="h-3 w-3 mr-1 fill-emerald-500 text-emerald-500" />
                         {restaurant.rating ?? restaurant.ratings ?? 0}
                       </Badge>
                     </div>
                     <p className="text-muted-foreground text-sm mb-2">
                       {cuisine} • $$$ • {restaurant.location}
                     </p>
-                    <Button className="w-full">Reserve a Table</Button>
+                    <Button className="w-full bg-orange-500 text-white hover:bg-orange-600">
+                      Reserve a Table
+                    </Button>
                   </CardContent>
                 </Card>
               </Link>

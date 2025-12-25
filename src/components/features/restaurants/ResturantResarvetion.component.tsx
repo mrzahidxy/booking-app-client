@@ -162,7 +162,11 @@ function ReservationForm({
         )}
       </div>
 
-      <Button className="w-full" disabled={isDisabled} type="submit">
+      <Button
+        className="w-full bg-orange-500 text-white hover:bg-orange-600"
+        disabled={isDisabled}
+        type="submit"
+      >
         {status === "unauthenticated" ? (
           <>
             <Lock className="h-4 w-4 mr-2" />

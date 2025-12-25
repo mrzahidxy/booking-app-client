@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { MenuIcon, Heart } from "lucide-react";
+import { ChevronDown, MenuIcon, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -97,13 +97,13 @@ export function Navbar() {
 
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2 ml-4 md:ml-0">
-          <span className="text-xl font-bold">Bookinn.</span>
+          <span className="text-xl font-semibold text-primary">Bookinn.</span>
         </Link>
 
         {/* Right Section */}
         <div className="flex items-center space-x-4 ml-auto">
           {/* Favorites Button */}
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" className="hover:text-primary">
             <Heart className="h-5 w-5" />
           </Button>
 
@@ -115,25 +115,35 @@ export function Navbar() {
           {status === "authenticated" && (
             <>
               <NotificationDropdown />
-              <DropdownMenu>
-                <DropdownMenuTrigger className="text-sm font-medium">
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/profile"
+                  className="text-sm font-medium hover:text-primary transition-colors"
+                >
                   {session.user?.name ?? "User"}
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  {session.user?.role === "Admin" ? (
-                    <DropdownMenuItem onClick={() => push("/admin")}>
-                      Admin Panel
+                </Link>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <ChevronDown className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    {session.user?.role === "Admin" ? (
+                      <DropdownMenuItem onClick={() => push("/admin")}>
+                        Admin Panel
+                      </DropdownMenuItem>
+                    ) : (
+                      <DropdownMenuItem onClick={() => push("/profile")}>
+                        Profile
+                      </DropdownMenuItem>
+                    )}
+                    <DropdownMenuItem onClick={handleSignOut}>
+                      Logout
                     </DropdownMenuItem>
-                  ) : (
-                    <DropdownMenuItem onClick={() => push("/profile")}>
-                      User Panel
-                    </DropdownMenuItem>
-                  )}
-                  <DropdownMenuItem onClick={handleSignOut}>
-                    Logout
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </>
           )}
 

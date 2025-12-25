@@ -61,7 +61,7 @@ const HeroSection = () => {
         className="object-cover opacity-90"
         sizes="100vw"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/70" />
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-900/70 via-slate-900/40 to-slate-900/80" />
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4">
         <div className="mx-auto max-w-4xl animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -84,7 +84,7 @@ const HeroSection = () => {
                   aria-label="Search category"
                   onValueChange={(value) => setFieldValue("type", value as SearchType)}
                 >
-                  <TabsList className="bg-white/10 border border-white/15 rounded-full p-1">
+                  <TabsList className="bg-white/10 border border-white/15 rounded-full p-1 shadow-sm">
                     {[
                       { value: "hotels", label: "Hotels", icon: Hotel },
                       { value: "restaurants", label: "Restaurants", icon: Utensils },
@@ -92,7 +92,7 @@ const HeroSection = () => {
                       <TabsTrigger
                         key={tab.value}
                         value={tab.value}
-                        className="data-[state=active]:bg-white/20 data-[state=active]:text-white text-primary-foreground/80 rounded-full px-4"
+                        className="data-[state=active]:bg-white data-[state=active]:text-primary text-primary-foreground/80 rounded-full px-4"
                       >
                         <tab.icon className="mr-2 h-4 w-4" />
                         {tab.label}
@@ -101,7 +101,7 @@ const HeroSection = () => {
                   </TabsList>
                 </Tabs>
                 <Form
-                  className="text-black flex flex-col md:flex-row gap-4 bg-white/95 p-4 rounded-2xl shadow-2xl w-full max-w-3xl mx-auto border border-white/40 transition focus-within:ring-2 focus-within:ring-white/50"
+                  className="text-black flex flex-col md:flex-row gap-4 bg-white/95 p-4 rounded-2xl shadow-2xl w-full max-w-3xl mx-auto border border-white/40 transition focus-within:ring-2 focus-within:ring-primary/40"
                   aria-busy={isSubmitting || isPending}
                 >
                   <div className="flex-1 min-w-[200px]">
@@ -136,7 +136,7 @@ const HeroSection = () => {
                   </div>
                   <Button
                     type="submit"
-                    className="bg-primary text-white w-full md:w-auto h-12 px-6 text-base font-semibold transition-transform duration-200 hover:-translate-y-0.5"
+                    className="bg-primary text-white w-full md:w-auto h-12 px-6 text-base font-semibold transition-transform duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow-md"
                     disabled={isDisabled}
                     aria-disabled={isDisabled}
                   >

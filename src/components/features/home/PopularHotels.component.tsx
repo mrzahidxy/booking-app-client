@@ -50,7 +50,10 @@ export default function PopularHotels() {
   return (
     <section className="py-16">
       <div className="container mx-auto px-4">
-        <h3 className="text-2xl font-bold mb-8">Popular Hotels</h3>
+        <div className="flex items-center justify-between mb-8">
+          <h3 className="text-2xl font-bold">Popular Hotels</h3>
+          <span className="text-sm text-muted-foreground">Top-rated stays</span>
+        </div>
         {hotels.length === 0 ? (
           <p className="text-sm text-muted-foreground">No hotels found.</p>
         ) : (

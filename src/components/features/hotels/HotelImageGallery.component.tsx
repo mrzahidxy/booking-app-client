@@ -18,11 +18,12 @@ export default function HotelImageGallery({ images }: { images: string[] }) {
         {hasImages ? (
           <>
             <Image
+              key={currentImage}
               src={currentImage}
               alt={`Hotel image ${currentImageIndex + 1} of ${images.length}`}
               width={1200}
               height={700}
-              className="w-full aspect-video object-cover"
+              className="w-full aspect-video object-cover transition-opacity duration-300"
               priority
               sizes="(max-width: 1024px) 100vw, 70vw"
             />

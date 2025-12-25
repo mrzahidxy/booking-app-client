@@ -3,7 +3,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { fetchCurrentUser } from "@/features/users/api";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import DefaultLoader from "@/components/common/DefaultLoacer.component";
@@ -53,7 +58,7 @@ const ReviewsPage = () => {
       </div>
 
       {reviews.length === 0 ? (
-        <Card>
+        <Card className="shadow-sm">
           <CardContent className="py-8 text-center text-muted-foreground">
             You have not written any reviews yet.
           </CardContent>
@@ -70,11 +75,13 @@ const ReviewsPage = () => {
             const date = new Date(review.createdAt).toLocaleDateString();
 
             return (
-              <Card key={review.id}>
+              <Card key={review.id} className="shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
                 <CardHeader className="space-y-2">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-lg">{target}</CardTitle>
-                    <Badge variant="secondary">{review.rating}/5</Badge>
+                    <Badge className="border-emerald-200 bg-emerald-50 text-emerald-700">
+                      {review.rating}/5
+                    </Badge>
                   </div>
                   <p className="text-xs text-muted-foreground">Reviewed on {date}</p>
                 </CardHeader>

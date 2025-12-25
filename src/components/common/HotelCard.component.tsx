@@ -10,7 +10,7 @@ export default function HotelCard({ hotel }: { hotel: any }) {
 
   return (
     <Link href={`/hotel/${hotel?.id}`} key={hotel?.name}>
-      <Card className="overflow-hidden h-[400px] flex flex-col justify-between">
+      <Card className="overflow-hidden h-[400px] flex flex-col justify-between transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
         <Image
           src={imageSrc}
           alt="Hotel"
@@ -26,8 +26,8 @@ export default function HotelCard({ hotel }: { hotel: any }) {
               <h4 className="font-semibold text-base line-clamp-1">
                 {hotel?.name}
               </h4>
-              <Badge variant="secondary" className="flex items-center">
-                <Star className="h-3 w-3 mr-1 fill-current" />
+              <Badge className="flex items-center border-emerald-200 bg-emerald-50 text-emerald-700">
+                <Star className="h-3 w-3 mr-1 fill-emerald-500 text-emerald-500" />
                 {hotel?.rating ?? hotel?.ratings ?? 0}
               </Badge>
             </div>

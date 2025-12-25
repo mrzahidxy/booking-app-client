@@ -58,16 +58,18 @@ export const ProfileStatsCard = ({ userData }: ProfileStatsCardProps) => {
               <Link
                 key={index}
                 href={stat.href}
-                className={`p-4 rounded-lg border ${stat.bgColor} transition-all hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary`}
+                className={`p-4 rounded-lg border bg-white ${stat.bgColor} transition-all hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary`}
                 aria-label={`View ${stat.title.toLowerCase()}`}
               >
-                <div className="flex items-center justify-between">
+                <div className="space-y-4">
+                  <span className={`inline-flex h-10 w-10 items-center justify-center rounded-lg ${stat.bgColor}`}>
+                    <Icon className={`h-5 w-5 ${stat.color}`} />
+                  </span>
                   <div>
-                    <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
+                    <p className={`text-3xl font-bold ${stat.color}`}>{stat.value}</p>
                     <p className="text-sm font-medium text-gray-900">{stat.title}</p>
                     <p className="text-xs text-gray-500">{stat.description}</p>
                   </div>
-                  <Icon className={`h-8 w-8 ${stat.color}`} />
                 </div>
               </Link>
             )
