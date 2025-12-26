@@ -18,17 +18,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           throw new Error("Email and Password are required");
         }
 
-        const authBaseUrl =
-          process.env.NEXT_PUBLIC_BASE_URL;
+        const authBaseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+        if (!authBaseUrl) {
+          throw new Error("NEXT_PUBLIC_BASE_URL is not set");
+        }
 
-        const res = await fetch(`${authBaseUrl}/auth/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: credentials.email,
-            password: credentials.password,
-          }),
-        });
+        let res: Response;
+        try {
+          res = await fetch(`${authBaseUrl}/auth/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: credentials.email,
+              password: credentials.password,
+            }),
+          });
+        } catch {
+          throw new Error(
+            "Unable to reach auth service. Check NEXT_PUBLIC_BASE_URL and make sure the API is running."
+          );
+        }
+
+        console.log("res", res);
 
         const json = await res.json().catch(() => null);
 
@@ -39,12 +50,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             data.token ?? data.access_token ?? data.accessToken ?? user?.token;
 
           if (user && token) {
+            const resolvedRole =
+              typeof user.role === "object" && user.role !== null
+                ? user.role.name
+                : user.role ?? user.typeName ?? user.type;
             // Return the user object which will be stored in the JWT
             return {
               id: user.id,
               name: user.name,
               email: user.email,
-              role: user.role ?? user.typeName ?? user.type,
+              role:
+                typeof resolvedRole === "string"
+                  ? resolvedRole.toUpperCase()
+                  : resolvedRole,
               token: token,
             };
           }

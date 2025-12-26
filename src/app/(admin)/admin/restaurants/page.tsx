@@ -53,13 +53,33 @@ const RestaurantListPage = () => {
     {
       accessorKey: "menu",
       header: "Menu",
-      cell: ({ row }) => (
-        <ul>
-          {JSON.parse(row.original.menu)?.map((item: { name: string; price: number }, index: number) => (
-            <li key={index}>{item.name} -{item.price}</li>
-          ))}
-        </ul>
-      )
+      cell: ({ row }) => {
+        const rawMenu = row.original.menu;
+        const parsedMenu =
+          typeof rawMenu === "string"
+            ? (() => {
+                try {
+                  return JSON.parse(rawMenu);
+                } catch {
+                  return [];
+                }
+              })()
+            : rawMenu;
+
+        const menuItems = Array.isArray(parsedMenu) ? parsedMenu : [];
+
+        return (
+          <ul>
+            {menuItems.map(
+              (item: { name: string; price: number }, index: number) => (
+                <li key={index}>
+                  {item.name} -{item.price}
+                </li>
+              )
+            )}
+          </ul>
+        );
+      }
     },
     { accessorKey: "createdAt", header: "Created At" },
     { accessorKey: "ratings", header: "Ratings" },

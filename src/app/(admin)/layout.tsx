@@ -14,7 +14,10 @@ export default function DashboardLayout({
 }) {
   const { status, data } = useSession();
   const router = useRouter();
-  const userRole = data?.user?.role;
+  const userRole =
+    typeof data?.user?.role === "string"
+      ? data.user.role.toUpperCase()
+      : data?.user?.role;
 
   useEffect(() => {
     if (status === "loading") {

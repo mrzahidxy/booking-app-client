@@ -10,13 +10,22 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const { status } = useSession();
+  const { data } = useSession();
   const router = useRouter();
+  const userRole =
+    typeof data?.user?.role === "string"
+      ? data.user.role.toUpperCase()
+      : data?.user?.role;
 
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/");
+      return;
     }
-  }, [status, router]);
+    if (status === "authenticated" && userRole === "ADMIN") {
+      router.push("/admin");
+    }
+  }, [status, userRole, router]);
 
 
   return <main className="">{children}</main>;

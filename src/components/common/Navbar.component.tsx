@@ -129,7 +129,7 @@ export function Navbar() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
-                    {session.user?.role === "Admin" ? (
+                    {String(session.user?.role).toUpperCase() === "ADMIN" ? (
                       <DropdownMenuItem onClick={() => push("/admin")}>
                         Admin Panel
                       </DropdownMenuItem>
