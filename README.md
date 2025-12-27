@@ -1,6 +1,6 @@
-# 🏨 Booking App - Hotel & Restaurant Reservation Platform
+# 🏨 Gontobbo - Hotel & Restaurant Reservation Platform
 
-A modern full-stack web application to explore, search, and book hotels and restaurants with ease. Built with scalability, performance, and usability in mind.
+Gontobbo is a modern full-stack web application to explore, search, and book hotels and restaurants with ease. Built with scalability, performance, and usability in mind.
 
 ---
 
@@ -48,8 +48,8 @@ A modern full-stack web application to explore, search, and book hotels and rest
 
 ```bash
 # Clone the repo
-git clone https://github.com/your-username/booking-app.git
-cd booking-app
+git clone https://github.com/your-username/gontobbo.git
+cd gontobbo
 
 # Install dependencies
 npm install

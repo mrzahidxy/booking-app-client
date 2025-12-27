@@ -79,14 +79,14 @@ export function Navbar() {
   };
 
   useEffect(() => {
-    if (status === "authenticated") {
-      if (!fcmToken) return;
-
-      privateRequest.put("/users/fcm", {
-        fcmToken: fcmToken,
-      });
+    if (status !== "authenticated" || !fcmToken) {
+      return;
     }
-  }, [status]);
+
+    privateRequest.put("/users/fcm", {
+      fcmToken,
+    });
+  }, [status, fcmToken]);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur">

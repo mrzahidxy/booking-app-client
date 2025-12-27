@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useFormikContext } from "formik";
 import {
@@ -42,10 +42,11 @@ const FormikPaginatedDropdown = ({
     id: number;
     name: string;
   } | null>(null);
+  const selectedValue = values[formikField];
 
   useEffect(() => {
     const initializeSelectedItem = async () => {
-      const id = values[formikField];
+      const id = selectedValue;
       if (id && !selectedItem) {
         const response = await privateRequest.get(`${url}/${id}`);
         const item = response.data?.data;
@@ -54,8 +55,13 @@ const FormikPaginatedDropdown = ({
         }
       }
     };
+
+    if (!selectedValue || selectedItem) {
+      return;
+    }
+
     initializeSelectedItem();
-  }, [values[formikField]]);
+  }, [selectedValue, selectedItem, formikField, url]);
 
   // Fetch paginated data from API
   const fetchPaginatedData = async (page: number) => {

@@ -37,7 +37,7 @@ export default async function HotelDetailPage({ params }: PageProps) {
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="text-2xl font-semibold mb-2">Hotel not found</h1>
           <p className="text-muted-foreground mb-6">
-            We couldn't load this hotel. Please try again.
+            We couldn&apos;t load this hotel. Please try again.
           </p>
           <Button asChild>
             <Link href="/">Back to home</Link>

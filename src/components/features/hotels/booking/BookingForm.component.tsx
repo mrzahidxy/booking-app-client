@@ -48,7 +48,7 @@ export function BookingForm({ room, bookingId }: BookingFormProps) {
       return `${data.availAbality} rooms available`;
     }
     return "Availability unavailable.";
-  }, [data?.availAbality, isLoading, values.bookingDate]);
+  }, [data?.availAbality, isError, isLoading, values.bookingDate]);
 
   useEffect(() => {
     if (bookingId) {

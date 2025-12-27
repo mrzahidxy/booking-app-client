@@ -8,6 +8,7 @@ import privateRequest from "@/shared/lib/api";
 import queryClient from "@/shared/lib/query-client";
 import { useRouter } from "next/navigation";
 import { Suspense } from "react";
+import Image from "next/image";
 
 const HotelsPage = () => {
   const router = useRouter();
@@ -31,13 +32,27 @@ const HotelsPage = () => {
     {
       accessorKey: "image",
       header: "Image",
-      cell: ({ row }) => (
-        <img
-          className="h-16 w-24 rounded-xl object-cover"
-          src={row.original.image?.[0]}
-          alt={row.original.name}
-        />
-      ),
+      cell: ({ row }) => {
+        const imageSrc = row.original.image?.[0];
+
+        if (!imageSrc) {
+          return (
+            <div className="flex h-16 w-24 items-center justify-center rounded-xl bg-muted/50 text-xs text-muted-foreground">
+              No image
+            </div>
+          );
+        }
+
+        return (
+          <Image
+            className="h-16 w-24 rounded-xl object-cover"
+            src={imageSrc}
+            alt={row.original.name ?? "Hotel image"}
+            width={96}
+            height={64}
+          />
+        );
+      },
     },
     { accessorKey: "name", header: "Hotel Name" },
     { accessorKey: "location", header: "Location" },
