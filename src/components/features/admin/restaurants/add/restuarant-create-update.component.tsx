@@ -18,6 +18,25 @@ export const RestaurantCreateUpdate = ({ id }: { id?: string }) => {
   const { toast } = useToast();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const normalizeList = (value: string) =>
+    value
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  const normalizeMenu = (menu: unknown) => {
+    if (Array.isArray(menu)) {
+      return menu;
+    }
+    if (typeof menu === "string") {
+      try {
+        const parsed = JSON.parse(menu);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  };
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["restaurants", id],
@@ -28,20 +47,17 @@ export const RestaurantCreateUpdate = ({ id }: { id?: string }) => {
   });
 
   const mutation = useMutation({
-    mutationFn: async (values: RestaurantCreate) =>
-      id
-        ? privateRequest.put(`/restaurants/${id}`, {
-            ...values,
-            cuisine: values.cuisine.split(","),
-            timeSlots: values.timeSlots.split(","),
-            menu: JSON.stringify(values.menu),
-          })
-        : privateRequest.post(`/restaurants`,  {
-            ...values,
-            cuisine: values.cuisine.split(","),
-            timeSlots: values.timeSlots.split(","),
-            menu: JSON.stringify(values.menu),
-          }),
+    mutationFn: async (values: RestaurantCreate) => {
+      const payload = {
+        ...values,
+        cuisine: normalizeList(values.cuisine),
+        timeSlots: normalizeList(values.timeSlots),
+        menu: values.menu ?? [],
+      };
+      return id
+        ? privateRequest.put(`/restaurants/${id}`, payload)
+        : privateRequest.post(`/restaurants`, payload);
+    },
   });
 
   const handleSubmit = async (
@@ -57,9 +73,13 @@ export const RestaurantCreateUpdate = ({ id }: { id?: string }) => {
       resetForm();
       queryClient.invalidateQueries({ queryKey: ["restaurants-list"] });
     } catch (err: any) {
+      const message =
+        err?.userMessage ?? err?.response?.data?.message ?? err?.message;
+      const description =
+        typeof message === "string" ? message : "Something went wrong!";
       toast({
         title: "Error",
-        description: err?.response?.data?.message || "Something went wrong!",
+        description,
         variant: "destructive",
       });
     } finally {
@@ -80,7 +100,7 @@ export const RestaurantCreateUpdate = ({ id }: { id?: string }) => {
               description: data.description || "",
               cuisine: data.cuisine?.join(",") || "",
               seats: data.seats || 0,
-              menu: JSON.parse(data.menu) || [],
+              menu: normalizeMenu(data.menu),
               timeSlots: data.timeSlots?.join(",") || "",
             }
           : InitialValues

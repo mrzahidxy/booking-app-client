@@ -19,7 +19,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { FcApproval } from "react-icons/fc";
 import { useToast } from "@/shared/hooks/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios"; // Import AxiosError type
@@ -106,9 +105,13 @@ export const StatusUpdateDialog: React.FC<StatusUpdateDialogProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <div className="flex items-center gap-2 cursor-pointer">
-          <FcApproval /> <span>Status</span>
-        </div>
+        <button
+          type="button"
+          className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 transition hover:border-emerald-300 hover:bg-emerald-100"
+        >
+          <span className="h-2 w-2 rounded-full bg-emerald-500" />
+          Status
+        </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

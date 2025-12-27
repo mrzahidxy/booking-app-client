@@ -31,22 +31,35 @@ const HotelsPage = () => {
     {
       accessorKey: "image",
       header: "Image",
-      cell: ({ row }) => <img style={{ width: "100px" }} src={row.original.image[0]} />,
+      cell: ({ row }) => (
+        <img
+          className="h-16 w-24 rounded-xl object-cover"
+          src={row.original.image?.[0]}
+          alt={row.original.name}
+        />
+      ),
     },
-    { accessorKey: "name", header: "User Name" },
+    { accessorKey: "name", header: "Hotel Name" },
     { accessorKey: "location", header: "Location" },
     {
       accessorKey: "rooms",
-      header: "rooms",
+      header: "Rooms",
       cell: ({ row }) => (
-        <ul>
+        <ul className="space-y-1 text-xs text-slate-500">
           {row.original.rooms.map((room: any) => (
             <li key={room.id}>{room.roomType}</li>
           ))}
         </ul>
       ), //</ul> row.original.rooms.map((room: any) => room.roomType + ", "),
     },
-    { accessorKey: "createdAt", header: "Created At" },
+    {
+      accessorKey: "createdAt",
+      header: "Created At",
+      cell: ({ row }) => {
+        const date = new Date(row?.original?.createdAt);
+        return date.toLocaleDateString();
+      },
+    },
     { accessorKey: "ratings", header: "Ratings" },
     {
       accessorKey: "action",
@@ -69,9 +82,10 @@ const HotelsPage = () => {
       <DynamicTable
         columns={columns}
         url="/hotels"
-        title="Hotel"
+        title="Hotels"
+        description="Manage all hotels in the platform"
         queryKey="hotels-list"
-        buttonText="Create Hotel"
+        buttonText="Add New Hotel"
         handleAdd={() => router.push("/admin/hotels/add")}
       />
     </Suspense>

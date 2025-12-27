@@ -3,9 +3,9 @@
 import { Formik, FormikHelpers } from "formik";
 import { RoleCreateUpdateForm } from "./role-form.component";
 import { InitialValues, RoleCreate, RoleSchema } from "./form.config";
-import privateRequest from "@/shared/lib/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/shared/hooks/use-toast";
+import { createRole, fetchRoleById, updateRole } from "@/features/role-permission/api";
 
 export const RoleCreateUpdate = ({
   roleId,
@@ -19,20 +19,15 @@ export const RoleCreateUpdate = ({
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["role-details", roleId],
-    queryFn: async () => {
-      const response = await privateRequest.get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/role-permission/roles/${roleId}`
-      );
-      return response.data;
-    },
+    queryFn: () => fetchRoleById(roleId as number),
     enabled: !!roleId,
   });
 
   const roleMutation = useMutation({
     mutationFn: async (values: RoleCreate) => {
       return values.id
-        ? privateRequest.put(`/role-permission/roles/${values.id}`, { name: values.name })
-        : privateRequest.post("/role-permission/roles", { name: values.name });
+        ? updateRole(values.id, { name: values.name })
+        : createRole({ name: values.name });
     },
     onSuccess: () => {
       toast({ title: "Success", description: "Role saved successfully!" });

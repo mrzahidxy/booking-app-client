@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { NotificationDropdown } from "@/components/features/notification/NotificationDropdow.component";
 import { useToast } from "@/shared/hooks/use-toast";
 import useFCMToken from "@/shared/hooks/useFCMToekn";
@@ -18,10 +18,13 @@ import { useEffect } from "react";
 import { getToken, onMessage } from "firebase/messaging";
 import { messaging } from "@/shared/lib/firebase-config";
 import privateRequest from "@/shared/lib/api";
+import { cn } from "@/shared/utils";
 
 export function Navbar() {
   const { data: session, status } = useSession();
   const { push } = useRouter();
+  const pathname = usePathname();
+  const isAdmin = pathname.startsWith("/admin");
 
   const { toast } = useToast();
   const { fcmToken, storeFCMToken } = useFCMToken();
@@ -86,24 +89,32 @@ export function Navbar() {
   }, [status]);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center">
-        {/* Mobile Menu Button */}
+    <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur">
+      <div
+        className={cn(
+          "flex h-16 items-center",
+          isAdmin ? "px-6 lg:px-10" : "container"
+        )}
+      >
         <div className="md:hidden">
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" className="rounded-full">
             <MenuIcon className="h-5 w-5" />
           </Button>
         </div>
 
-        {/* Logo */}
-        <Link href="/" className="flex items-center space-x-2 ml-4 md:ml-0">
-          <span className="text-xl font-semibold text-primary">Bookinn.</span>
+        <Link
+          href="/"
+          className="ml-4 flex items-center space-x-2 text-lg font-semibold text-primary md:ml-0"
+        >
+          <span className="tracking-tight">Bookinn.</span>
         </Link>
 
-        {/* Right Section */}
-        <div className="flex items-center space-x-4 ml-auto">
-          {/* Favorites Button */}
-          <Button variant="ghost" size="icon" className="hover:text-primary">
+        <div className="ml-auto flex items-center space-x-3">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-9 w-9 rounded-full border border-transparent text-slate-600 hover:border-slate-200 hover:bg-white hover:text-primary"
+          >
             <Heart className="h-5 w-5" />
           </Button>
 
@@ -118,13 +129,17 @@ export function Navbar() {
               <div className="flex items-center gap-2">
                 <Link
                   href="/profile"
-                  className="text-sm font-medium hover:text-primary transition-colors"
+                  className="text-sm font-semibold text-slate-700 transition-colors hover:text-primary"
                 >
                   {session.user?.name ?? "User"}
                 </Link>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 rounded-full border border-transparent text-slate-600 hover:border-slate-200 hover:bg-white hover:text-primary"
+                    >
                       <ChevronDown className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -149,7 +164,10 @@ export function Navbar() {
 
           {status === "unauthenticated" && (
             // Sign-in link for unauthenticated users
-            <Link href="/auth/login" className="text-sm font-medium">
+            <Link
+              href="/auth/login"
+              className="text-sm font-semibold text-slate-700 hover:text-primary"
+            >
               Sign in
             </Link>
           )}

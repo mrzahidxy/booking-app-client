@@ -15,11 +15,13 @@ import {
 import { Button } from "./button";
 import { DataTable } from "./data-table.component";
 import DefaultLoader from "../common/DefaultLoacer.component";
+import { Plus } from "lucide-react";
 
 interface DynamicTableProps<TData> {
   url: string;
   columns: ColumnDef<TData>[];
   title?: string;
+  description?: string;
   buttonText?: string;
   queryKey: string;
   handleAdd?: () => void
@@ -30,6 +32,7 @@ export function DynamicTable<TData>({
   url,
   columns,
   title,
+  description,
   buttonText,
   queryKey,
   handleAdd
@@ -75,23 +78,33 @@ export function DynamicTable<TData>({
   };
 
   return (
-    <div className="space-y-4 flex flex-col">
-      {/* Table Title */}
-      {title && <h1 className="text-2xl font-bold">{title}</h1>}
-
-      {/* Add Button */}
-      {buttonText && handleAdd && (
-        <Button className="self-end" onClick={handleAdd}>
-          {buttonText}
-        </Button>
+    <section className="space-y-6">
+      {(title || buttonText) && (
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            {title && (
+              <h1 className="text-2xl font-semibold text-slate-900">{title}</h1>
+            )}
+            {description && (
+              <p className="mt-1 text-sm text-slate-500">{description}</p>
+            )}
+          </div>
+          {buttonText && handleAdd && (
+            <Button
+              className="h-10 gap-2 rounded-lg px-4 text-sm font-semibold shadow-sm"
+              onClick={handleAdd}
+            >
+              <Plus className="h-4 w-4" />
+              {buttonText}
+            </Button>
+          )}
+        </div>
       )}
 
-      {/* Data Table */}
-      <DataTable columns={columns} data={tableData} />
+      <DataTable columns={columns} data={tableData ?? []} />
 
-      {/* Pagination Controls */}
       {pagination?.totalPages > 1 && (
-        <Pagination>
+        <Pagination className="justify-end">
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious onClick={() => handlePageChange(page - 1)} />
@@ -112,6 +125,6 @@ export function DynamicTable<TData>({
           </PaginationContent>
         </Pagination>
       )}
-    </div>
+    </section>
   );
 }

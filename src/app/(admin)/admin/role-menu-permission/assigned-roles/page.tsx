@@ -4,17 +4,17 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DynamicTable } from "@/components/ui/dynamic-data-table.component";
 import TableActionButtons from "@/components/common/table-actions.component";
 import { useMutation } from "@tanstack/react-query";
-import privateRequest from "@/shared/lib/api";
 import queryClient from "@/shared/lib/query-client";
 import { useRouter } from "next/navigation";
 import { Suspense } from "react";
+import { deleteAssignedRole } from "@/features/role-permission/api";
 
 const AssignedRolesPage = () => {
   const router = useRouter();
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (id: number) => {
-      return await privateRequest.delete(`/role-permission/assigned-roles/${id}`);
+      return deleteAssignedRole(id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["assigned-roles-list"] });

@@ -23,6 +23,11 @@ const UserPage = (props: Props) => {
     {
       accessorKey: "email",
       header: "Email",
+      cell: ({ row }) => (
+        <span className="font-medium text-primary">
+          {row.original?.email}
+        </span>
+      ),
     },
     {
       accessorKey: "phone",
@@ -44,6 +49,7 @@ const UserPage = (props: Props) => {
         columns={columns}
         url="/users"
         title="Users"
+        description="Manage all platform users"
         queryKey="usersList"
         // handleAdd={() => {router.push("/admin/users/add")}}
         // buttonText="Add User"

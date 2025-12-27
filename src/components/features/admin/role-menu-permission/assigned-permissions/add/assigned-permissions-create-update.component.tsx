@@ -6,13 +6,17 @@ import {
   AssignedPermissionSchema,
   InitialValues,
 } from "./form.config";
-import privateRequest from "@/shared/lib/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/shared/hooks/use-toast";
 import { AssignedPermissionsForm } from "./assigned-permissions-form.component";
 import { Card } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import { TRolePermissionsByIdResponse } from "@/entities/role-permission";
+import {
+  assignPermissionsToRole,
+  fetchPermissionsForRole,
+  replacePermissionsForRole,
+} from "@/features/role-permission/api";
 
 export const AssignedPermissionsCreateUpdate = ({
   id = "",
@@ -22,39 +26,26 @@ export const AssignedPermissionsCreateUpdate = ({
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const router = useRouter();
+  const roleId = Number(id);
+  const isEditing = Number.isFinite(roleId) && roleId > 0;
 
   // Fetch data on update
   const { data, isLoading, isError, error } = useQuery<TRolePermissionsByIdResponse>({
     queryKey: ["assigned-permission-details", id],
-    queryFn: async () => {
-      const response = await privateRequest.get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/role-permission/assigned-permissions/${id}`
-      );
-      return response.data;
-    },
-    enabled: !!parseInt(id),
+    queryFn: () => fetchPermissionsForRole(roleId),
+    enabled: isEditing,
   });
 
   // Handle form submission on create/update
   const mutation = useMutation({
     mutationFn: async (values: AssignedPermissionCreate) => {
-      if (id) {
-        return await privateRequest.put(
-          `/role-permission/assigned-permissions/edit`,
-          {
-            roleId: values.roleId,
-            permissionIds: values.permissionIds,
-          }
-        );
-      } else {
-        return await privateRequest.post(
-          "/role-permission/assigned-permissions/",
-          {
-            roleId: values.roleId,
-            permissionIds: values.permissionIds,
-          }
-        );
-      }
+      const payload = {
+        roleId: values.roleId,
+        permissionIds: values.permissionIds,
+      };
+      return isEditing
+        ? replacePermissionsForRole(payload)
+        : assignPermissionsToRole(payload);
     },
     onSuccess: () => {
       toast({

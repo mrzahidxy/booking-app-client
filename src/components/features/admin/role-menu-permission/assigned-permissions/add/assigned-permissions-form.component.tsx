@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Form, useFormikContext } from "formik";
-import privateRequest from "@/shared/lib/api";
 import { useQuery } from "@tanstack/react-query";
 import {
   CardContent,
@@ -21,13 +20,7 @@ import { AssignedPermissionCreate } from "./form.config";
 import { Loader2 } from "lucide-react";
 import { FormikSubmitButton } from "@/components/common/form";
 import { TPermission, TPermissionsResponse } from "@/entities/role-permission";
-
-const fetchPermissions = async (page: number) => {
-  const response = await privateRequest.get(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/role-permission/permissions?page=${page}&limit=10`
-  );
-  return response.data?.data ?? { collection: [], pagination: {} };
-};
+import { fetchPermissions } from "@/features/role-permission/api";
 
 export const AssignedPermissionsForm = () => {
   const { values, setFieldValue, errors } =
@@ -36,7 +29,10 @@ export const AssignedPermissionsForm = () => {
 
   const { data, isLoading } = useQuery<TPermissionsResponse["data"]>({
     queryKey: ["permissions", page],
-    queryFn: () => fetchPermissions(page),
+    queryFn: async () => {
+      const response = await fetchPermissions({ page, limit: 10 });
+      return response.data ?? { collection: [], pagination: {} };
+    },
     staleTime: 5 * 60 * 1000,
   });
 

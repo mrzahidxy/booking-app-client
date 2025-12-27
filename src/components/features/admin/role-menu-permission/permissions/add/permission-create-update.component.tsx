@@ -3,9 +3,13 @@
 import { Formik, FormikHelpers } from "formik";
 import { PermissionCreateUpdateForm } from "./permission-form.component";
 import { InitialValues, PermissionCreate, PermissionSchema } from "./form.config";
-import privateRequest from "@/shared/lib/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/shared/hooks/use-toast";
+import {
+  createPermission,
+  fetchPermissionById,
+  updatePermission,
+} from "@/features/role-permission/api";
 
 export const PermissionCreateUpdate = ({
   permissionId = "",
@@ -19,28 +23,16 @@ export const PermissionCreateUpdate = ({
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["permission-details", permissionId],
-    queryFn: async () => {
-      const response = await privateRequest.get(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/role-permission/permissions/${permissionId}`
-      );
-      return response.data;
-    },
+    queryFn: () => fetchPermissionById(Number(permissionId)),
     staleTime: 0,
     enabled: !!permissionId,
   });
 
   const mutation = useMutation({
     mutationFn: async (values: PermissionCreate) => {
-      if (values?.id) {
-        return await privateRequest.put(
-          `/role-permission/permissions/${values.id}`,
-          { name: values.name }
-        );
-      } else {
-        return await privateRequest.post("/role-permission/permissions", {
-          name: values.name,
-        });
-      }
+      return values?.id
+        ? updatePermission(values.id, { name: values.name })
+        : createPermission({ name: values.name });
     },
     onSuccess: () => {
       toast({

@@ -30,7 +30,11 @@ const RestaurantListPage = () => {
       accessorKey: "image",
       header: "Image",
       cell: ({ row }) => (
-        <img style={{ width: "100px" }} src={row.original.image[0]} />
+        <img
+          className="h-16 w-24 rounded-xl object-cover"
+          src={row.original.image?.[0]}
+          alt={row.original.name}
+        />
       ),
     },
     { accessorKey: "name", header: "Name" },
@@ -81,7 +85,14 @@ const RestaurantListPage = () => {
         );
       }
     },
-    { accessorKey: "createdAt", header: "Created At" },
+    {
+      accessorKey: "createdAt",
+      header: "Created At",
+      cell: ({ row }) => {
+        const date = new Date(row?.original?.createdAt);
+        return date.toLocaleDateString();
+      },
+    },
     { accessorKey: "ratings", header: "Ratings" },
     {
       accessorKey: "action",
@@ -103,8 +114,9 @@ const RestaurantListPage = () => {
         columns={columns}
         url="/restaurants"
         title="Restaurants"
+        description="Manage all restaurants in the platform"
         queryKey="restaurants-list"
-        buttonText="Create Restaurant"
+        buttonText="Add New Restaurant"
         handleAdd={() => router.push("/admin/restaurants/add")}
       />
     </Suspense>

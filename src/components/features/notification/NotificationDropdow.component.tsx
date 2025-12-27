@@ -118,7 +118,11 @@ export function NotificationDropdown(): JSX.Element {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="icon" className="relative">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="relative h-9 w-9 rounded-full border border-transparent text-slate-600 hover:border-slate-200 hover:bg-white hover:text-primary"
+        >
           <Bell className="h-5 w-5" />
           {unreadCount > 0 && (
             <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-xs text-destructive-foreground">

@@ -2,35 +2,31 @@
 
 import { Formik, FormikHelpers } from "formik";
 import { AssignedRoleCreate, AssignedRoleSchema, InitialValues } from "./form.config";
-import privateRequest from "@/shared/lib/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/shared/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { AssignedRoleForm } from "./assigned-roles-form.component";
-
-const fetchAssignedRoleById = async (id: string) => {
-  const response = await privateRequest.get(`/role-permission/assigned-roles/${id}`);
-  return response.data;
-};
+import {
+  assignRoleToUser,
+  fetchAssignedRoleForUser,
+} from "@/features/role-permission/api";
 
 export const AssignedRolesCreateUpdate = ({ id }: { id?: string }) => {
   const { toast } = useToast();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const userId = id ? Number(id) : 0;
 
   const { data } = useQuery({
     queryKey: ["assigned-role-details", id],
-    queryFn: () => fetchAssignedRoleById(id!),
-    enabled: !!id,
+    queryFn: () => fetchAssignedRoleForUser(userId),
+    enabled: userId > 0,
   });
 
   const mutation = useMutation({
     mutationFn: async (values: AssignedRoleCreate) => {
-      return await privateRequest.post(
-        `/role-permission/assigned-roles/${values.userId}`,
-        { roleId: values.roleId }
-      );
+      return assignRoleToUser(values.userId, values.roleId);
     },
   });
 
