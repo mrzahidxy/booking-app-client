@@ -2,7 +2,7 @@
 
 import { Formik, type FormikHelpers } from "formik"
 import { type UserProfileUpdate, UserProfileSchema, UserProfileInitialValues } from "./form.config"
-import { fetchCurrentUser, updateCurrentUser } from "@/features/users/api"
+import { fetchCurrentUser, updateCurrentUser, UpdateUserPayload } from "@/features/users/api"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useToast } from "@/shared/hooks/use-toast"
 import { useSession } from "next-auth/react"
@@ -33,7 +33,11 @@ export const ProfileEdit = ({ onCancel }: ProfileEditProps) => {
   const mutation = useMutation({
     mutationFn: async (values: UserProfileUpdate) => {
       const { id: _id, ...payload } = values
-      return await updateCurrentUser(payload)
+      // Clean payload by removing null values to match API requirements
+      const cleanPayload: UpdateUserPayload = Object.fromEntries(
+        Object.entries(payload).filter(([_, value]) => value !== null)
+      )
+      return await updateCurrentUser(cleanPayload)
     },
   })
 
@@ -77,11 +81,11 @@ export const ProfileEdit = ({ onCancel }: ProfileEditProps) => {
       initialValues={
         data
           ? {
-              id: data.id ?? null,
-              name: data.name ?? "",
-              email: data.email ?? "",
-              phone: data.phone ?? "",
-            }
+            id: data.id ?? null,
+            name: data.name ?? "",
+            email: data.email ?? "",
+            phone: data.phone ?? "",
+          }
           : UserProfileInitialValues
       }
       validationSchema={UserProfileSchema}

@@ -99,7 +99,7 @@ export default async function RestaurantDetailPage({
                 <div className="prose prose-sm max-w-none">
                   <h3 className="text-lg font-semibold mb-2">Menu</h3>
                   <pre className="whitespace-pre-wrap">
-                    {JSON.parse(restaurantData.menu).map(
+                    {(typeof restaurantData.menu === 'string' ? JSON.parse(restaurantData.menu) : restaurantData.menu).map(
                       (
                         item: { name: string; price: string },
                         index: number

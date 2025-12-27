@@ -37,6 +37,9 @@ export function Navbar() {
     const requestPermission = async () => {
       const permission = await Notification.requestPermission();
       if (permission === "granted") {
+        if (!messaging) {
+          return;
+        }
         const currentFCMToken = await getToken(messaging, {
           vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
         });

@@ -72,7 +72,7 @@ const CartPage = () => {
         </div>
         <p className="text-green-500">{message}</p>
         <p className="text-red-500">
-          {typeof error === "string" ? error : error?.message ?? ""}
+          {error ?? ""}
         </p>
       </div>
     </div>
