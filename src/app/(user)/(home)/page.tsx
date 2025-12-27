@@ -28,20 +28,20 @@ const SpecialOffers = dynamic(
 );
 
 export const metadata: Metadata = {
-  title: "Traveller | Book Hotels & Restaurants",
+  title: "Gontobbo | Book Hotels & Restaurants",
   description:
-    "Discover curated hotels and restaurants worldwide. Book stays, reserve tables, and explore travel offers with Traveller.",
+    "Discover curated hotels and restaurants worldwide. Book stays, reserve tables, and explore travel offers with Gontobbo.",
   openGraph: {
-    title: "Traveller | Book Hotels & Restaurants",
+    title: "Gontobbo | Book Hotels & Restaurants",
     description:
-      "Discover curated hotels and restaurants worldwide. Book stays, reserve tables, and explore travel offers with Traveller.",
+      "Discover curated hotels and restaurants worldwide. Book stays, reserve tables, and explore travel offers with Gontobbo.",
     images: ["/images/main-banner.jpg"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Traveller | Book Hotels & Restaurants",
+    title: "Gontobbo | Book Hotels & Restaurants",
     description:
-      "Discover curated hotels and restaurants worldwide. Book stays, reserve tables, and explore travel offers with Traveller.",
+      "Discover curated hotels and restaurants worldwide. Book stays, reserve tables, and explore travel offers with Gontobbo.",
     images: ["/images/main-banner.jpg"],
   },
 };
