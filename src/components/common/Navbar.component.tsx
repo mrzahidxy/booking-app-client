@@ -109,7 +109,7 @@ export function Navbar() {
           href="/"
           className="ml-4 flex items-center space-x-2 text-lg font-semibold text-primary md:ml-0"
         >
-          <span className="tracking-tight">Bookinn.</span>
+          <span className="tracking-tight">Gontobbo</span>
         </Link>
 
         <div className="ml-auto flex items-center space-x-3">

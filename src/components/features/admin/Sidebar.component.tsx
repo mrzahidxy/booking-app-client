@@ -63,7 +63,7 @@ const Sidebar = () => {
         href="/admin"
         className="mb-8 flex items-center gap-2 px-2 text-lg font-semibold text-primary"
       >
-        Bookinn.
+        Gontobbo
       </Link>
 
       <nav className="flex-1 space-y-1 text-sm font-medium text-slate-600">
