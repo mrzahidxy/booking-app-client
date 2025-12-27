@@ -41,7 +41,7 @@ export const AssignedPermissionsCreateUpdate = ({
     mutationFn: async (values: AssignedPermissionCreate) => {
       const payload = {
         roleId: values.roleId,
-        permissionIds: values.permissionIds,
+        permissionIds: values.permissionIds.filter(id => id !== undefined) as number[],
       };
       return isEditing
         ? replacePermissionsForRole(payload)
@@ -89,9 +89,9 @@ export const AssignedPermissionsCreateUpdate = ({
       initialValues={
         id
           ? {
-              roleId: data?.data?.roleId,
-              permissionIds: data?.data?.permissionIds,
-            } as AssignedPermissionCreate
+            roleId: data?.data?.roleId,
+            permissionIds: data?.data?.permissionIds,
+          } as AssignedPermissionCreate
           : InitialValues
       }
       validationSchema={AssignedPermissionSchema}

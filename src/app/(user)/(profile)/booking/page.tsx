@@ -50,7 +50,7 @@ const BookingPage = (props: Props) => {
       accessorKey: "bookingDate",
       header: "Booking Date",
       cell: ({ row }) => {
-        let date = new Date(row?.original?.bookingDate ?? row?.original?.createdAt);
+        let date = new Date(row?.original?.createdAt);
         return date.toLocaleString();
       }
     },

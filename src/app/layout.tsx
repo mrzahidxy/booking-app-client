@@ -9,8 +9,8 @@ import ClientProviders from "@/providers/client-providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Booking App",
-  description: 'A booking app',
+  title: "Gontobbo",
+  description: "Hotel & restaurant reservations with Gontobbo.",
 };
 
 export default function RootLayout({

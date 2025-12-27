@@ -21,12 +21,12 @@ const HeroSection = () => {
   };
 
   const validate = (values: SearchFormValues) => {
-    const errors: Partial<Record<keyof SearchFormValues | "form", string>> = {};
+    const errors: Record<string, string> = {};
     if (!values.name.trim() && !values.location.trim()) {
-      errors.form = "Enter a name or location to search.";
-    }
-    return errors;
-  };
+      errors.name = "Enter a name or location to search.";
+      return errors;
+    };
+  }
 
   const handleSubmit = (values: SearchFormValues) => {
     const queryValue = [values.name, values.location]
@@ -65,100 +65,100 @@ const HeroSection = () => {
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4">
         <div className="mx-auto max-w-4xl animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <h2 className="text-3xl sm:text-5xl font-semibold tracking-tight mb-3">
-          Your perfect stay awaits
-        </h2>
-        <p className="text-base sm:text-lg text-primary-foreground/80 mb-10">
-          Find and book hotels & restaurants worldwide
-        </p>
+          <h2 className="text-3xl sm:text-5xl font-semibold tracking-tight mb-3">
+            Your perfect stay awaits
+          </h2>
+          <p className="text-base sm:text-lg text-primary-foreground/80 mb-10">
+            Find and book hotels & restaurants worldwide
+          </p>
 
-        {/* Search Form Component */}
-        <Formik initialValues={initialValues} validate={validate} onSubmit={handleSubmit}>
-          {({ values, errors, handleChange, setFieldValue, isSubmitting }) => {
-            const isDisabled =
-              (!values.name.trim() && !values.location.trim()) || isSubmitting || isPending;
-            return (
-              <div className="space-y-4">
-                <Tabs
-                  defaultValue="hotels"
-                  aria-label="Search category"
-                  onValueChange={(value) => setFieldValue("type", value as SearchType)}
-                >
-                  <TabsList className="bg-white/10 border border-white/15 rounded-full p-1 shadow-sm">
-                    {[
-                      { value: "hotels", label: "Hotels", icon: Hotel },
-                      { value: "restaurants", label: "Restaurants", icon: Utensils },
-                    ].map((tab) => (
-                      <TabsTrigger
-                        key={tab.value}
-                        value={tab.value}
-                        className="data-[state=active]:bg-white data-[state=active]:text-primary text-primary-foreground/80 rounded-full px-4"
-                      >
-                        <tab.icon className="mr-2 h-4 w-4" />
-                        {tab.label}
-                      </TabsTrigger>
-                    ))}
-                  </TabsList>
-                </Tabs>
-                <Form
-                  className="text-black flex flex-col md:flex-row gap-4 bg-white/95 p-4 rounded-2xl shadow-2xl w-full max-w-3xl mx-auto border border-white/40 transition focus-within:ring-2 focus-within:ring-primary/40"
-                  aria-busy={isSubmitting || isPending}
-                >
-                  <div className="flex-1 min-w-[200px]">
-                    <Label htmlFor="search-name" className="sr-only">
-                      Search by name
-                    </Label>
-                    <Input
-                      id="search-name"
-                      name="name"
-                      placeholder="Search by name"
-                      value={values.name}
-                      onChange={handleChange}
-                      aria-label="Search by name"
-                      autoComplete="off"
-                      className="h-12 text-base bg-white/90"
-                    />
-                  </div>
-                  <div className="flex-1 min-w-[200px]">
-                    <Label htmlFor="search-location" className="sr-only">
-                      Search by location
-                    </Label>
-                    <Input
-                      id="search-location"
-                      name="location"
-                      placeholder="Search by location"
-                      value={values.location}
-                      onChange={handleChange}
-                      aria-label="Search by location"
-                      autoComplete="off"
-                      className="h-12 text-base bg-white/90"
-                    />
-                  </div>
-                  <Button
-                    type="submit"
-                    className="bg-primary text-white w-full md:w-auto h-12 px-6 text-base font-semibold transition-transform duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow-md"
-                    disabled={isDisabled}
-                    aria-disabled={isDisabled}
+          {/* Search Form Component */}
+          <Formik initialValues={initialValues} validate={validate} onSubmit={handleSubmit}>
+            {({ values, errors, handleChange, setFieldValue, isSubmitting }) => {
+              const isDisabled =
+                (!values.name.trim() && !values.location.trim()) || isSubmitting || isPending;
+              return (
+                <div className="space-y-4">
+                  <Tabs
+                    defaultValue="hotels"
+                    aria-label="Search category"
+                    onValueChange={(value) => setFieldValue("type", value as SearchType)}
                   >
-                    <Search className="h-4 w-4 mr-1" />
-                    {isPending ? "Searching..." : "Search"}
-                  </Button>
-                </Form>
-                <div aria-live="polite" className="min-h-[20px] text-center">
-                  {isPending ? (
-                    <span className="text-xs text-primary-foreground/80">
-                      Searching for the best matches...
-                    </span>
-                  ) : errors.form ? (
-                    <span className="text-xs text-red-100" role="alert">
-                      {errors.form}
-                    </span>
-                  ) : null}
+                    <TabsList className="bg-white/10 border border-white/15 rounded-full p-1 shadow-sm">
+                      {[
+                        { value: "hotels", label: "Hotels", icon: Hotel },
+                        { value: "restaurants", label: "Restaurants", icon: Utensils },
+                      ].map((tab) => (
+                        <TabsTrigger
+                          key={tab.value}
+                          value={tab.value}
+                          className="data-[state=active]:bg-white data-[state=active]:text-primary text-primary-foreground/80 rounded-full px-4"
+                        >
+                          <tab.icon className="mr-2 h-4 w-4" />
+                          {tab.label}
+                        </TabsTrigger>
+                      ))}
+                    </TabsList>
+                  </Tabs>
+                  <Form
+                    className="text-black flex flex-col md:flex-row gap-4 bg-white/95 p-4 rounded-2xl shadow-2xl w-full max-w-3xl mx-auto border border-white/40 transition focus-within:ring-2 focus-within:ring-primary/40"
+                    aria-busy={isSubmitting || isPending}
+                  >
+                    <div className="flex-1 min-w-[200px]">
+                      <Label htmlFor="search-name" className="sr-only">
+                        Search by name
+                      </Label>
+                      <Input
+                        id="search-name"
+                        name="name"
+                        placeholder="Search by name"
+                        value={values.name}
+                        onChange={handleChange}
+                        aria-label="Search by name"
+                        autoComplete="off"
+                        className="h-12 text-base bg-white/90"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-[200px]">
+                      <Label htmlFor="search-location" className="sr-only">
+                        Search by location
+                      </Label>
+                      <Input
+                        id="search-location"
+                        name="location"
+                        placeholder="Search by location"
+                        value={values.location}
+                        onChange={handleChange}
+                        aria-label="Search by location"
+                        autoComplete="off"
+                        className="h-12 text-base bg-white/90"
+                      />
+                    </div>
+                    <Button
+                      type="submit"
+                      className="bg-primary text-white w-full md:w-auto h-12 px-6 text-base font-semibold transition-transform duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow-md"
+                      disabled={isDisabled}
+                      aria-disabled={isDisabled}
+                    >
+                      <Search className="h-4 w-4 mr-1" />
+                      {isPending ? "Searching..." : "Search"}
+                    </Button>
+                  </Form>
+                  <div aria-live="polite" className="min-h-[20px] text-center">
+                    {isPending ? (
+                      <span className="text-xs text-primary-foreground/80">
+                        Searching for the best matches...
+                      </span>
+                    ) : errors.name ? (
+                      <span className="text-xs text-red-100" role="alert">
+                        {errors.name}
+                      </span>
+                    ) : null}
+                  </div>
                 </div>
-              </div>
-            );
-          }}
-        </Formik>
+              );
+            }}
+          </Formik>
         </div>
       </div>
     </section>

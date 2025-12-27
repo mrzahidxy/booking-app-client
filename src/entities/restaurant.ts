@@ -30,7 +30,7 @@ export interface RestaurantAPIResponse {
   data: RestaurantData;
 }
 
-export interface Pagination {
+ interface Pagination {
   totalItems: number;
   totalPages: number;
   currentPage: number;

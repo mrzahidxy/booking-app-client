@@ -1,4 +1,5 @@
 import { Link } from "lucide-react";
+import Image from "next/image";
 import { FiBell, FiEdit2, FiX } from "react-icons/fi";
 
 interface props {
@@ -33,9 +34,12 @@ export function Sidebar({ setShowSidebar }: props) {
           className="flex flex-row items-center gap-4"
           //   onClick={handleDropdownClick}
         >
-          <img
+          <Image
             src="https://fakeimg.pl/200/"
-            className="w-6 h-6 rounded-full cursor-pointer"
+            alt="Profile"
+            width={24}
+            height={24}
+            className="h-6 w-6 rounded-full cursor-pointer"
           />
           <span className="text-lg font-semibold">Profile</span>
         </div>

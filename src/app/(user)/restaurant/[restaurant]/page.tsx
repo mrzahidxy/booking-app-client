@@ -27,7 +27,7 @@ export default async function RestaurantDetailPage({
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="text-2xl font-semibold mb-2">Restaurant not found</h1>
           <p className="text-muted-foreground mb-6">
-            We couldn't load this restaurant. Please try again.
+            We couldn&apos;t load this restaurant. Please try again.
           </p>
           <Button asChild>
             <Link href="/">Back to home</Link>
@@ -99,7 +99,7 @@ export default async function RestaurantDetailPage({
                 <div className="prose prose-sm max-w-none">
                   <h3 className="text-lg font-semibold mb-2">Menu</h3>
                   <pre className="whitespace-pre-wrap">
-                    {JSON.parse(restaurantData.menu).map(
+                    {(typeof restaurantData.menu === 'string' ? JSON.parse(restaurantData.menu) : restaurantData.menu).map(
                       (
                         item: { name: string; price: string },
                         index: number
