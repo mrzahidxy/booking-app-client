@@ -4,7 +4,7 @@ import { Inter } from "next/font/google";
 
 import { Toaster } from "@/components/ui/toaster";
 
-import ClientProviders from "./client-providers";
+import ClientProviders from "@/providers/client-providers";
 
 const inter = Inter({ subsets: ["latin"] });
 

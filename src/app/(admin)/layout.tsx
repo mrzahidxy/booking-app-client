@@ -3,8 +3,8 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { Navbar } from "../(root)/Navbar.component";
-import Sidebar from "./Sidebar.component";
+import { Navbar } from "@/components/common/Navbar.component";
+import Sidebar from "@/components/features/admin/Sidebar.component";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function DashboardLayout({
@@ -14,26 +14,35 @@ export default function DashboardLayout({
 }) {
   const { status, data } = useSession();
   const router = useRouter();
-  const userRole = data?.user?.role;
+  const userRole =
+    typeof data?.user?.role === "string"
+      ? data.user.role.toUpperCase()
+      : data?.user?.role;
 
   useEffect(() => {
-    if (status === "unauthenticated" && userRole !== "ADMIN") {
-      router.push("/auth/login");
+    if (status === "loading") {
+      return;
     }
-  }, [status, userRole]);
+    if (status !== "authenticated") {
+      router.replace("/auth/login");
+      return;
+    }
+    if (userRole !== "ADMIN") {
+      router.replace("/");
+    }
+  }, [status, userRole, router]);
 
 
   return (
-    <div className="flex flex-col h-screen">
-      {/* Navbar */}
+    <div className="flex min-h-screen flex-col bg-slate-50">
       <Navbar />
 
       <div className="flex flex-1">
-        {/* Sidebar */}
         <Sidebar />
 
-        {/* Main Content */}
-        <main className="flex-1 px-16 p-8 overflow-auto">{children}</main>
+        <main className="flex-1 px-6 py-8 lg:px-10">
+          <div className="mx-auto w-full max-w-[1200px]">{children}</div>
+        </main>
       </div>
     </div>
   );

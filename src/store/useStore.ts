@@ -1,5 +1,5 @@
 // store/useStore.ts
-import privateRequest from "@/healper/privateRequest";
+import privateRequest from "@/shared/lib/api";
 import axios from "axios";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";

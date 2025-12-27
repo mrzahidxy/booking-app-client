@@ -13,9 +13,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import TableActionButtons from "@/components/common/table-actions.component";
-import { PermissionCreateUpdate } from "./add/permission-create-update.component";
-import privateRequest from "@/healper/privateRequest";
-import { useToast } from "@/hooks/use-toast";
+import { PermissionCreateUpdate } from "@/components/features/admin/role-menu-permission/permissions/add/permission-create-update.component";
+import { useToast } from "@/shared/hooks/use-toast";
+import { deletePermission as removePermission } from "@/features/role-permission/api";
 
 const PermissionPage = () => {
   const { toast } = useToast();
@@ -39,8 +39,7 @@ const PermissionPage = () => {
   };
 
   const { mutate: deletePermission, isPending: isDeleting } = useMutation({
-    mutationFn: (id: number) =>
-      privateRequest.delete(`/role-permission/permissions/${id}`),
+    mutationFn: (id: number) => removePermission(id),
     onSuccess: () => {
       toast({
         title: "Success",

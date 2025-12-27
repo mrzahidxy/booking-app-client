@@ -4,8 +4,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DynamicTable } from "@/components/ui/dynamic-data-table.component";
 import TableActionButtons from "@/components/common/table-actions.component";
 import { useMutation } from "@tanstack/react-query";
-import privateRequest from "@/healper/privateRequest";
-import queryClient from "@/app/config/queryClient";
+import privateRequest from "@/shared/lib/api";
+import queryClient from "@/shared/lib/query-client";
 import { useRouter } from "next/navigation";
 import { Suspense } from "react";
 
@@ -30,7 +30,11 @@ const RestaurantListPage = () => {
       accessorKey: "image",
       header: "Image",
       cell: ({ row }) => (
-        <img style={{ width: "100px" }} src={row.original.image[0]} />
+        <img
+          className="h-16 w-24 rounded-xl object-cover"
+          src={row.original.image?.[0]}
+          alt={row.original.name}
+        />
       ),
     },
     { accessorKey: "name", header: "Name" },
@@ -53,15 +57,42 @@ const RestaurantListPage = () => {
     {
       accessorKey: "menu",
       header: "Menu",
-      cell: ({ row }) => (
-        <ul>
-          {JSON.parse(row.original.menu)?.map((item: { name: string; price: number }, index: number) => (
-            <li key={index}>{item.name} -{item.price}</li>
-          ))}
-        </ul>
-      )
+      cell: ({ row }) => {
+        const rawMenu = row.original.menu;
+        const parsedMenu =
+          typeof rawMenu === "string"
+            ? (() => {
+                try {
+                  return JSON.parse(rawMenu);
+                } catch {
+                  return [];
+                }
+              })()
+            : rawMenu;
+
+        const menuItems = Array.isArray(parsedMenu) ? parsedMenu : [];
+
+        return (
+          <ul>
+            {menuItems.map(
+              (item: { name: string; price: number }, index: number) => (
+                <li key={index}>
+                  {item.name} -{item.price}
+                </li>
+              )
+            )}
+          </ul>
+        );
+      }
     },
-    { accessorKey: "createdAt", header: "Created At" },
+    {
+      accessorKey: "createdAt",
+      header: "Created At",
+      cell: ({ row }) => {
+        const date = new Date(row?.original?.createdAt);
+        return date.toLocaleDateString();
+      },
+    },
     { accessorKey: "ratings", header: "Ratings" },
     {
       accessorKey: "action",
@@ -83,8 +114,9 @@ const RestaurantListPage = () => {
         columns={columns}
         url="/restaurants"
         title="Restaurants"
+        description="Manage all restaurants in the platform"
         queryKey="restaurants-list"
-        buttonText="Create Restaurant"
+        buttonText="Add New Restaurant"
         handleAdd={() => router.push("/admin/restaurants/add")}
       />
     </Suspense>

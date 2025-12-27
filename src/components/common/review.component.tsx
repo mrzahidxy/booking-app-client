@@ -5,13 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Star } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import privateRequest from "@/healper/privateRequest";
+import privateRequest from "@/shared/lib/api";
 import { useSession } from "next-auth/react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import DefaultLoader from "../common/DefaultLoacer.component";
-import queryClient from "@/app/config/queryClient";
+import queryClient from "@/shared/lib/query-client";
 import { ReviewList } from "./review-list.component";
 
 interface ReviewFormProps {

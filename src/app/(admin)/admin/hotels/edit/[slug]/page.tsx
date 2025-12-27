@@ -1,4 +1,4 @@
-import { HotelCreateUpdate } from "../../add/hotels-create-update.component";
+import { HotelCreateUpdate } from "@/components/features/admin/hotels/add/hotels-create-update.component";
 import CommonLayout from "@/components/common/CommonLayout.component";
 
 export default function UpdateHotel({
