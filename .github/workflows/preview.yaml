@@ -9,8 +9,8 @@ on:
   workflow_dispatch: {}
   # Automatically trigger on pushes to the dev branch
   push:
-    branches:
-      - dev-deployment
+    branches-ignore:
+      - main
 
 jobs:
   deploy-preview:
