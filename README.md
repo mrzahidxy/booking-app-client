@@ -37,7 +37,6 @@ Gontobbo is a modern full-stack web application to explore, search, and book hot
 - **Cloudinary (image upload)**
 
 ### DevOps
-- **Vercel** (Frontend hosting)
 - **Render/AWS/Docker** (optional backend hosting)
 - **GitHub Actions** (CI/CD)
 - **Dotenv** for environment configuration
