@@ -16,6 +16,7 @@ import { AxiosError } from "axios";
 import queryClient from "@/shared/lib/query-client";
 import { toast } from "@/shared/hooks/use-toast";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import {
   Pagination,
   PaginationContent,
@@ -36,9 +37,12 @@ const fetchNotifications = async (page: number, limit: number) => {
 
 export default function NotificationsPage() {
   const [currentPage, setCurrentPage] = useState(1);
+  const { status } = useSession();
+  const isSessionReady = status === "authenticated";
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["notifications", currentPage],
     queryFn: () => fetchNotifications(currentPage, 20),
+    enabled: isSessionReady,
   });
 
   const notifications = data?.data?.collection ?? [];
@@ -77,12 +81,23 @@ export default function NotificationsPage() {
   };
 
   // Handle error and loading states
-  if (isLoading) {
+  if (status === "loading" || isLoading) {
     return (
       <div className="container max-w-4xl py-10">
         <Card className="shadow-sm">
           <CardContent className="py-8 text-center text-muted-foreground">
-            Loading notifications...
+            Checking your session...
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+  if (status === "unauthenticated") {
+    return (
+      <div className="container max-w-4xl py-10">
+        <Card className="shadow-sm">
+          <CardContent className="py-8 text-center text-muted-foreground">
+            Sign in to view notifications.
           </CardContent>
         </Card>
       </div>
