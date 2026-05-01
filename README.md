@@ -51,7 +51,6 @@ Gontobbo is a modern hotel and restaurant booking frontend built with Next.js 14
 The client lives in the `client/` directory, so install it separately from the API.
 
 ```bash
-cd client
 npm install
 cp .env.example .env.local
 npm run dev
