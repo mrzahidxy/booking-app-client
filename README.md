@@ -100,6 +100,18 @@ Documented in [`.env.example`](./.env.example):
 
 ---
 
+## 🚀 Deployment
+
+The client uses a single GitHub Actions workflow at [`.github/workflows/vercel-deploy.yml`](./.github/workflows/vercel-deploy.yml).
+
+- Pushes to `dev-deployment` create Vercel preview deployments.
+- Pushes to `main` create Vercel production deployments.
+- Manual runs let you choose `preview` or `production`.
+- The workflow uses `npm ci`, npm caching, and Vercel build caching to keep deployments fast.
+- It keeps the deploy path to checkout, install, pull env, build, and deploy.
+
+---
+
 ## 📸 Screenshots
 
 _You can add screenshots here later like:_
