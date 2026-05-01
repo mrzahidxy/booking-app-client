@@ -53,7 +53,6 @@ jobs:
           echo "target=$TARGET" >> "$GITHUB_OUTPUT"
 
       - name: Install dependencies
-        working-directory: client
         run: npm ci
 
       - name: Restore build cache
@@ -68,11 +67,9 @@ jobs:
             ${{ runner.os }}-client-build-
 
       - name: Pull Vercel environment
-        working-directory: client
         run: npx --yes vercel@latest pull --yes --environment=${{ steps.target.outputs.target }} --token="$VERCEL_TOKEN"
 
       - name: Build project artifacts
-        working-directory: client
         run: |
           if [[ "${{ steps.target.outputs.target }}" == "production" ]]; then
             npx --yes vercel@latest build --prod --token="$VERCEL_TOKEN"
@@ -81,7 +78,6 @@ jobs:
           fi
 
       - name: Deploy to Vercel
-        working-directory: client
         shell: bash
         run: |
           if [[ "${{ steps.target.outputs.target }}" == "production" ]]; then
