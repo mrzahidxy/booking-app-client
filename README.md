@@ -1,19 +1,22 @@
-# 🏨 Gontobbo - Hotel & Restaurant Reservation Platform
+# 🏨 Gontobbo Booking App
 
-Gontobbo is a modern full-stack web application to explore, search, and book hotels and restaurants with ease. Built with scalability, performance, and usability in mind.
+![Version 1](https://img.shields.io/badge/Version-1-blue?style=for-the-badge)
+
+Version 1 release of the Gontobbo booking app.
+
+Gontobbo is a modern hotel and restaurant booking frontend built with Next.js 14 and the App Router. It connects to the API for search, booking, payments, notifications, and admin workflows.
 
 ---
 
 ## 🚀 Features
 
-- 🔍 Search hotels & restaurants by **name** and **location**
-- 📅 Book rooms with **calendar selection**
-- 👥 Select number of **guests**
-- 💼 Role-based access (Admin/User)
-- 📸 Upload multiple images with **Cloudinary**
-- 🛏️ Manage rooms per hotel
-- ✅ Form validation using **Formik** + **Yup/Zod**
-- 🔄 API caching, mutation & pagination with **React Query**
+- 🔍 Hotel and restaurant search
+- 📅 Booking management
+- 💳 Payment integration
+- 🛠️ Admin panel
+- 🔔 Notifications
+- 👥 Role-based access control
+- 📸 Image upload and gallery views
 - 🌙 Dark mode support
 
 ---
@@ -21,38 +24,91 @@ Gontobbo is a modern full-stack web application to explore, search, and book hot
 ## 🛠️ Tech Stack
 
 ### Frontend
-- **Next.js 14 (App Router)**
-- **React**
+- **Next.js 14** with **App Router**
+- **React 18**
+- **TypeScript**
 - **Tailwind CSS**
-- **ShadCN UI**
+- **Radix UI**
 - **React Query**
-- **Formik + Yup**
-- **Zod (server validation)**
+- **NextAuth**
+- **Formik** + **Yup**
+- **Zustand**
+- **Axios**
+- **Firebase**
+- **Stripe JS**
 
-### Backend
-- **Node.js + Express.js**
-- **Prisma ORM**
-- **PostgreSQL**
-- **Zod validation**
-- **Cloudinary (image upload)**
-
-### DevOps
-- **Render/AWS/Docker** (optional backend hosting)
-- **GitHub Actions** (CI/CD)
-- **Dotenv** for environment configuration
+### UI / Forms
+- **Lucide React**
+- **React Hook Form**
+- **React Day Picker**
+- **Tailwind Merge**
+- **Class Variance Authority**
 
 ---
 
 ## 📦 Installation
 
-```bash
-# Clone the repo
-git clone https://github.com/your-username/gontobbo.git
-cd gontobbo
+The client lives in the `client/` directory, so install it separately from the API.
 
-# Install dependencies
+```bash
+cd client
 npm install
+cp .env.example .env.local
+npm run dev
 ```
+
+PowerShell:
+
+```powershell
+Copy-Item .env.example .env.local
+```
+
+Make sure the API is running and `NEXT_PUBLIC_BASE_URL` points to it before logging in or testing booking flows.
+
+---
+
+## 🔐 Environment Variables
+
+Documented in [`.env.example`](./.env.example):
+
+| Variable | Purpose |
+| --- | --- |
+| `NEXT_PUBLIC_BASE_URL` | Base API URL used by the client |
+| `NEXT_PUBLIC_FIREBASE_API_KEY` | Firebase API key |
+| `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | Firebase auth domain |
+| `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | Firebase project id |
+| `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | Firebase storage bucket |
+| `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | Firebase messaging sender id |
+| `NEXT_PUBLIC_FIREBASE_APP_ID` | Firebase app id |
+| `NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID` | Firebase measurement id |
+| `NEXT_PUBLIC_FIREBASE_VAPID_KEY` | Firebase web push VAPID key |
+| `NEXTAUTH_URL` | Canonical NextAuth URL |
+| `AUTH_SECRET` | NextAuth secret |
+| `NEXT_PUBLIC_AUTH_SERVICE_SECRET` | Optional auth service secret used by the backend flow |
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Stripe publishable key used by the client |
+
+---
+
+## 📚 NPM Scripts
+
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Starts the Next.js development server |
+| `npm run build` | Builds the production client |
+| `npm run start` | Starts the production Next.js server |
+| `npm run lint` | Runs Next.js linting |
+
+---
+
+## 🚀 Deployment
+
+The client uses a single GitHub Actions workflow at [`.github/workflows/vercel-deploy.yml`](./.github/workflows/vercel-deploy.yml).
+
+- Pushes to `dev-deployment` create Vercel preview deployments.
+- Pushes to `main` create Vercel production deployments.
+- Manual runs let you choose `preview` or `production`.
+- The workflow uses `npm ci`, npm caching, and Vercel build caching to keep deployments fast.
+- It keeps the deploy path to checkout, install, pull env, build, and deploy.
 
 ---
 
@@ -60,7 +116,7 @@ npm install
 
 _You can add screenshots here later like:_
 
-```
+```md
 ![Home Page](./screenshots/home.png)
 ![Booking Modal](./screenshots/booking.png)
 ```
