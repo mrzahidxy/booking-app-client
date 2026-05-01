@@ -47,7 +47,7 @@ const AssignedPermissionsPage = () => {
     <Suspense fallback={<div>Loading...</div>}>
       <DynamicTable
         columns={columns}
-        url="/role-permission/assigned-permissions/"
+        url="/role-permission/assigned-permissions"
         title="Assigned Permissions"
         queryKey="assigned-permissions-list"
         buttonText="Assign Permission"

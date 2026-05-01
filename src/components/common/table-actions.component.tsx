@@ -22,18 +22,16 @@ const TableActionButtons: React.FC<TableActionButtonsProps> = ({
   loading = false,
 }) => {
   return (
-    <div className="flex space-x-3">
+    <div className="flex items-center gap-2">
       {showEdit && onEdit && (
         <button
           type="button"
           onClick={() => onEdit(id)}
           aria-label="Edit"
           disabled={loading}
-          className={`text-2xl cursor-pointer ${
-            loading ? "text-gray-400" : "hover:text-gray-600"
-          }`}
+          className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-300"
         >
-          <PencilLine />
+          <PencilLine className="h-4 w-4" />
         </button>
       )}
 
@@ -43,11 +41,9 @@ const TableActionButtons: React.FC<TableActionButtonsProps> = ({
           onClick={() => onDelete(id)}
           aria-label="Delete"
           disabled={loading}
-          className={`text-2xl cursor-pointer ${
-            loading ? "text-gray-400" : "text-red-500 hover:text-red-700"
-          }`}
+          className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-rose-500 transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 disabled:cursor-not-allowed disabled:text-slate-300"
         >
-          <Trash />
+          <Trash className="h-4 w-4" />
         </button>
       )}
 
@@ -57,11 +53,9 @@ const TableActionButtons: React.FC<TableActionButtonsProps> = ({
           onClick={() => onView(id)}
           aria-label="View"
           disabled={loading}
-          className={`text-2xl cursor-pointer ${
-            loading ? "text-gray-400" : "text-blue-500 hover:text-blue-700"
-          }`}
+          className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-indigo-500 transition hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-600 disabled:cursor-not-allowed disabled:text-slate-300"
         >
-          <Eye />
+          <Eye className="h-4 w-4" />
         </button>
       )}
     </div>

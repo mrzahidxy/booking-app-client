@@ -4,10 +4,11 @@ import { ColumnDef } from "@tanstack/react-table";
 import { DynamicTable } from "@/components/ui/dynamic-data-table.component";
 import TableActionButtons from "@/components/common/table-actions.component";
 import { useMutation } from "@tanstack/react-query";
-import privateRequest from "@/healper/privateRequest";
-import queryClient from "@/app/config/queryClient";
+import privateRequest from "@/shared/lib/api";
+import queryClient from "@/shared/lib/query-client";
 import { useRouter } from "next/navigation";
 import { Suspense } from "react";
+import Image from "next/image";
 
 const HotelsPage = () => {
   const router = useRouter();
@@ -31,22 +32,49 @@ const HotelsPage = () => {
     {
       accessorKey: "image",
       header: "Image",
-      cell: ({ row }) => <img style={{ width: "100px" }} src={row.original.image[0]} />,
+      cell: ({ row }) => {
+        const imageSrc = row.original.image?.[0];
+
+        if (!imageSrc) {
+          return (
+            <div className="flex h-16 w-24 items-center justify-center rounded-xl bg-muted/50 text-xs text-muted-foreground">
+              No image
+            </div>
+          );
+        }
+
+        return (
+          <Image
+            className="h-16 w-24 rounded-xl object-cover"
+            src={imageSrc}
+            alt={row.original.name ?? "Hotel image"}
+            width={96}
+            height={64}
+          />
+        );
+      },
     },
-    { accessorKey: "name", header: "User Name" },
+    { accessorKey: "name", header: "Hotel Name" },
     { accessorKey: "location", header: "Location" },
     {
       accessorKey: "rooms",
-      header: "rooms",
+      header: "Rooms",
       cell: ({ row }) => (
-        <ul>
+        <ul className="space-y-1 text-xs text-slate-500">
           {row.original.rooms.map((room: any) => (
             <li key={room.id}>{room.roomType}</li>
           ))}
         </ul>
       ), //</ul> row.original.rooms.map((room: any) => room.roomType + ", "),
     },
-    { accessorKey: "createdAt", header: "Created At" },
+    {
+      accessorKey: "createdAt",
+      header: "Created At",
+      cell: ({ row }) => {
+        const date = new Date(row?.original?.createdAt);
+        return date.toLocaleDateString();
+      },
+    },
     { accessorKey: "ratings", header: "Ratings" },
     {
       accessorKey: "action",
@@ -69,9 +97,10 @@ const HotelsPage = () => {
       <DynamicTable
         columns={columns}
         url="/hotels"
-        title="Hotel"
+        title="Hotels"
+        description="Manage all hotels in the platform"
         queryKey="hotels-list"
-        buttonText="Create Hotel"
+        buttonText="Add New Hotel"
         handleAdd={() => router.push("/admin/hotels/add")}
       />
     </Suspense>

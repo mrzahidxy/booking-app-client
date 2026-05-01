@@ -1,6 +1,6 @@
-import { publicRequest } from "@/healper/privateRequest";
+import { publicRequest } from "@/shared/lib/api";
 import { ProductCard } from "./Product-Card.component";
-import { TProduct } from "@/models";
+import { TProduct } from "@/entities";
 
 // Async function to fetch product data
 const fetchProduct = async (

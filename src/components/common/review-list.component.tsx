@@ -2,7 +2,7 @@
 
 import { Star } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import privateRequest from "@/healper/privateRequest";
+import privateRequest from "@/shared/lib/api";
 import { Card, CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";
 import DefaultLoader from "./DefaultLoacer.component";

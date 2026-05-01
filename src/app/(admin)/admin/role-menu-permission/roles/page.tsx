@@ -9,11 +9,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { RoleCreateUpdate } from "./add/role-create-update.component";
+import { RoleCreateUpdate } from "@/components/features/admin/role-menu-permission/roles/add/role-create-update.component";
 import TableActionButtons from "@/components/common/table-actions.component";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import privateRequest from "@/healper/privateRequest";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/shared/hooks/use-toast";
+import { deleteRole as removeRole } from "@/features/role-permission/api";
 
 const RolePage = () => {
   const { toast } = useToast();
@@ -32,7 +32,7 @@ const RolePage = () => {
   };
 
   const { mutate: deleteRole, isPending: isDeleting } = useMutation({
-    mutationFn: (id: number) => privateRequest.delete(`/role-permission/roles/${id}`),
+    mutationFn: (id: number) => removeRole(id),
     onSuccess: () => {
       toast({ title: "Success", description: "Role deleted successfully!" });
       queryClient.invalidateQueries({ queryKey: ["rolesList"] });

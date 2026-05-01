@@ -1,5 +1,5 @@
 import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { AssignedPermissionsCreateUpdate } from "../../add/assigned-permissions-create-update.component";
+import { AssignedPermissionsCreateUpdate } from "@/components/features/admin/role-menu-permission/assigned-permissions/add/assigned-permissions-create-update.component";
 
 export default function AssignPermission({
   params,
