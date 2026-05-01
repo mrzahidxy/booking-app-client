@@ -26,6 +26,7 @@ import { AxiosError } from "axios";
 import queryClient from "@/shared/lib/query-client";
 import { toast } from "@/shared/hooks/use-toast";
 import { Notification, NotificationPage } from "@/entities";
+import { useSession } from "next-auth/react";
 
 const fetchNotifications = async (
   page: number,
@@ -38,6 +39,8 @@ const fetchNotifications = async (
 };
 
 export function NotificationDropdown(): JSX.Element {
+  const { status } = useSession();
+  const isSessionReady = status === "authenticated";
   const {
     data,
     isLoading,
@@ -53,6 +56,7 @@ export function NotificationDropdown(): JSX.Element {
   >({
     queryKey: ["notifications"],
     queryFn: ({ pageParam = 1 }) => fetchNotifications(pageParam as number, 20),
+    enabled: isSessionReady,
     getNextPageParam: (lastPage) =>
       lastPage.pagination.hasNextPage
         ? lastPage.pagination.currentPage + 1
@@ -83,7 +87,8 @@ export function NotificationDropdown(): JSX.Element {
 
   // Render list or states
   const renderNotifications = () => {
-    if (isLoading) return <p>Loading...</p>;
+    if (status === "loading" || isLoading) return <p>Loading...</p>;
+    if (status === "unauthenticated") return <p>Sign in to view notifications.</p>;
     if (isError) return <p>Error: {(error as Error).message}</p>;
     if (notifications.length === 0)
       return (

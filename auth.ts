@@ -2,6 +2,10 @@ import NextAuth from "next-auth";
 import credentials from "next-auth/providers/credentials";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  trustHost: true,
+  session: {
+    strategy: "jwt",
+  },
   providers: [
     credentials({
       name: "Credentials",
