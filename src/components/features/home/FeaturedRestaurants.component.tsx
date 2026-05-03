@@ -86,8 +86,8 @@ export default function FeaturedRestaurants() {
               : restaurant.cuisine;
 
             return (
-              <Link href={`/restaurant/${restaurant.id}`} key={restaurant.id}>
-                <Card className="group overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10">
+              <Link href={`/restaurant/${restaurant.id}`} key={restaurant.id} className="h-full">
+                <Card className="group flex h-full flex-col overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10">
                   <Image
                     src={restaurant.image?.[0] ?? "/images/main-banner.jpg"}
                     alt={restaurant.name ?? "Restaurant"}
@@ -96,18 +96,20 @@ export default function FeaturedRestaurants() {
                     className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 20vw"
                   />
-                  <CardContent className="p-4">
-                    <div className="mb-2 flex items-start justify-between">
-                      <h4 className="font-semibold text-foreground">{restaurant.name}</h4>
+                  <CardContent className="flex flex-1 flex-col p-4">
+                    <div className="mb-2 flex items-start justify-between gap-3">
+                      <h4 className="line-clamp-2 min-h-[3.5rem] text-lg font-semibold leading-7 text-foreground">
+                        {restaurant.name}
+                      </h4>
                       <Badge variant="success" className="flex items-center gap-1">
                         <Star className="h-3 w-3 fill-current" />
                         {restaurant.rating ?? restaurant.ratings ?? 0}
                       </Badge>
                     </div>
-                    <p className="mb-2 text-sm text-muted-foreground">
+                    <p className="mb-2 min-h-[3rem] flex-1 text-sm leading-6 text-muted-foreground">
                       {cuisine} • $$$ • {restaurant.location}
                     </p>
-                    <Button variant="action" className="w-full">
+                    <Button variant="action" className="mt-4 w-full">
                       Reserve a Table
                     </Button>
                   </CardContent>
