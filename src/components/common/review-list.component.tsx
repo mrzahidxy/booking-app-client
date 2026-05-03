@@ -64,11 +64,11 @@ export function ReviewList({ id, type }: ReviewListProps) {
           <Card key={review.id}>
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-2">
-                <Badge variant="secondary" className="flex items-center">
-                  <Star className="h-3 w-3 mr-1 fill-yellow-400 stroke-yellow-400" />
+                <Badge variant="warning" className="flex items-center gap-1">
+                  <Star className="h-3 w-3 fill-current" />
                   {review.rating}
                 </Badge>
-                <span className="text-sm font-medium">{review.user.name}</span>
+                <span className="text-sm font-medium text-foreground">{review.user.name}</span>
               </div>
               <p className="text-sm text-muted-foreground">{review.review}</p>
             </CardContent>

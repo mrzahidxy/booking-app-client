@@ -41,7 +41,7 @@ const ReviewsPage = () => {
   if (isError) {
     return (
       <div className="container max-w-4xl mx-auto py-8">
-        <p className="text-red-500">Error loading reviews: {error?.message}</p>
+        <p className="text-sm text-destructive">Error loading reviews: {error?.message}</p>
       </div>
     );
   }
@@ -51,7 +51,7 @@ const ReviewsPage = () => {
   return (
     <div className="container max-w-4xl mx-auto py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">Review History</h1>
+        <h1 className="text-3xl font-semibold tracking-tight">Review History</h1>
         <p className="text-muted-foreground mt-1">
           Your feedback on hotels and restaurants.
         </p>
@@ -79,7 +79,7 @@ const ReviewsPage = () => {
                 <CardHeader className="space-y-2">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-lg">{target}</CardTitle>
-                    <Badge className="border-emerald-200 bg-emerald-50 text-emerald-700">
+                    <Badge variant="success">
                       {review.rating}/5
                     </Badge>
                   </div>

@@ -149,7 +149,7 @@ function ReservationForm({
       </div>
 
       <div
-        className="rounded-md border bg-muted/30 px-3 py-2 text-sm text-muted-foreground"
+        className="rounded-xl border border-border bg-muted/40 px-3 py-2 text-sm text-muted-foreground"
         aria-live="polite"
       >
         {isLoading ? (
@@ -163,7 +163,8 @@ function ReservationForm({
       </div>
 
       <Button
-        className="w-full bg-orange-500 text-white hover:bg-orange-600"
+        variant="action"
+        className="w-full"
         disabled={isDisabled}
         type="submit"
       >
@@ -218,16 +219,17 @@ export default function RestaurantResarvetion({ restaurantData }: any) {
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="sticky top-6">
         <CardHeader>
           <CardTitle>Make a Reservation</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3 rounded-xl border border-border bg-slate-50/80 px-3 py-2">
             <div className="flex items-center">
-              <Clock className="h-4 w-4 mr-2" />
+              <Clock className="mr-2 h-4 w-4 text-primary" />
               <span>Open Now</span>
             </div>
+            <span className="text-xs font-medium text-success">Accepting reservations</span>
           </div>
           <Separator />
           <Formik

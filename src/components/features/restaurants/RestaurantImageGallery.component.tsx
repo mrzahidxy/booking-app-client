@@ -6,19 +6,18 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
-export default function RestaurantImageGallery({ images }: { images: string[] }) {
+export default function RestaurantImageGallery({ images = [] }: { images?: string[] }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   return (
     <>
-      {/* Image Gallery */}
-      <div className="relative rounded-lg overflow-hidden">
+      <div className="relative overflow-hidden rounded-2xl border border-border">
         <Image
           src={images[currentImageIndex] || "/placeholder.svg"}
-          alt="Hotel"
+          alt="Restaurant"
           width={800}
           height={500}
-          className="w-full aspect-video object-cover"
+          className="aspect-video w-full object-cover"
         />
         <div className="absolute bottom-4 right-4 flex gap-2">
           <Button
@@ -29,6 +28,7 @@ export default function RestaurantImageGallery({ images }: { images: string[] })
                 prev === 0 ? images.length - 1 : prev - 1
               )
             }
+            disabled={images.length <= 1}
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -40,20 +40,20 @@ export default function RestaurantImageGallery({ images }: { images: string[] })
                 prev === images.length - 1 ? 0 : prev + 1
               )
             }
+            disabled={images.length <= 1}
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
       </div>
 
-      {/* Thumbnail Scroll */}
       <ScrollArea className="w-full whitespace-nowrap rounded-lg">
         <div className="flex gap-2 p-1">
           {images.map((image, index) => (
             <button
               key={index}
               onClick={() => setCurrentImageIndex(index)}
-              className={`relative flex-shrink-0 rounded-md overflow-hidden ${
+              className={`relative flex-shrink-0 overflow-hidden rounded-xl border border-border ${
                 currentImageIndex === index ? "ring-2 ring-primary" : ""
               }`}
             >
@@ -62,7 +62,7 @@ export default function RestaurantImageGallery({ images }: { images: string[] })
                 alt={`Thumbnail ${index + 1}`}
                 width={100}
                 height={100}
-                className="w-20 h-20 object-cover"
+                className="h-20 w-20 object-cover"
               />
             </button>
           ))}

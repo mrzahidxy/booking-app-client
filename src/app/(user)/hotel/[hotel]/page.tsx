@@ -35,7 +35,7 @@ export default async function HotelDetailPage({ params }: PageProps) {
     return (
       <div className="min-h-screen bg-background">
         <div className="container mx-auto px-4 py-16 text-center">
-          <h1 className="text-2xl font-semibold mb-2">Hotel not found</h1>
+          <h1 className="mb-2 text-2xl font-semibold tracking-tight">Hotel not found</h1>
           <p className="text-muted-foreground mb-6">
             We couldn&apos;t load this hotel. Please try again.
           </p>
@@ -67,7 +67,7 @@ export default async function HotelDetailPage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b bg-background/80 backdrop-blur">
+      <header className="border-b border-border bg-white/80 backdrop-blur">
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-wrap items-center gap-3 mb-4">
             <Button variant="ghost" size="sm" asChild>
@@ -77,18 +77,18 @@ export default async function HotelDetailPage({ params }: PageProps) {
               </Link>
             </Button>
             <Separator orientation="vertical" className="h-6 hidden sm:block" />
-            <Badge className="flex items-center border-emerald-200 bg-emerald-50 text-emerald-700">
-              <Star className="h-3 w-3 mr-1 fill-emerald-500 text-emerald-500" />
+            <Badge variant="success" className="flex items-center gap-1">
+              <Star className="h-3 w-3 fill-current" />
               {ratingValue}
             </Badge>
           </div>
           <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">
+              <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
                 {hotelData.name}
               </h1>
-              <p className="text-muted-foreground flex items-center mt-2">
-                <MapPin className="h-4 w-4 mr-2" />
+              <p className="mt-2 flex items-center text-muted-foreground">
+                <MapPin className="mr-2 h-4 w-4" />
                 {hotelData.location}
               </p>
             </div>
@@ -105,14 +105,14 @@ export default async function HotelDetailPage({ params }: PageProps) {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid gap-8 lg:grid-cols-3">
           {/* Left Column - Images and Details */}
           <div className="lg:col-span-2 space-y-8">
             <HotelImageGallery images={hotelData.image ?? []} />
 
             {/* Hotel Details */}
             <Tabs defaultValue="overview" className="w-full">
-              <TabsList className="bg-muted/70 p-1 rounded-full">
+              <TabsList className="bg-muted/70 p-1.5 rounded-full">
                 <TabsTrigger value="overview">Overview</TabsTrigger>
                 <TabsTrigger value="amenities">Amenities</TabsTrigger>
                 <TabsTrigger value="reviews">Reviews</TabsTrigger>
@@ -157,7 +157,7 @@ export default async function HotelDetailPage({ params }: PageProps) {
                 <p className="text-sm text-muted-foreground">
                   Pick a room type and confirm availability for your dates.
                 </p>
-                <div className="rounded-lg border bg-muted/40 px-4 py-3 text-sm text-muted-foreground">
+                <div className="rounded-xl border border-border bg-muted/40 px-4 py-3 text-sm text-muted-foreground">
                   {hotelData.rooms?.length
                     ? "Rooms available. Select a room to continue."
                     : "No rooms available for this hotel yet."}

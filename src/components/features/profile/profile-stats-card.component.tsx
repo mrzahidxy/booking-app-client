@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { BookOpen, MessageSquare, Bell } from "lucide-react"
-import Link from "next/link"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BookOpen, Bell, MessageSquare } from "lucide-react";
+import Link from "next/link";
 
 interface UserData {
-  bookings?: any[]
-  review?: any[]
-  notification?: any[]
+  bookings?: any[];
+  review?: any[];
+  notification?: any[];
 }
 
 interface ProfileStatsCardProps {
-  userData: UserData
+  userData: UserData;
 }
 
 export const ProfileStatsCard = ({ userData }: ProfileStatsCardProps) => {
@@ -21,8 +21,7 @@ export const ProfileStatsCard = ({ userData }: ProfileStatsCardProps) => {
       value: userData?.bookings?.length ?? 0,
       icon: BookOpen,
       description: "Completed bookings",
-      color: "text-blue-600",
-      bgColor: "bg-blue-50",
+      tone: "primary",
       href: "/booking",
     },
     {
@@ -30,8 +29,7 @@ export const ProfileStatsCard = ({ userData }: ProfileStatsCardProps) => {
       value: userData?.review?.length ?? 0,
       icon: MessageSquare,
       description: "Reviews submitted",
-      color: "text-green-600",
-      bgColor: "bg-green-50",
+      tone: "success",
       href: "/reviews",
     },
     {
@@ -39,11 +37,10 @@ export const ProfileStatsCard = ({ userData }: ProfileStatsCardProps) => {
       value: userData?.notification?.length ?? 0,
       icon: Bell,
       description: "Total notifications",
-      color: "text-orange-600",
-      bgColor: "bg-orange-50",
+      tone: "action",
       href: "/notification",
     },
-  ]
+  ] as const;
 
   return (
     <Card>
@@ -51,32 +48,37 @@ export const ProfileStatsCard = ({ userData }: ProfileStatsCardProps) => {
         <CardTitle>Account Statistics</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {stats.map((stat, index) => {
-            const Icon = stat.icon
+            const Icon = stat.icon;
+            const toneClasses = {
+              primary: "bg-primary/10 text-primary",
+              success: "bg-success/10 text-success",
+              action: "bg-action/10 text-action",
+            }[stat.tone];
+
             return (
               <Link
                 key={index}
                 href={stat.href}
-                className={`p-4 rounded-lg border bg-white ${stat.bgColor} transition-all hover:-translate-y-1 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary`}
+                className="rounded-2xl border border-border bg-white p-4 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-900/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 aria-label={`View ${stat.title.toLowerCase()}`}
               >
                 <div className="space-y-4">
-                  <span className={`inline-flex h-10 w-10 items-center justify-center rounded-lg ${stat.bgColor}`}>
-                    <Icon className={`h-5 w-5 ${stat.color}`} />
+                  <span className={`inline-flex h-10 w-10 items-center justify-center rounded-xl ${toneClasses}`}>
+                    <Icon className="h-5 w-5" />
                   </span>
                   <div>
-                    <p className={`text-3xl font-bold ${stat.color}`}>{stat.value}</p>
-                    <p className="text-sm font-medium text-gray-900">{stat.title}</p>
-                    <p className="text-xs text-gray-500">{stat.description}</p>
+                    <p className="text-3xl font-semibold text-foreground">{stat.value}</p>
+                    <p className="text-sm font-medium text-foreground">{stat.title}</p>
+                    <p className="text-xs text-muted-foreground">{stat.description}</p>
                   </div>
                 </div>
               </Link>
-            )
+            );
           })}
         </div>
       </CardContent>
     </Card>
-  )
-}
- 
+  );
+};

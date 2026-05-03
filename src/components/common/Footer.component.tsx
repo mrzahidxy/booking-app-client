@@ -2,16 +2,18 @@ import { Facebook, Twitter, Instagram, Youtube } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="bg-muted/70 border-t">
+    <footer className="border-t border-border bg-slate-50/80">
       <div className="container py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           <div>
-            <h3 className="font-semibold mb-4">About Gontobbo</h3>
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-foreground">
+              About Gontobbo
+            </h3>
             <ul className="space-y-2">
               <li>
                 <a
                   href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm text-muted-foreground transition-colors hover:text-primary"
                 >
                   About Us
                 </a>
@@ -19,7 +21,7 @@ export function Footer() {
               <li>
                 <a
                   href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm text-muted-foreground transition-colors hover:text-primary"
                 >
                   Press
                 </a>
@@ -27,7 +29,7 @@ export function Footer() {
               <li>
                 <a
                   href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm text-muted-foreground transition-colors hover:text-primary"
                 >
                   Resources and Policies
                 </a>
@@ -35,7 +37,7 @@ export function Footer() {
               <li>
                 <a
                   href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm text-muted-foreground transition-colors hover:text-primary"
                 >
                   Careers
                 </a>
@@ -43,12 +45,14 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="font-semibold mb-4">Explore</h3>
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-foreground">
+              Explore
+            </h3>
             <ul className="space-y-2">
               <li>
                 <a
                   href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm text-muted-foreground transition-colors hover:text-primary"
                 >
                   Write a Review
                 </a>
@@ -56,7 +60,7 @@ export function Footer() {
               <li>
                 <a
                   href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm text-muted-foreground transition-colors hover:text-primary"
                 >
                   Add a Place
                 </a>
@@ -64,7 +68,7 @@ export function Footer() {
               <li>
                 <a
                   href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm text-muted-foreground transition-colors hover:text-primary"
                 >
                   Join
                 </a>
@@ -72,7 +76,7 @@ export function Footer() {
               <li>
                 <a
                   href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm text-muted-foreground transition-colors hover:text-primary"
                 >
                   Travelers&apos; Choice
                 </a>
@@ -80,12 +84,14 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="font-semibold mb-4">Do Business With Us</h3>
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-foreground">
+              Do Business With Us
+            </h3>
             <ul className="space-y-2">
               <li>
                 <a
                   href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm text-muted-foreground transition-colors hover:text-primary"
                 >
                   Owners
                 </a>
@@ -93,7 +99,7 @@ export function Footer() {
               <li>
                 <a
                   href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm text-muted-foreground transition-colors hover:text-primary"
                 >
                   Business Advantage
                 </a>
@@ -101,7 +107,7 @@ export function Footer() {
               <li>
                 <a
                   href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm text-muted-foreground transition-colors hover:text-primary"
                 >
                   Sponsored Placements
                 </a>
@@ -109,7 +115,7 @@ export function Footer() {
               <li>
                 <a
                   href="#"
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  className="text-sm text-muted-foreground transition-colors hover:text-primary"
                 >
                   Access our Content API
                 </a>
@@ -117,36 +123,38 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="font-semibold mb-4">Follow Us</h3>
+            <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-foreground">
+              Follow Us
+            </h3>
             <div className="flex space-x-4">
               <a
                 href="#"
-                className="text-muted-foreground hover:text-primary transition-colors"
+                className="text-muted-foreground transition-colors hover:text-primary"
               >
                 <Facebook className="h-5 w-5" />
               </a>
               <a
                 href="#"
-                className="text-muted-foreground hover:text-primary transition-colors"
+                className="text-muted-foreground transition-colors hover:text-primary"
               >
                 <Twitter className="h-5 w-5" />
               </a>
               <a
                 href="#"
-                className="text-muted-foreground hover:text-primary transition-colors"
+                className="text-muted-foreground transition-colors hover:text-primary"
               >
                 <Instagram className="h-5 w-5" />
               </a>
               <a
                 href="#"
-                className="text-muted-foreground hover:text-primary transition-colors"
+                className="text-muted-foreground transition-colors hover:text-primary"
               >
                 <Youtube className="h-5 w-5" />
               </a>
             </div>
           </div>
         </div>
-        <div className="mt-12 pt-8 border-t">
+        <div className="mt-12 border-t border-border pt-8">
           <p className="text-center text-sm text-muted-foreground">
             © {new Date().getFullYear()} Gontobbo LLC All rights reserved.
           </p>

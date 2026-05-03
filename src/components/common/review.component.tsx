@@ -94,8 +94,8 @@ export function Review({ id, type }: ReviewFormProps) {
                     type="button"
                     onClick={() => setRating(star)}
                     className={cn(
-                      "p-1",
-                      star <= rating ? "text-yellow-400" : "text-gray-300"
+                      "p-1 transition-colors",
+                      star <= rating ? "text-warning" : "text-muted-foreground/30"
                     )}
                   >
                     <Star className="h-6 w-6 fill-current" />
@@ -115,7 +115,7 @@ export function Review({ id, type }: ReviewFormProps) {
               />
             </div>
             {mutation.isError && (
-              <p className="text-red-500 text-sm">
+              <p className="text-sm text-destructive">
                 {mutation.error instanceof Error
                   ? mutation.error.message
                   : "Failed to submit review. Please try again."}

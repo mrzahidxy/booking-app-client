@@ -87,9 +87,9 @@ export function NotificationDropdown(): JSX.Element {
 
   // Render list or states
   const renderNotifications = () => {
-    if (status === "loading" || isLoading) return <p>Loading...</p>;
-    if (status === "unauthenticated") return <p>Sign in to view notifications.</p>;
-    if (isError) return <p>Error: {(error as Error).message}</p>;
+    if (status === "loading" || isLoading) return <p className="p-4 text-sm text-muted-foreground">Loading...</p>;
+    if (status === "unauthenticated") return <p className="p-4 text-sm text-muted-foreground">Sign in to view notifications.</p>;
+    if (isError) return <p className="p-4 text-sm text-destructive">Error: {(error as Error).message}</p>;
     if (notifications.length === 0)
       return (
         <p className="text-sm text-muted-foreground py-4 text-center">
@@ -101,7 +101,7 @@ export function NotificationDropdown(): JSX.Element {
       <Link
         href={`/booking`}
         key={notification.id}
-        className={`flex items-start gap-3 py-2 cursor-pointer ${
+        className={`flex items-start gap-3 py-2 cursor-pointer transition-colors hover:text-primary ${
           !notification.read ? "bg-muted/50 -mx-4 px-4 rounded-md" : ""
         }`}
         onClick={() => markRead.mutate({ id: notification.id })}
@@ -113,9 +113,7 @@ export function NotificationDropdown(): JSX.Element {
             {new Date(notification.createdAt).toLocaleString()}
           </p>
         </div>
-        {!notification.read && (
-          <span className="mt-1 h-2 w-2 rounded-full bg-blue-600" />
-        )}
+        {!notification.read && <span className="mt-1 h-2 w-2 rounded-full bg-primary" />}
       </Link>
     ));
   };
@@ -126,11 +124,11 @@ export function NotificationDropdown(): JSX.Element {
         <Button
           variant="ghost"
           size="icon"
-          className="relative h-9 w-9 rounded-full border border-transparent text-slate-600 hover:border-slate-200 hover:bg-white hover:text-primary"
+          className="relative h-9 w-9 rounded-full border border-transparent text-muted-foreground hover:border-border hover:bg-background hover:text-primary"
         >
           <Bell className="h-5 w-5" />
           {unreadCount > 0 && (
-            <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-xs text-destructive-foreground">
+            <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-warning text-xs font-semibold text-warning-foreground">
               {unreadCount}
             </span>
           )}

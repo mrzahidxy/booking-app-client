@@ -29,7 +29,7 @@ const TableActionButtons: React.FC<TableActionButtonsProps> = ({
           onClick={() => onEdit(id)}
           aria-label="Edit"
           disabled={loading}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:text-slate-300"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border text-muted-foreground transition hover:border-primary/20 hover:bg-primary/10 hover:text-primary disabled:cursor-not-allowed disabled:text-slate-300"
         >
           <PencilLine className="h-4 w-4" />
         </button>
@@ -41,7 +41,7 @@ const TableActionButtons: React.FC<TableActionButtonsProps> = ({
           onClick={() => onDelete(id)}
           aria-label="Delete"
           disabled={loading}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-rose-500 transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 disabled:cursor-not-allowed disabled:text-slate-300"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border text-destructive transition hover:border-destructive/20 hover:bg-destructive/10 hover:text-destructive disabled:cursor-not-allowed disabled:text-slate-300"
         >
           <Trash className="h-4 w-4" />
         </button>
@@ -53,7 +53,7 @@ const TableActionButtons: React.FC<TableActionButtonsProps> = ({
           onClick={() => onView(id)}
           aria-label="View"
           disabled={loading}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-indigo-500 transition hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-600 disabled:cursor-not-allowed disabled:text-slate-300"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-border text-action transition hover:border-action/20 hover:bg-action/10 hover:text-action disabled:cursor-not-allowed disabled:text-slate-300"
         >
           <Eye className="h-4 w-4" />
         </button>

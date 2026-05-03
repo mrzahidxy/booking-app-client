@@ -57,14 +57,14 @@ const BookingPage = (props: Props) => {
     {
       accessorKey: "status",
       header: "Status",
-      cell: ({ row }) => {
+        cell: ({ row }) => {
         const status = row.original.status;
         const tone =
           status === "CONFIRMED"
-            ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+            ? "border-success/20 bg-success/10 text-success"
             : status === "PENDING"
-              ? "border-orange-200 bg-orange-50 text-orange-700"
-              : "border-gray-200 bg-gray-50 text-gray-600";
+              ? "border-warning/20 bg-warning/15 text-warning"
+              : "border-border bg-muted text-muted-foreground";
         return <Badge className={tone}>{status}</Badge>;
       },
     },
@@ -73,7 +73,7 @@ const BookingPage = (props: Props) => {
   return (
     <div className="container max-w-5xl mx-auto py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">Booking History</h1>
+        <h1 className="text-3xl font-semibold tracking-tight">Booking History</h1>
         <p className="text-muted-foreground mt-1">
           Track your hotel and restaurant bookings in one place.
         </p>

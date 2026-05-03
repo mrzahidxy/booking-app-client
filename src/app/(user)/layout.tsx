@@ -11,10 +11,10 @@ interface RootLayoutProps {
 }
 
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => (
-  <div className="flex flex-col min-h-screen">
+  <div className="flex min-h-screen flex-col bg-background">
     <div className="flex-grow">
       <Navbar />
-      <main className="my-6">{children}</main>
+      <main className="py-6 sm:py-8">{children}</main>
     </div>
     <Footer />
   </div>

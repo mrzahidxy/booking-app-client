@@ -107,9 +107,9 @@ export const StatusUpdateDialog: React.FC<StatusUpdateDialogProps> = ({
       <DialogTrigger asChild>
         <button
           type="button"
-          className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 transition hover:border-emerald-300 hover:bg-emerald-100"
+          className="inline-flex items-center gap-2 rounded-full border border-success/20 bg-success/10 px-3 py-1 text-xs font-semibold text-success transition hover:border-success/30 hover:bg-success/15"
         >
-          <span className="h-2 w-2 rounded-full bg-emerald-500" />
+          <span className="h-2 w-2 rounded-full bg-success" />
           Status
         </button>
       </DialogTrigger>
@@ -141,7 +141,7 @@ export const StatusUpdateDialog: React.FC<StatusUpdateDialogProps> = ({
         </div>
         <DialogFooter>
           {isError && (
-            <p className="text-sm text-red-500">
+            <p className="text-sm text-destructive">
               {error?.response?.data?.message || "Something went wrong."}
             </p>
           )}
