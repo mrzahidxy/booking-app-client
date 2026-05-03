@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Formik, Form } from "formik";
 import { Label } from "@/components/ui/label";
+import Link from "next/link";
 import type { SearchFormValues, SearchType } from "@/features/search/types";
 
 const HeroSection = () => {
@@ -65,13 +66,14 @@ const HeroSection = () => {
         <div className="mx-auto flex max-w-4xl flex-col items-start gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <div className="space-y-4 max-w-3xl">
             <p className="inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white/80">
-              Trusted hotel and dining bookings
+              Gontobbo Booking
             </p>
-            <h2 className="text-3xl font-semibold tracking-tight sm:text-5xl">
-              Your perfect stay awaits
+            <h2 className="max-w-2xl text-3xl font-semibold tracking-tight sm:text-5xl">
+              Stay, dine, and book every detail in one place
             </h2>
-            <p className="text-base leading-7 text-primary-foreground/80 sm:text-lg">
-              Find and book hotels & restaurants worldwide
+            <p className="max-w-2xl text-base leading-7 text-primary-foreground/80 sm:text-lg">
+              Discover polished hotel stays, signature dining rooms, and quick reservations built for
+              easy travel planning.
             </p>
           </div>
 
@@ -165,6 +167,36 @@ const HeroSection = () => {
               );
             }}
           </Formik>
+
+          <div className="flex flex-wrap gap-3 text-sm text-white/85">
+            {[
+              "Verified hotel stays",
+              "Restaurant reservations",
+              "Curated travel picks",
+            ].map((item) => (
+              <span
+                key={item}
+                className="rounded-full border border-white/15 bg-white/10 px-4 py-2 backdrop-blur"
+              >
+                {item}
+              </span>
+            ))}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-4 text-sm">
+            <Link
+              href="/search/hotels"
+              className="font-semibold text-white underline-offset-4 transition hover:underline"
+            >
+              Browse featured stays
+            </Link>
+            <Link
+              href="/search/restaurants"
+              className="text-white/80 underline-offset-4 transition hover:text-white hover:underline"
+            >
+              Explore dining spots
+            </Link>
+          </div>
         </div>
       </div>
     </section>

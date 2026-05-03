@@ -13,6 +13,20 @@ import type { RestaurantData } from "@/entities/restaurant";
 
 const fetchFeaturedRestaurants = () => fetchRestaurants({ page: 1, limit: 10 });
 
+const sectionHeader = (
+  <>
+    <div className="space-y-2">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+        Dining picks
+      </p>
+      <h3 className="text-2xl font-semibold tracking-tight">Featured restaurants</h3>
+    </div>
+    <p className="max-w-xl text-sm text-muted-foreground">
+      Curated restaurants for date nights, business dinners, and easy table bookings.
+    </p>
+  </>
+);
+
 export default function FeaturedRestaurants() {
   const { data, isLoading, isError } = useQuery<RestaurantData>({
     queryKey: ["restaurants", "featured"],
@@ -21,11 +35,10 @@ export default function FeaturedRestaurants() {
 
   if (isLoading) {
     return (
-      <section className="py-16 bg-slate-50/80" aria-busy="true">
+      <section className="bg-slate-50/80 py-16" aria-busy="true">
         <div className="container mx-auto px-4">
-          <div className="mb-8 flex items-end justify-between gap-4">
-            <h3 className="text-2xl font-semibold tracking-tight">Featured Restaurants</h3>
-            <span className="text-sm text-muted-foreground">Handpicked spots</span>
+          <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            {sectionHeader}
           </div>
           <div
             className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5"
@@ -42,11 +55,10 @@ export default function FeaturedRestaurants() {
 
   if (isError) {
     return (
-      <section className="py-16 bg-slate-50/80">
+      <section className="bg-slate-50/80 py-16">
         <div className="container mx-auto px-4">
-          <div className="mb-8 flex items-end justify-between gap-4">
-            <h3 className="text-2xl font-semibold tracking-tight">Featured Restaurants</h3>
-            <span className="text-sm text-muted-foreground">Handpicked spots</span>
+          <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            {sectionHeader}
           </div>
           <p role="alert" className="text-sm text-muted-foreground">
             Unable to load restaurants right now. Please try again later.
@@ -60,11 +72,10 @@ export default function FeaturedRestaurants() {
 
   if (restaurants.length === 0) {
     return (
-      <section className="py-16 bg-slate-50/80">
+      <section className="bg-slate-50/80 py-16">
         <div className="container mx-auto px-4">
-          <div className="mb-8 flex items-end justify-between gap-4">
-            <h3 className="text-2xl font-semibold tracking-tight">Featured Restaurants</h3>
-            <span className="text-sm text-muted-foreground">Handpicked spots</span>
+          <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            {sectionHeader}
           </div>
           <p className="text-sm text-muted-foreground">No restaurants found.</p>
         </div>
@@ -73,11 +84,16 @@ export default function FeaturedRestaurants() {
   }
 
   return (
-    <section className="py-16 bg-slate-50/80">
+    <section className="bg-slate-50/80 py-16">
       <div className="container mx-auto px-4">
-        <div className="mb-8 flex items-end justify-between gap-4">
-          <h3 className="text-2xl font-semibold tracking-tight">Featured Restaurants</h3>
-          <span className="text-sm text-muted-foreground">Handpicked spots</span>
+        <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          {sectionHeader}
+          <Link
+            href="/search/restaurants"
+            className="whitespace-nowrap text-sm font-semibold text-primary"
+          >
+            Browse all
+          </Link>
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
           {restaurants.map((restaurant) => {
@@ -107,10 +123,10 @@ export default function FeaturedRestaurants() {
                       </Badge>
                     </div>
                     <p className="mb-2 min-h-[3rem] flex-1 text-sm leading-6 text-muted-foreground">
-                      {cuisine} • $$$ • {restaurant.location}
+                      {cuisine} | $$$ | {restaurant.location}
                     </p>
                     <Button variant="action" className="mt-4 w-full">
-                      Reserve a Table
+                      Reserve your table
                     </Button>
                   </CardContent>
                 </Card>
