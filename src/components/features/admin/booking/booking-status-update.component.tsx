@@ -26,7 +26,6 @@ import { updateBookingStatus } from "@/features/bookings/api";
 
 interface StatusUpdateDialogProps {
   id: number;
-  type: string;
 }
 
 interface UpdateStatusResponse {
@@ -36,14 +35,12 @@ interface UpdateStatusResponse {
 
 interface UpdateStatusVariables {
   status: string;
-  type: string;
 }
 
 interface ErrorResponse {
   message: string;
 }
 
-// BookingStatus enum
 export enum BookingStatus {
   PENDING = "PENDING",
   CONFIRMED = "CONFIRMED",
@@ -51,17 +48,13 @@ export enum BookingStatus {
   COMPLETED = "COMPLETED",
 }
 
-// Define the StatusUpdateDialog component
-export const StatusUpdateDialog: React.FC<StatusUpdateDialogProps> = ({
-  id, type
-}) => {
+export const StatusUpdateDialog: React.FC<StatusUpdateDialogProps> = ({ id }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [status, setStatus] = useState<string>("");
   const { toast } = useToast();
 
   const queryClient = useQueryClient();
 
-  // Mutation for updating the user role
   const { mutate, isPending, isError, error } = useMutation<
     UpdateStatusResponse, // Expected response type
     AxiosError<ErrorResponse>, // Error type with extended interface
@@ -89,7 +82,6 @@ export const StatusUpdateDialog: React.FC<StatusUpdateDialogProps> = ({
     },
   });
 
-  // Handle the status update button click
   const handleStatusUpdate = () => {
     if (status === "") {
       toast({
@@ -99,7 +91,7 @@ export const StatusUpdateDialog: React.FC<StatusUpdateDialogProps> = ({
       });
       return;
     }
-    mutate({status: status, type: type});
+    mutate({ status });
   };
 
   return (

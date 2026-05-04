@@ -3,7 +3,6 @@
 import { DynamicTable } from "@/components/ui/dynamic-data-table.component";
 import { ColumnDef } from "@tanstack/react-table";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
 import { Suspense } from "react";
 import {
   Card,
@@ -13,44 +12,57 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import type { Booking } from "@/entities";
 
-type Props = {};
-type Order = {
-  id: number;
-  netAmount: string;
-  address: string;
-  status: string;
-  createdAt: string;
-  user: { name: string };
+type BookingRow = Booking & {
+  paymentStatus?: string;
+  payment?: { status?: string }[];
 };
 
-const BookingPage = (props: Props) => {
+const BookingPage = () => {
   const session = useSession();
   const userId = session?.data?.user?.id;
 
-  const columns: ColumnDef<Order>[] = [
+  const columns: ColumnDef<BookingRow>[] = [
     {
       accessorKey: "id",
       header: "Id",
-      cell: ({ row }) => {
-        return (
-          <Link href={`/order/${row.original.id}`}>{row?.original?.id}</Link>
-        );
-      },
+      cell: ({ row }) => row?.original?.id,
     },
     {
-      accessorKey: "room.hotel.name",
-      header: "Hotel",
+      id: "bookingName",
+      header: "Hotel / Restaurant",
+      cell: ({ row }) => {
+        const hotelName = row.original?.room?.hotel?.name;
+        const restaurantName = row.original?.restaurant?.name;
+        return hotelName ?? restaurantName ?? "-";
+      },
     },
     {
       accessorKey: "totalPrice",
       header: "Total Price",
     },
     {
+      id: "paymentStatus",
+      header: "Payment Status",
+      cell: ({ row }) => {
+        const paymentStatus = row.original?.paymentStatus ?? row.original?.payment?.[0]?.status ?? "UNPAID";
+        const tone =
+          paymentStatus === "SUCCEEDED"
+            ? "border-success/20 bg-success/10 text-success"
+            : paymentStatus === "FAILED"
+              ? "border-destructive/20 bg-destructive/10 text-destructive"
+              : paymentStatus === "PENDING"
+                ? "border-warning/20 bg-warning/15 text-warning"
+                : "border-border bg-muted text-muted-foreground";
+        return <Badge className={tone}>{paymentStatus}</Badge>;
+      },
+    },
+    {
       accessorKey: "bookingDate",
       header: "Booking Date",
       cell: ({ row }) => {
-        let date = new Date(row?.original?.createdAt);
+        const date = new Date(row?.original?.createdAt ?? Date.now());
         return date.toLocaleString();
       }
     },

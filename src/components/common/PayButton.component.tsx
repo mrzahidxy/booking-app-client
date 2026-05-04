@@ -1,8 +1,8 @@
 import { useState } from "react";
-import privateRequest from "@/shared/lib/api";
 import { Button } from "../ui/button";
 import { stripeClient } from "@/shared/lib/stripe-client";
 import { toast } from "@/shared/hooks/use-toast";
+import { createStripeCheckoutSession } from "@/features/payments/api";
 
 export default function PayButton({ bookingId }: { bookingId: number }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -10,9 +10,9 @@ export default function PayButton({ bookingId }: { bookingId: number }) {
   const handlePayment = async () => {
     try {
       setIsLoading(true);
-      const response = await privateRequest.post(`/payments/${bookingId}`);
+      const response = await createStripeCheckoutSession(bookingId);
       const stripe = await stripeClient();
-      const sessionId = response.data.sessionId;
+      const sessionId = response?.sessionId;
 
       if (!stripe || !sessionId) {
         throw new Error("Payment setup failed");

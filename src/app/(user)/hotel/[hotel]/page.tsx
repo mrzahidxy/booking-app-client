@@ -164,14 +164,13 @@ export default async function HotelDetailPage({ params }: PageProps) {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Price Range</p>
-                  <p className="text-2xl font-semibold text-primary">
-                    {minPrice != null && maxPrice != null
-                      ? `$${minPrice} - $${maxPrice}`
+                <p className="text-2xl font-semibold text-primary">
+                  {minPrice != null && maxPrice != null
+                      ? `BDT ${minPrice.toLocaleString()} - BDT ${maxPrice.toLocaleString()}`
                       : "Contact for pricing"}
-                  </p>
-                  <p className="text-xs text-muted-foreground">per night</p>
-                </div>
-                <Button className="w-full">Check Availability</Button>
+                </p>
+                <p className="text-xs text-muted-foreground">per night</p>
+              </div>
                 <Separator />
                 <div className="space-y-2 text-sm text-muted-foreground">
                   <div className="flex items-center gap-2">

@@ -45,8 +45,13 @@ const BookingPage = (props: Props) => {
       header: "Phone",
     },
     {
-      accessorKey: "restaurant.name",
-      header: "Restaurant",
+      id: "bookingName",
+      header: "Hotel / Restaurant",
+      cell: ({ row }) => {
+        const hotelName = row.original?.room?.hotel?.name;
+        const restaurantName = row.original?.restaurant?.name;
+        return hotelName ?? restaurantName ?? "-";
+      },
     },
     {
       accessorKey: "totalPrice",
@@ -74,9 +79,25 @@ const BookingPage = (props: Props) => {
       ),
     },
     {
+      id: "paymentStatus",
+      header: "Payment Status",
+      cell: ({ row }) => {
+        const paymentStatus = row.original?.paymentStatus ?? row.original?.payment?.[0]?.status ?? "UNPAID";
+        const tone =
+          paymentStatus === "SUCCEEDED"
+            ? "border-success/20 bg-success/10 text-success"
+            : paymentStatus === "FAILED"
+              ? "border-destructive/20 bg-destructive/10 text-destructive"
+              : paymentStatus === "PENDING"
+                ? "border-warning/20 bg-warning/15 text-warning"
+                : "border-border bg-muted text-muted-foreground";
+        return <Badge className={tone}>{paymentStatus}</Badge>;
+      },
+    },
+    {
       accessorKey: "status",
       header: "Status",
-      cell: ({ row }) => {
+        cell: ({ row }) => {
         const status = String(row.original?.status ?? "");
         return (
           <Badge
@@ -110,12 +131,7 @@ const BookingPage = (props: Props) => {
       accessorKey: "action",
       header: "Action",
       cell: ({ row }) => {
-        const type = row?.original?.roomId
-          ? "room"
-          : row?.original?.restaurantId
-          ? "restaurant"
-          : "";
-        return <StatusUpdateDialog id={row.original.id} type={type} />;
+        return <StatusUpdateDialog id={row.original.id} />;
       },
     },
   ];

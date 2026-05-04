@@ -89,15 +89,18 @@ export default function HotelRooms({ rooms }: any) {
                   </ul>
                 </div>
                 <div className="text-left sm:text-right">
-                  <p className="text-2xl font-semibold text-foreground">${room.price}</p>
+                  <p className="text-2xl font-semibold text-foreground">
+                    BDT {room.price.toLocaleString()}
+                  </p>
                   <p className="text-sm text-muted-foreground">per night</p>
                 </div>
               </div>
 
               <Button
-                className="w-full"
-                disabled={status === "unauthenticated"}
-                onClick={() => {
+              className="w-full"
+              disabled={status === "unauthenticated"}
+              onClick={() => {
+                  setBookingId(null);
                   setSelectedRoom(room);
                   setOpen(true);
                 }}
@@ -118,7 +121,15 @@ export default function HotelRooms({ rooms }: any) {
 
       {/* Booking Modal */}
       {selectedRoom && (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog
+          open={open}
+          onOpenChange={(nextOpen) => {
+            setOpen(nextOpen);
+            if (!nextOpen) {
+              setBookingId(null);
+            }
+          }}
+        >
           <DialogContent className="sm:max-w-[380px]">
             <DialogHeader>
               <DialogTitle>Book {selectedRoom.roomType} Room</DialogTitle>
