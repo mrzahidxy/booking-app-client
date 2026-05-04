@@ -6,7 +6,7 @@ import HomeSectionSkeleton from "@/components/features/home/HomeSectionSkeleton.
 const PopularHotels = dynamic(
   () => import("@/components/features/home/PopularHotels.component"),
   {
-    loading: () => <HomeSectionSkeleton title="Popular Hotels" />,
+    loading: () => <HomeSectionSkeleton title="Popular stays" />,
   }
 );
 const FeaturedRestaurants = dynamic(
@@ -14,7 +14,7 @@ const FeaturedRestaurants = dynamic(
   {
     loading: () => (
       <HomeSectionSkeleton
-        title="Featured Restaurants"
+        title="Featured restaurants"
         className="bg-secondary/10"
       />
     ),
@@ -23,25 +23,25 @@ const FeaturedRestaurants = dynamic(
 const SpecialOffers = dynamic(
   () => import("@/components/features/home/SpecialOffers.component"),
   {
-    loading: () => <HomeSectionSkeleton title="Special Offers" items={2} />,
+    loading: () => <HomeSectionSkeleton title="Special offers" items={2} />,
   }
 );
 
 export const metadata: Metadata = {
-  title: "Gontobbo | Book Hotels & Restaurants",
+  title: "Gontobbo | Stay, Dine & Book",
   description:
-    "Discover curated hotels and restaurants worldwide. Book stays, reserve tables, and explore travel offers with Gontobbo.",
+    "Book polished hotel stays and restaurant tables with Gontobbo. Discover curated places, browse featured picks, and reserve with confidence.",
   openGraph: {
-    title: "Gontobbo | Book Hotels & Restaurants",
+    title: "Gontobbo | Stay, Dine & Book",
     description:
-      "Discover curated hotels and restaurants worldwide. Book stays, reserve tables, and explore travel offers with Gontobbo.",
+      "Book polished hotel stays and restaurant tables with Gontobbo. Discover curated places, browse featured picks, and reserve with confidence.",
     images: ["/images/main-banner.jpg"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Gontobbo | Book Hotels & Restaurants",
+    title: "Gontobbo | Stay, Dine & Book",
     description:
-      "Discover curated hotels and restaurants worldwide. Book stays, reserve tables, and explore travel offers with Gontobbo.",
+      "Book polished hotel stays and restaurant tables with Gontobbo. Discover curated places, browse featured picks, and reserve with confidence.",
     images: ["/images/main-banner.jpg"],
   },
 };
@@ -52,8 +52,8 @@ const HomePage = () => {
       <div className="min-h-screen bg-background">
         <HeroSection />
         <PopularHotels />
-        <FeaturedRestaurants />
         <SpecialOffers />
+        <FeaturedRestaurants />
       </div>
     </div>
   );

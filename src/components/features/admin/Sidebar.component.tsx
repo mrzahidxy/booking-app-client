@@ -58,7 +58,7 @@ const Sidebar = () => {
   };
 
   return (
-    <aside className="flex min-h-[calc(100vh-4rem)] w-[260px] flex-col border-r border-slate-200 bg-white px-4 py-6">
+    <aside className="flex min-h-[calc(100vh-4rem)] w-[260px] flex-col border-r border-border bg-white/90 px-4 py-6 backdrop-blur">
       <Link
         href="/admin"
         className="mb-8 flex items-center gap-2 px-2 text-lg font-semibold text-primary"
@@ -66,7 +66,7 @@ const Sidebar = () => {
         Gontobbo
       </Link>
 
-      <nav className="flex-1 space-y-1 text-sm font-medium text-slate-600">
+    <nav className="flex-1 space-y-1 text-sm font-medium text-muted-foreground">
         {links.map(({ href, label, icon, children }) => {
           const isActive = href && pathname === href;
           const isChildActive = children?.some(
@@ -84,8 +84,8 @@ const Sidebar = () => {
                   className={cn(
                     "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition",
                     isSectionOpen
-                      ? "bg-blue-50 text-blue-600"
-                      : "hover:bg-slate-100 hover:text-slate-900"
+          ? "bg-primary/10 text-primary"
+          : "hover:bg-muted hover:text-foreground"
                   )}
                 >
                   {icon}
@@ -109,8 +109,8 @@ const Sidebar = () => {
                           className={cn(
                             "block rounded-md px-2 py-1.5 text-sm transition",
                             isSubActive
-                              ? "text-blue-600"
-                              : "text-slate-500 hover:text-slate-900"
+            ? "text-primary"
+            : "text-muted-foreground hover:text-foreground"
                           )}
                         >
                           {subLabel}
@@ -131,8 +131,8 @@ const Sidebar = () => {
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2 transition",
                 isActive
-                  ? "bg-blue-50 text-blue-600"
-                  : "hover:bg-slate-100 hover:text-slate-900"
+          ? "bg-primary/10 text-primary"
+          : "hover:bg-muted hover:text-foreground"
               )}
             >
               {icon}

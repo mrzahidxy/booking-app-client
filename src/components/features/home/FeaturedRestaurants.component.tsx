@@ -13,6 +13,20 @@ import type { RestaurantData } from "@/entities/restaurant";
 
 const fetchFeaturedRestaurants = () => fetchRestaurants({ page: 1, limit: 10 });
 
+const sectionHeader = (
+  <>
+    <div className="space-y-2">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+        Dining picks
+      </p>
+      <h3 className="text-2xl font-semibold tracking-tight">Featured restaurants</h3>
+    </div>
+    <p className="max-w-xl text-sm text-muted-foreground">
+      Curated restaurants for date nights, business dinners, and easy table bookings.
+    </p>
+  </>
+);
+
 export default function FeaturedRestaurants() {
   const { data, isLoading, isError } = useQuery<RestaurantData>({
     queryKey: ["restaurants", "featured"],
@@ -21,15 +35,17 @@ export default function FeaturedRestaurants() {
 
   if (isLoading) {
     return (
-      <section className="py-16 bg-secondary/10" aria-busy="true">
+      <section className="bg-slate-50/80 py-16" aria-busy="true">
         <div className="container mx-auto px-4">
-          <h3 className="text-2xl font-bold mb-8">Featured Restaurants</h3>
+          <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            {sectionHeader}
+          </div>
           <div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6"
+            className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5"
             data-testid="featured-restaurants-loading"
           >
             {Array.from({ length: 5 }).map((_, index) => (
-              <Skeleton key={index} className="h-[320px] w-full" />
+              <Skeleton key={index} className="h-[340px] w-full" />
             ))}
           </div>
         </div>
@@ -39,9 +55,11 @@ export default function FeaturedRestaurants() {
 
   if (isError) {
     return (
-      <section className="py-16 bg-secondary/10">
+      <section className="bg-slate-50/80 py-16">
         <div className="container mx-auto px-4">
-          <h3 className="text-2xl font-bold mb-8">Featured Restaurants</h3>
+          <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            {sectionHeader}
+          </div>
           <p role="alert" className="text-sm text-muted-foreground">
             Unable to load restaurants right now. Please try again later.
           </p>
@@ -54,9 +72,11 @@ export default function FeaturedRestaurants() {
 
   if (restaurants.length === 0) {
     return (
-      <section className="py-16 bg-secondary/10">
+      <section className="bg-slate-50/80 py-16">
         <div className="container mx-auto px-4">
-          <h3 className="text-2xl font-bold mb-8">Featured Restaurants</h3>
+          <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            {sectionHeader}
+          </div>
           <p className="text-sm text-muted-foreground">No restaurants found.</p>
         </div>
       </section>
@@ -64,42 +84,49 @@ export default function FeaturedRestaurants() {
   }
 
   return (
-    <section className="py-16 bg-secondary/40">
+    <section className="bg-slate-50/80 py-16">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between mb-8">
-          <h3 className="text-2xl font-bold">Featured Restaurants</h3>
-          <span className="text-sm text-muted-foreground">Handpicked spots</span>
+        <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          {sectionHeader}
+          <Link
+            href="/search/restaurants"
+            className="whitespace-nowrap text-sm font-semibold text-primary"
+          >
+            Browse all
+          </Link>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
           {restaurants.map((restaurant) => {
             const cuisine = Array.isArray(restaurant.cuisine)
               ? restaurant.cuisine.join(", ")
               : restaurant.cuisine;
 
             return (
-              <Link href={`/restaurant/${restaurant.id}`} key={restaurant.id}>
-                <Card className="overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+              <Link href={`/restaurant/${restaurant.id}`} key={restaurant.id} className="h-full">
+                <Card className="group flex h-full flex-col overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10">
                   <Image
                     src={restaurant.image?.[0] ?? "/images/main-banner.jpg"}
                     alt={restaurant.name ?? "Restaurant"}
                     width={400}
                     height={300}
-                    className="w-full h-48 object-cover"
+                    className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 20vw"
                   />
-                  <CardContent className="p-4">
-                    <div className="flex justify-between items-start mb-2">
-                      <h4 className="font-semibold">{restaurant.name}</h4>
-                      <Badge className="flex items-center border-emerald-200 bg-emerald-50 text-emerald-700">
-                        <Star className="h-3 w-3 mr-1 fill-emerald-500 text-emerald-500" />
+                  <CardContent className="flex flex-1 flex-col p-4">
+                    <div className="mb-2 flex items-start justify-between gap-3">
+                      <h4 className="line-clamp-2 min-h-[3.5rem] text-lg font-semibold leading-7 text-foreground">
+                        {restaurant.name}
+                      </h4>
+                      <Badge variant="success" className="flex items-center gap-1">
+                        <Star className="h-3 w-3 fill-current" />
                         {restaurant.rating ?? restaurant.ratings ?? 0}
                       </Badge>
                     </div>
-                    <p className="text-muted-foreground text-sm mb-2">
-                      {cuisine} • $$$ • {restaurant.location}
+                    <p className="mb-2 min-h-[3rem] flex-1 text-sm leading-6 text-muted-foreground">
+                      {cuisine} | $$$ | {restaurant.location}
                     </p>
-                    <Button className="w-full bg-orange-500 text-white hover:bg-orange-600">
-                      Reserve a Table
+                    <Button variant="action" className="mt-4 w-full">
+                      Reserve your table
                     </Button>
                   </CardContent>
                 </Card>

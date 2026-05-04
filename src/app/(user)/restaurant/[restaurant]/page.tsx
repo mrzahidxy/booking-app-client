@@ -25,7 +25,7 @@ export default async function RestaurantDetailPage({
     return (
       <div className="min-h-screen bg-background">
         <div className="container mx-auto px-4 py-16 text-center">
-          <h1 className="text-2xl font-semibold mb-2">Restaurant not found</h1>
+          <h1 className="mb-2 text-2xl font-semibold tracking-tight">Restaurant not found</h1>
           <p className="text-muted-foreground mb-6">
             We couldn&apos;t load this restaurant. Please try again.
           </p>
@@ -37,11 +37,11 @@ export default async function RestaurantDetailPage({
     );
   }
   return (
-    <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b">
+      <header className="border-b border-border bg-white/80 backdrop-blur">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center gap-4 mb-4">
+          <div className="mb-4 flex items-center gap-4">
             <Button variant="ghost" size="sm" asChild>
               <Link href="/search/restaurants">
                 <ChevronLeft className="h-4 w-4 mr-2" />
@@ -49,14 +49,14 @@ export default async function RestaurantDetailPage({
               </Link>
             </Button>
             <Separator orientation="vertical" className="h-6" />
-            <Badge className="flex items-center border-emerald-200 bg-emerald-50 text-emerald-700">
-              <Star className="h-3 w-3 mr-1 fill-emerald-500 text-emerald-500" />
+            <Badge variant="success" className="flex items-center gap-1">
+              <Star className="h-3 w-3 fill-current" />
               {restaurantData?.ratings ?? 0}
             </Badge>
           </div>
-          <h1 className="text-2xl font-bold mb-2">{restaurantData.name}</h1>
-          <p className="text-muted-foreground flex items-center">
-            <MapPin className="h-4 w-4 mr-2" />
+          <h1 className="mb-2 text-2xl font-semibold tracking-tight sm:text-3xl">{restaurantData.name}</h1>
+          <p className="flex items-center text-muted-foreground">
+            <MapPin className="mr-2 h-4 w-4" />
             {restaurantData.location}
           </p>
         </div>
@@ -64,7 +64,7 @@ export default async function RestaurantDetailPage({
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid gap-8 lg:grid-cols-3">
           {/* Left Column - Images and Details */}
           <div className="lg:col-span-2 space-y-8">
             {/* Image Gallery */}

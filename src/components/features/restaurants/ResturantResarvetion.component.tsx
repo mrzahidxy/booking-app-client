@@ -5,9 +5,8 @@ import { Clock, Loader2, Lock } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useMutation, useQuery, type UseMutationResult } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { toast } from "@/shared/hooks/use-toast";
-import { useRouter } from "next/navigation";
 import { Form, Formik, useFormikContext } from "formik";
 import * as yup from "yup";
 import { Label } from "@/components/ui/label";
@@ -24,6 +23,7 @@ import {
   checkRestaurantAvailability,
   createRestaurantReservation,
 } from "@/features/restaurants/api";
+import PayButton from "@/components/common/PayButton.component";
 
 const TIME_SLOTS = ["MORNING", "AFTERNOON", "EVENING", "NIGHT"];
 
@@ -39,12 +39,16 @@ type ReservationFormProps = {
   restaurantId: number;
   status: string;
   mutation: UseMutationResult<unknown, unknown, ReservationValues, unknown>;
+  reservationId: number | null;
+  onEditReservation: () => void;
 };
 
 function ReservationForm({
   restaurantId,
   status,
   mutation,
+  reservationId,
+  onEditReservation,
 }: ReservationFormProps) {
   const { values, setFieldValue, errors, touched } =
     useFormikContext<ReservationValues>();
@@ -67,7 +71,7 @@ function ReservationForm({
       availabilityParams.timeSlot,
     ],
     queryFn: () => checkRestaurantAvailability(availabilityParams),
-    enabled: !!restaurantId && !!values.bookingDate,
+    enabled: !!restaurantId && !!values.bookingDate && !reservationId,
     staleTime: 0,
     refetchOnMount: true,
     refetchInterval: 200000,
@@ -85,6 +89,29 @@ function ReservationForm({
     }
     return `${data?.availAbality ?? 0} seat(s) available`;
   }, [data?.availAbality, isError, isLoading, values.bookingDate]);
+
+  if (reservationId) {
+    return (
+      <div className="space-y-4">
+        <div className="rounded-xl border border-border bg-emerald-50/80 p-4">
+          <p className="text-sm font-medium text-emerald-700">Reservation created</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Proceed to payment to complete your restaurant reservation.
+          </p>
+        </div>
+        <div className="space-y-3 rounded-xl border border-border p-4">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-muted-foreground">Reservation ID</span>
+            <span className="font-medium">#{reservationId}</span>
+          </div>
+          <PayButton bookingId={reservationId} />
+          <Button type="button" variant="outline" className="w-full" onClick={onEditReservation}>
+            Edit reservation
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   const isDisabled =
     status === "unauthenticated" || mutation.isPending || !data?.isAvailable;
@@ -149,7 +176,7 @@ function ReservationForm({
       </div>
 
       <div
-        className="rounded-md border bg-muted/30 px-3 py-2 text-sm text-muted-foreground"
+        className="rounded-xl border border-border bg-muted/40 px-3 py-2 text-sm text-muted-foreground"
         aria-live="polite"
       >
         {isLoading ? (
@@ -163,7 +190,8 @@ function ReservationForm({
       </div>
 
       <Button
-        className="w-full bg-orange-500 text-white hover:bg-orange-600"
+        variant="action"
+        className="w-full"
         disabled={isDisabled}
         type="submit"
       >
@@ -183,8 +211,8 @@ function ReservationForm({
 }
 
 export default function RestaurantResarvetion({ restaurantData }: any) {
-  const router = useRouter();
   const { status } = useSession();
+  const [reservationId, setReservationId] = useState<number | null>(null);
 
   const initialValues: ReservationValues = {
     partySize: 1,
@@ -200,12 +228,12 @@ export default function RestaurantResarvetion({ restaurantData }: any) {
         bookingDate: values.bookingDate,
         timeSlot: values.timeSlot,
       }),
-    onSuccess: () => {
+    onSuccess: (response: any) => {
+      setReservationId(response.data.data.id);
       toast({
         title: "Success",
-        description: `Restaurant reservation successfully!`,
+        description: `Restaurant reservation created. Continue to payment.`,
       });
-      router.refresh();
     },
     onError: (error: any) => {
       toast({
@@ -218,16 +246,17 @@ export default function RestaurantResarvetion({ restaurantData }: any) {
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="sticky top-6">
         <CardHeader>
           <CardTitle>Make a Reservation</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3 rounded-xl border border-border bg-slate-50/80 px-3 py-2">
             <div className="flex items-center">
-              <Clock className="h-4 w-4 mr-2" />
+              <Clock className="mr-2 h-4 w-4 text-primary" />
               <span>Open Now</span>
             </div>
+            <span className="text-xs font-medium text-success">Accepting reservations</span>
           </div>
           <Separator />
           <Formik
@@ -245,6 +274,8 @@ export default function RestaurantResarvetion({ restaurantData }: any) {
               restaurantId={restaurantData.id}
               status={status}
               mutation={mutation}
+              reservationId={reservationId}
+              onEditReservation={() => setReservationId(null)}
             />
           </Formik>
         </CardContent>

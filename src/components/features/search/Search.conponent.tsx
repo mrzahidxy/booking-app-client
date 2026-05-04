@@ -49,7 +49,7 @@ const SearchComponent = ({ type }: { type: SearchType }) => {
   if (!searchParams.query) {
     return (
       <div className="container py-8">
-        <h2 className="text-2xl font-semibold mb-4">Search Results</h2>
+        <h2 className="mb-4 text-2xl font-semibold tracking-tight">Search Results</h2>
         <p className="text-sm text-muted-foreground">
           Enter a search term to see results.
         </p>
@@ -60,10 +60,10 @@ const SearchComponent = ({ type }: { type: SearchType }) => {
   if (isLoading) {
     return (
       <div className="container py-8" aria-busy="true">
-        <h2 className="text-2xl font-semibold mb-4">Search Results</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+        <h2 className="mb-4 text-2xl font-semibold tracking-tight">Search Results</h2>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
           {Array.from({ length: 5 }).map((_, index) => (
-            <Skeleton key={index} className="h-[360px] w-full" />
+            <Skeleton key={index} className="h-[392px] w-full" />
           ))}
         </div>
       </div>
@@ -77,7 +77,7 @@ const SearchComponent = ({ type }: { type: SearchType }) => {
         : "We couldn't load results. Please try again.";
     return (
       <div className="container py-8">
-        <h2 className="text-2xl font-semibold mb-4">Search Results</h2>
+        <h2 className="mb-4 text-2xl font-semibold tracking-tight">Search Results</h2>
         <div className="rounded-md border border-destructive/30 bg-destructive/10 p-4">
           <p role="alert" className="text-sm text-destructive">
             {errorMessage}
@@ -95,7 +95,7 @@ const SearchComponent = ({ type }: { type: SearchType }) => {
   if (collection.length === 0) {
     return (
       <div className="container py-8">
-        <h2 className="text-2xl font-semibold mb-4">Search Results</h2>
+        <h2 className="mb-4 text-2xl font-semibold tracking-tight">Search Results</h2>
         <p className="text-sm text-muted-foreground">No results found.</p>
       </div>
     );
@@ -103,26 +103,26 @@ const SearchComponent = ({ type }: { type: SearchType }) => {
 
   return (
     <div className="container py-8">
-      <h2 className="text-2xl font-semibold mb-4">Search Results</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+      <h2 className="mb-4 text-2xl font-semibold tracking-tight">Search Results</h2>
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
         {type === "hotels"
           ? (collection as Hotel[]).map((hotel) => (
               <HotelCard key={hotel.id} hotel={hotel} />
             ))
           : (collection as Restaurant[]).map((restaurant) => (
               <Link href={`/restaurant/${restaurant.id}`} key={restaurant.id}>
-                <Card className="overflow-hidden">
+                <Card className="group overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10">
                   <Image
                     src={restaurant.image?.[0] ?? "/images/main-banner.jpg"}
                     alt={restaurant.name ?? "Restaurant"}
                     width={400}
                     height={240}
-                    className="h-48 w-full object-cover"
+                    className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 20vw"
                   />
                   <CardContent className="p-4">
-                    <h4 className="font-semibold">{restaurant.name}</h4>
-                    <p className="text-muted-foreground text-sm">
+                    <h4 className="font-semibold text-foreground">{restaurant.name}</h4>
+                    <p className="text-sm text-muted-foreground">
                       {restaurant.location}
                     </p>
                   </CardContent>

@@ -34,13 +34,13 @@ export default function DashboardLayout({
 
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50">
+    <div className="flex min-h-screen flex-col bg-background">
       <Navbar />
 
       <div className="flex flex-1">
         <Sidebar />
 
-        <main className="flex-1 px-6 py-8 lg:px-10">
+        <main className="flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
           <div className="mx-auto w-full max-w-[1200px]">{children}</div>
         </main>
       </div>

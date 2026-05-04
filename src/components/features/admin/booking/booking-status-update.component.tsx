@@ -26,7 +26,6 @@ import { updateBookingStatus } from "@/features/bookings/api";
 
 interface StatusUpdateDialogProps {
   id: number;
-  type: string;
 }
 
 interface UpdateStatusResponse {
@@ -36,14 +35,12 @@ interface UpdateStatusResponse {
 
 interface UpdateStatusVariables {
   status: string;
-  type: string;
 }
 
 interface ErrorResponse {
   message: string;
 }
 
-// BookingStatus enum
 export enum BookingStatus {
   PENDING = "PENDING",
   CONFIRMED = "CONFIRMED",
@@ -51,17 +48,13 @@ export enum BookingStatus {
   COMPLETED = "COMPLETED",
 }
 
-// Define the StatusUpdateDialog component
-export const StatusUpdateDialog: React.FC<StatusUpdateDialogProps> = ({
-  id, type
-}) => {
+export const StatusUpdateDialog: React.FC<StatusUpdateDialogProps> = ({ id }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [status, setStatus] = useState<string>("");
   const { toast } = useToast();
 
   const queryClient = useQueryClient();
 
-  // Mutation for updating the user role
   const { mutate, isPending, isError, error } = useMutation<
     UpdateStatusResponse, // Expected response type
     AxiosError<ErrorResponse>, // Error type with extended interface
@@ -89,7 +82,6 @@ export const StatusUpdateDialog: React.FC<StatusUpdateDialogProps> = ({
     },
   });
 
-  // Handle the status update button click
   const handleStatusUpdate = () => {
     if (status === "") {
       toast({
@@ -99,7 +91,7 @@ export const StatusUpdateDialog: React.FC<StatusUpdateDialogProps> = ({
       });
       return;
     }
-    mutate({status: status, type: type});
+    mutate({ status });
   };
 
   return (
@@ -107,9 +99,9 @@ export const StatusUpdateDialog: React.FC<StatusUpdateDialogProps> = ({
       <DialogTrigger asChild>
         <button
           type="button"
-          className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 transition hover:border-emerald-300 hover:bg-emerald-100"
+          className="inline-flex items-center gap-2 rounded-full border border-success/20 bg-success/10 px-3 py-1 text-xs font-semibold text-success transition hover:border-success/30 hover:bg-success/15"
         >
-          <span className="h-2 w-2 rounded-full bg-emerald-500" />
+          <span className="h-2 w-2 rounded-full bg-success" />
           Status
         </button>
       </DialogTrigger>
@@ -141,7 +133,7 @@ export const StatusUpdateDialog: React.FC<StatusUpdateDialogProps> = ({
         </div>
         <DialogFooter>
           {isError && (
-            <p className="text-sm text-red-500">
+            <p className="text-sm text-destructive">
               {error?.response?.data?.message || "Something went wrong."}
             </p>
           )}

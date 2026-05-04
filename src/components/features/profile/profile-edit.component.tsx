@@ -70,8 +70,8 @@ export const ProfileEdit = ({ onCancel }: ProfileEditProps) => {
 
   if (isError) {
     return (
-      <div className="text-center py-10">
-        <p className="text-red-500">Error loading profile: {error?.message}</p>
+      <div className="py-10 text-center">
+        <p className="text-sm text-destructive">Error loading profile: {error?.message}</p>
       </div>
     )
   }

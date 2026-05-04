@@ -38,7 +38,7 @@ export interface TCartOrder  {
     quantity: number;
     createdAt: string;
     updatedAt: string;
-    product: TCartProduct;
+    product?: TCartProduct | null;
 };
 
   

@@ -6,15 +6,14 @@ import { ChevronLeft, ChevronRight, ImageOff } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
-export default function HotelImageGallery({ images }: { images: string[] }) {
+export default function HotelImageGallery({ images = [] }: { images?: string[] }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const hasImages = images.length > 0;
   const currentImage = images[currentImageIndex] ?? "/images/main-banner.jpg";
 
   return (
     <>
-      {/* Image Gallery */}
-      <div className="relative rounded-2xl overflow-hidden border bg-muted">
+      <div className="relative overflow-hidden rounded-2xl border border-border bg-muted">
         {hasImages ? (
           <>
             <Image
@@ -23,12 +22,12 @@ export default function HotelImageGallery({ images }: { images: string[] }) {
               alt={`Hotel image ${currentImageIndex + 1} of ${images.length}`}
               width={1200}
               height={700}
-              className="w-full aspect-video object-cover transition-opacity duration-300"
+              className="aspect-video w-full object-cover transition-opacity duration-300"
               priority
               sizes="(max-width: 1024px) 100vw, 70vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-            <div className="absolute bottom-4 left-4 text-xs text-white/90">
+            <div className="absolute bottom-4 left-4 text-xs font-medium text-white/90">
               {currentImageIndex + 1} / {images.length}
             </div>
             <div className="absolute bottom-4 right-4 flex gap-2">
@@ -61,14 +60,13 @@ export default function HotelImageGallery({ images }: { images: string[] }) {
             </div>
           </>
         ) : (
-          <div className="flex flex-col items-center justify-center aspect-video text-muted-foreground">
-            <ImageOff className="h-10 w-10 mb-2" />
+          <div className="flex aspect-video flex-col items-center justify-center text-muted-foreground">
+            <ImageOff className="mb-2 h-10 w-10" />
             <p className="text-sm">No images available</p>
           </div>
         )}
       </div>
 
-      {/* Thumbnail Scroll */}
       {hasImages ? (
         <ScrollArea className="w-full whitespace-nowrap rounded-lg">
           <div className="flex gap-2 p-1">
@@ -76,7 +74,7 @@ export default function HotelImageGallery({ images }: { images: string[] }) {
               <button
                 key={image + index}
                 onClick={() => setCurrentImageIndex(index)}
-                className={`relative flex-shrink-0 rounded-md overflow-hidden border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+                className={`relative flex-shrink-0 overflow-hidden rounded-xl border border-border transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
                   currentImageIndex === index ? "ring-2 ring-primary" : ""
                 }`}
                 aria-label={`View image ${index + 1}`}
@@ -86,7 +84,7 @@ export default function HotelImageGallery({ images }: { images: string[] }) {
                   alt={`Thumbnail ${index + 1}`}
                   width={100}
                   height={100}
-                  className="w-20 h-20 object-cover"
+                  className="h-20 w-20 object-cover"
                 />
               </button>
             ))}

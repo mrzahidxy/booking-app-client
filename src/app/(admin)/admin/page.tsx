@@ -36,64 +36,64 @@ const Dashboard = () => {
     {
       key: "users",
       label: "Total Users",
-      tone: "text-blue-600",
-      bg: "bg-blue-50",
+      tone: "text-primary",
+      bg: "bg-primary/10",
       icon: Users,
     },
     {
       key: "hotels",
       label: "Total Hotels",
-      tone: "text-indigo-600",
-      bg: "bg-indigo-50",
+      tone: "text-action",
+      bg: "bg-action/10",
       icon: Hotel,
     },
     {
       key: "restaurants",
       label: "Total Restaurants",
-      tone: "text-orange-600",
-      bg: "bg-orange-50",
+      tone: "text-action",
+      bg: "bg-action/10",
       icon: Building2,
     },
     {
       key: "rooms",
       label: "Total Rooms",
-      tone: "text-sky-600",
-      bg: "bg-sky-50",
+      tone: "text-primary",
+      bg: "bg-primary/10",
       icon: BedDouble,
     },
     {
       key: "bookings",
       label: "Total Bookings",
-      tone: "text-emerald-600",
-      bg: "bg-emerald-50",
+      tone: "text-success",
+      bg: "bg-success/10",
       icon: ClipboardList,
     },
     {
       key: "reviews",
       label: "Total Reviews",
-      tone: "text-amber-600",
-      bg: "bg-amber-50",
+      tone: "text-warning",
+      bg: "bg-warning/15",
       icon: Star,
     },
     {
       key: "notifications",
       label: "Total Notifications",
-      tone: "text-rose-600",
-      bg: "bg-rose-50",
+      tone: "text-destructive",
+      bg: "bg-destructive/10",
       icon: Bell,
     },
     {
       key: "payments",
       label: "Total Payments",
-      tone: "text-violet-600",
-      bg: "bg-violet-50",
+      tone: "text-action",
+      bg: "bg-action/10",
       icon: CreditCard,
     },
     {
       key: "revenue",
       label: "Revenue",
-      tone: "text-emerald-600",
-      bg: "bg-emerald-50",
+      tone: "text-success",
+      bg: "bg-success/10",
       icon: DollarSign,
       format: (value) => `$${value.toLocaleString()}`,
     },
@@ -102,8 +102,8 @@ const Dashboard = () => {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold text-slate-900">Dashboard</h1>
-        <p className="text-sm text-slate-500">
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground">Dashboard</h1>
+        <p className="text-sm text-muted-foreground">
           Welcome back! Here&apos;s what&apos;s happening today.
         </p>
       </div>
@@ -115,8 +115,8 @@ const Dashboard = () => {
           ))}
         </div>
       ) : isError ? (
-        <Card className="border-slate-200 shadow-sm">
-          <CardContent className="py-8 text-center text-slate-500">
+        <Card className="border-border shadow-sm">
+          <CardContent className="py-8 text-center text-muted-foreground">
             Unable to load admin stats.
           </CardContent>
         </Card>
@@ -132,19 +132,19 @@ const Dashboard = () => {
             }
             const Icon = stat.icon;
             return (
-              <Card key={stat.key} className="border-slate-200 shadow-sm">
-                <CardContent className="p-5">
-                  <div
-                    className={`flex h-10 w-10 items-center justify-center rounded-xl ${stat.bg}`}
-                  >
-                    <Icon className={`h-5 w-5 ${stat.tone}`} />
-                  </div>
-                  <div className="mt-4 text-2xl font-semibold text-slate-900">
-                    {stat.format ? stat.format(value) : value}
-                  </div>
-                  <p className="mt-1 text-sm text-slate-500">{stat.label}</p>
-                </CardContent>
-              </Card>
+            <Card key={stat.key} className="border-border shadow-sm">
+              <CardContent className="p-5">
+                <div
+                  className={`flex h-10 w-10 items-center justify-center rounded-xl ${stat.bg}`}
+                >
+                  <Icon className={`h-5 w-5 ${stat.tone}`} />
+                </div>
+                <div className="mt-4 text-2xl font-semibold text-foreground">
+                  {stat.format ? stat.format(value) : value}
+                </div>
+                <p className="mt-1 text-sm text-muted-foreground">{stat.label}</p>
+              </CardContent>
+            </Card>
             );
           })}
         </div>
@@ -152,9 +152,9 @@ const Dashboard = () => {
 
       {!isLoading && !isError && data && (
         <div className="grid gap-6 sm:grid-cols-2">
-          <Card className="border-slate-200 shadow-sm">
+          <Card className="border-border shadow-sm">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-semibold text-slate-700">
+              <CardTitle className="text-sm font-semibold text-foreground">
                 Bookings by Status
               </CardTitle>
             </CardHeader>
@@ -162,16 +162,16 @@ const Dashboard = () => {
               {Object.entries(data.bookingsByStatus).map(([status, count]) => (
                 <span
                   key={status}
-                  className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500"
+                  className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground"
                 >
                   {status}: {count}
                 </span>
               ))}
             </CardContent>
           </Card>
-          <Card className="border-slate-200 shadow-sm">
+          <Card className="border-border shadow-sm">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-semibold text-slate-700">
+              <CardTitle className="text-sm font-semibold text-foreground">
                 Payments by Status
               </CardTitle>
             </CardHeader>
@@ -179,7 +179,7 @@ const Dashboard = () => {
               {Object.entries(data.paymentsByStatus).map(([status, count]) => (
                 <span
                   key={status}
-                  className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500"
+                  className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground"
                 >
                   {status}: {count}
                 </span>

@@ -107,7 +107,7 @@ export default function NotificationsPage() {
     return (
       <div className="container max-w-4xl py-10">
         <Card className="shadow-sm">
-          <CardContent className="py-8 text-center text-red-500">
+          <CardContent className="py-8 text-center text-destructive">
             Error loading notifications: {error.message}
           </CardContent>
         </Card>
@@ -119,34 +119,36 @@ export default function NotificationsPage() {
     <div className="container py-10 max-w-4xl">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold">Notifications</h1>
+          <h1 className="text-3xl font-semibold tracking-tight">Notifications</h1>
           <p className="text-muted-foreground mt-1">
             Stay updated on bookings and account activity.
           </p>
         </div>
-        <Badge className="border-emerald-200 bg-emerald-50 text-emerald-700 w-fit">
+        <Badge variant="warning" className="w-fit">
           {unreadNotifications.length} unread
         </Badge>
       </div>
 
       <Card className="shadow-sm">
         <CardContent className="p-6">
-          <Tabs defaultValue="all" className="w-full">
-            <TabsList className="mb-4 bg-muted/60 p-1 rounded-full">
-          <TabsTrigger value="all">All ({notifications.length})</TabsTrigger>
-          <TabsTrigger value="unread">
-            Unread ({unreadNotifications.length})
-          </TabsTrigger>
-          <TabsTrigger value="read">
-            Read ({readNotifications.length})
-          </TabsTrigger>
+          <Tabs defaultValue="all" className="w-full pt-2">
+            <TabsList className="mb-6 h-auto w-full justify-start rounded-2xl bg-muted/60 p-1 sm:inline-flex sm:w-auto">
+              <TabsTrigger value="all" className="flex-1 rounded-xl px-4 py-2 sm:flex-none">
+                All ({notifications.length})
+              </TabsTrigger>
+              <TabsTrigger value="unread" className="flex-1 rounded-xl px-4 py-2 sm:flex-none">
+                Unread ({unreadNotifications.length})
+              </TabsTrigger>
+              <TabsTrigger value="read" className="flex-1 rounded-xl px-4 py-2 sm:flex-none">
+                Read ({readNotifications.length})
+              </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="all" className="space-y-4">
+            <TabsContent value="all" className="mt-0 space-y-4">
               {renderNotifications(notifications, handleMarkAsRead)}
             </TabsContent>
 
-            <TabsContent value="unread" className="space-y-4">
+            <TabsContent value="unread" className="mt-0 space-y-4">
               {unreadNotifications.length > 0 ? (
                 renderNotifications(unreadNotifications, handleMarkAsRead)
               ) : (
@@ -158,7 +160,7 @@ export default function NotificationsPage() {
               )}
             </TabsContent>
 
-            <TabsContent value="read" className="space-y-4">
+            <TabsContent value="read" className="mt-0 space-y-4">
               {readNotifications.length > 0 ? (
                 renderNotifications(readNotifications)
               ) : (

@@ -19,7 +19,7 @@ export function PermissionCreateUpdateForm({ error }: PermissionFormProps) {
 
       <div className=" mt-3">
         <FormikSubmitButton
-          className="bg-blue-500 hover:bg-blue-600 transition  delay-100 ease-in-out text-white w-full py-3 rounded-md"
+          className="w-full rounded-xl bg-primary py-3 text-white transition-colors hover:bg-primary/90"
           text="Submit"
         />
       </div>

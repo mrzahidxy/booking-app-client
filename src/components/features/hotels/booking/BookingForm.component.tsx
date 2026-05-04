@@ -51,9 +51,7 @@ export function BookingForm({ room, bookingId }: BookingFormProps) {
   }, [data?.availAbality, isError, isLoading, values.bookingDate]);
 
   useEffect(() => {
-    if (bookingId) {
-      setStep(3);
-    }
+    setStep(bookingId ? 3 : 1);
   }, [bookingId]);
 
   return (
@@ -156,13 +154,15 @@ export function BookingForm({ room, bookingId }: BookingFormProps) {
                     <span className="text-muted-foreground">
                       Price per night
                     </span>
-                    <span className="font-medium">${room.price}</span>
+                    <span className="font-medium">
+                      BDT {room.price.toLocaleString()}
+                    </span>
                   </div>
                   <div className="pt-2 border-t">
                     <div className="flex justify-between">
                       <span className="font-semibold">Total</span>
                       <span className="font-semibold">
-                        ${room.price * values.quantity!}
+                        BDT {(room.price * values.quantity!).toLocaleString()}
                       </span>
                     </div>
                   </div>
