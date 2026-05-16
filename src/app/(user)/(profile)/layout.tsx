@@ -1,32 +1,22 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import type { ReactNode } from "react";
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const { status } = useSession();
-  const { data } = useSession();
-  const router = useRouter();
-  const userRole =
-    typeof data?.user?.role === "string"
-      ? data.user.role.toUpperCase()
-      : data?.user?.role;
+import { ProfileShell } from "@/components/features/profile/ProfileShell.component";
+import { RequireUserArea } from "@/components/features/profile/RequireUserArea";
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/");
-      return;
-    }
-    if (status === "authenticated" && userRole === "ADMIN") {
-      router.push("/admin");
-    }
-  }, [status, userRole, router]);
-
-
-  return <main className="">{children}</main>;
+interface RootLayoutProps {
+  children: ReactNode;
 }
+
+const RootLayout = ({ children }: RootLayoutProps) => {
+  return (
+    <RequireUserArea>
+      <main className="py-4 sm:py-6">
+        <ProfileShell>{children}</ProfileShell>
+      </main>
+    </RequireUserArea>
+  );
+};
+
+export default RootLayout;

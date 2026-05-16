@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import credentials from "next-auth/providers/credentials";
+import { hasTenantMemberships } from "@/shared/lib/session";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
@@ -43,8 +44,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           );
         }
 
-        console.log("res", res);
-
         const json = await res.json().catch(() => null);
 
         if (res.ok && json?.data) {
@@ -54,10 +53,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             data.token ?? data.access_token ?? data.accessToken ?? user?.token;
 
           if (user && token) {
-            const resolvedRole =
-              typeof user.role === "object" && user.role !== null
-                ? user.role.name
-                : user.role ?? user.typeName ?? user.type;
+          const resolvedRole =
+            typeof user.role === "object" && user.role !== null
+              ? user.role.name
+              : user.role ?? user.typeName ?? user.type;
+            const rawTenantMembership = user.tenantMembership
+              ?? (Array.isArray(user.tenantMemberships)
+                ? user.tenantMemberships[0]
+                : null);
+            const tenantMembership = rawTenantMembership
+              ? {
+                  tenantId: rawTenantMembership.tenantId,
+                  role: rawTenantMembership.role,
+                  tenant: rawTenantMembership.tenant
+                    ? {
+                        id: rawTenantMembership.tenant.id,
+                        name: rawTenantMembership.tenant.name,
+                        slug: rawTenantMembership.tenant.slug,
+                        isActive: rawTenantMembership.tenant.isActive,
+                      }
+                    : undefined,
+                }
+              : undefined;
             // Return the user object which will be stored in the JWT
             return {
               id: user.id,
@@ -68,6 +85,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                   ? resolvedRole.toUpperCase()
                   : resolvedRole,
               token: token,
+              tenantMembership,
             };
           }
         }
@@ -81,7 +99,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async authorized({ request, auth }) {
       const { pathname } = request.nextUrl;
       if (pathname.startsWith("/admin")) {
-        return auth?.user?.role === "ADMIN";
+        const hasTenantAccess = hasTenantMemberships(auth as any);
+        return auth?.user?.role === "ADMIN" || hasTenantAccess;
       }
       return true;
     },
@@ -94,18 +113,33 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.email = user.email;
         token.role = user.role;
         token.token = user.token;
+        token.tenantMembership = (user as any).tenantMembership;
+        token.tenantMemberships = (user as any).tenantMembership
+          ? [(user as any).tenantMembership]
+          : (user as any).tenantMemberships ?? [];
       }
       return token;
     },
 
     async session({ session, token }) {
-      session.user = {
-        id: token.id,
-        name: token.name as string,
-        email: token.email as string,
-        role: token.role as string,
-        token: token.token as string,
+      const currentUser = session.user as typeof session.user & {
+        id?: string;
+        role?: string;
+        token?: string;
+        tenantMembership?: any;
+        tenantMemberships?: any[];
       };
+
+      currentUser.id = String(token.id ?? "");
+      currentUser.name = token.name as string;
+      currentUser.email = token.email as string;
+      currentUser.role = token.role as string;
+      currentUser.token = token.token as string;
+      currentUser.tenantMembership = (token as any).tenantMembership;
+      currentUser.tenantMemberships = (token as any).tenantMembership
+        ? [(token as any).tenantMembership]
+        : (token as any).tenantMemberships ?? [];
+      session.user = currentUser;
       return session;
     },
   },

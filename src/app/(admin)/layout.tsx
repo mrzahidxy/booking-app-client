@@ -6,6 +6,10 @@ import { useEffect } from "react";
 import { Navbar } from "@/components/common/Navbar.component";
 import Sidebar from "@/components/features/admin/Sidebar.component";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  hasTenantMemberships,
+  isPlatformAdminSession,
+} from "@/shared/lib/session";
 
 export default function DashboardLayout({
   children,
@@ -14,10 +18,8 @@ export default function DashboardLayout({
 }) {
   const { status, data } = useSession();
   const router = useRouter();
-  const userRole =
-    typeof data?.user?.role === "string"
-      ? data.user.role.toUpperCase()
-      : data?.user?.role;
+  const isPlatformAdmin = isPlatformAdminSession(data);
+  const hasTenantAccess = hasTenantMemberships(data);
 
   useEffect(() => {
     if (status === "loading") {
@@ -27,10 +29,10 @@ export default function DashboardLayout({
       router.replace("/auth/login");
       return;
     }
-    if (userRole !== "ADMIN") {
+    if (!isPlatformAdmin && !hasTenantAccess) {
       router.replace("/");
     }
-  }, [status, userRole, router]);
+  }, [status, isPlatformAdmin, hasTenantAccess, router]);
 
 
   return (
