@@ -1,16 +1,17 @@
 "use client";
 
+import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+
 import { Navbar } from "@/components/common/Navbar.component";
-import { AdminSidebar } from "@/components/features/admin/AdminSidebar.component";
+import { WorkspaceSidebar } from "@/components/features/workspace/WorkspaceSidebar.component";
 import {
   hasTenantMemberships,
   isPlatformAdminSession,
 } from "@/shared/lib/session";
 
-export default function DashboardLayout({
+export default function WorkspaceLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -28,22 +29,21 @@ export default function DashboardLayout({
       router.replace("/auth/login");
       return;
     }
-    if (!isPlatformAdmin && !hasTenantAccess) {
-      router.replace("/");
+    if (isPlatformAdmin) {
+      router.replace("/admin");
       return;
     }
-    if (!isPlatformAdmin && hasTenantAccess) {
-      router.replace("/workspace");
+    if (!hasTenantAccess) {
+      router.replace("/");
     }
   }, [status, isPlatformAdmin, hasTenantAccess, router]);
-
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Navbar />
 
       <div className="flex flex-1">
-        <AdminSidebar />
+        <WorkspaceSidebar />
 
         <main className="flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
           <div className="mx-auto w-full max-w-[1200px]">{children}</div>

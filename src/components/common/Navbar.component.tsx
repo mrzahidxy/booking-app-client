@@ -1,7 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronDown, MenuIcon, Heart } from "lucide-react";
+import { useEffect } from "react";
+import { signOut, useSession } from "next-auth/react";
+import { usePathname, useRouter } from "next/navigation";
+import { getToken, onMessage } from "firebase/messaging";
+import { ChevronDown, Heart, MenuIcon } from "lucide-react";
+
+import { NotificationDropdown } from "@/components/features/notification/NotificationDropdow.component";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,38 +15,40 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { signOut, useSession } from "next-auth/react";
-import { usePathname, useRouter } from "next/navigation";
-import { NotificationDropdown } from "@/components/features/notification/NotificationDropdow.component";
-import { useToast } from "@/shared/hooks/use-toast";
-import useFCMToken from "@/shared/hooks/useFCMToekn";
-import { useEffect } from "react";
-import { getToken, onMessage } from "firebase/messaging";
 import { messaging } from "@/shared/lib/firebase-config";
 import privateRequest from "@/shared/lib/api";
+import { useToast } from "@/shared/hooks/use-toast";
+import useFCMToken from "@/shared/hooks/useFCMToekn";
 import { cn } from "@/shared/utils";
+import {
+  getWorkspaceProfileHref,
+  hasTenantMemberships,
+  isPlatformAdminSession,
+} from "@/shared/lib/session";
 
 export function Navbar() {
   const { data: session, status } = useSession();
   const { push } = useRouter();
   const pathname = usePathname();
-  const isAdmin = pathname.startsWith("/admin");
+  const isAdminSurface = pathname.startsWith("/admin") || pathname.startsWith("/workspace");
+  const isPlatformAdmin = isPlatformAdminSession(session);
+  const hasTenantAccess = hasTenantMemberships(session);
+  const isWorkspaceUser = isPlatformAdmin || hasTenantAccess;
+  const profileHref = getWorkspaceProfileHref(session);
 
   const { toast } = useToast();
   const { fcmToken, storeFCMToken } = useFCMToken();
 
   useEffect(() => {
-    if (!messaging) {
+    const currentMessaging = messaging;
+    if (!currentMessaging) {
       return;
     }
 
     const requestPermission = async () => {
       const permission = await Notification.requestPermission();
       if (permission === "granted") {
-        if (!messaging) {
-          return;
-        }
-        const currentFCMToken = await getToken(messaging, {
+        const currentFCMToken = await getToken(currentMessaging, {
           vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
         });
         if (currentFCMToken) {
@@ -54,13 +62,13 @@ export function Navbar() {
     }
   }, [fcmToken, storeFCMToken]);
 
-  // Handle incoming notifications
   useEffect(() => {
-    if (!messaging) {
+    const currentMessaging = messaging;
+    if (!currentMessaging) {
       return;
     }
 
-    const unsubscribe = onMessage(messaging, (payload) => {
+    const unsubscribe = onMessage(currentMessaging, (payload) => {
       toast({
         title: payload.notification?.title,
         description: payload.notification?.body,
@@ -92,15 +100,19 @@ export function Navbar() {
   }, [status, fcmToken]);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/80 bg-white/90 backdrop-blur-xl shadow-sm shadow-slate-900/5">
+    <header className="sticky top-0 z-50 w-full border-b border-border/80 bg-white/90 shadow-sm shadow-slate-900/5 backdrop-blur-xl">
       <div
         className={cn(
           "flex h-16 items-center",
-          isAdmin ? "px-4 sm:px-6 lg:px-10" : "container"
+          isAdminSurface ? "px-4 sm:px-6 lg:px-10" : "container"
         )}
       >
         <div className="md:hidden">
-          <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:text-primary">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full text-muted-foreground hover:text-primary"
+          >
             <MenuIcon className="h-5 w-5" />
           </Button>
         </div>
@@ -121,21 +133,18 @@ export function Navbar() {
             <Heart className="h-5 w-5" />
           </Button>
 
-          {status === "loading" && (
-            // Loading state
-            <span className="text-sm font-medium">Loading...</span>
-          )}
+          {status === "loading" && <span className="text-sm font-medium">Loading...</span>}
 
           {status === "authenticated" && (
             <>
               <NotificationDropdown />
               <div className="flex items-center gap-2">
-              <Link
-                href="/profile"
-                className="text-sm font-semibold text-foreground transition-colors hover:text-primary"
-              >
-                {session.user?.name ?? "User"}
-              </Link>
+                <Link
+                  href={profileHref}
+                  className="text-sm font-semibold text-foreground transition-colors hover:text-primary"
+                >
+                  {session.user?.name ?? "User"}
+                </Link>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
@@ -147,18 +156,19 @@ export function Navbar() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
-                    {String(session.user?.role).toUpperCase() === "ADMIN" ? (
-                      <DropdownMenuItem onClick={() => push("/admin")}>
-                        Admin Panel
-                      </DropdownMenuItem>
+                    {isWorkspaceUser ? (
+                      <>
+                        <DropdownMenuItem onClick={() => push(isPlatformAdmin ? "/admin" : "/workspace")}>
+                          {isPlatformAdmin ? "Admin Panel" : "Workspace"}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => push(profileHref)}>
+                          Account
+                        </DropdownMenuItem>
+                      </>
                     ) : (
-                      <DropdownMenuItem onClick={() => push("/profile")}>
-                        Profile
-                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => push("/profile")}>Profile</DropdownMenuItem>
                     )}
-                    <DropdownMenuItem onClick={handleSignOut}>
-                      Logout
-                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleSignOut}>Logout</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
@@ -166,7 +176,6 @@ export function Navbar() {
           )}
 
           {status === "unauthenticated" && (
-            // Sign-in link for unauthenticated users
             <Link
               href="/auth/login"
               className="text-sm font-semibold text-foreground hover:text-primary"

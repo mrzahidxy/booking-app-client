@@ -4,7 +4,10 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-import { isPlatformAdminSession } from "@/shared/lib/session";
+import {
+  hasTenantMemberships,
+  isPlatformAdminSession,
+} from "@/shared/lib/session";
 
 export const RequirePlatformAdmin = ({
   children,
@@ -14,6 +17,7 @@ export const RequirePlatformAdmin = ({
   const { data, status } = useSession();
   const router = useRouter();
   const isPlatformAdmin = isPlatformAdminSession(data);
+  const hasTenantAccess = hasTenantMemberships(data);
 
   useEffect(() => {
     if (status === "loading") {
@@ -21,9 +25,9 @@ export const RequirePlatformAdmin = ({
     }
 
     if (status !== "authenticated" || !isPlatformAdmin) {
-      router.replace("/admin");
+      router.replace(hasTenantAccess ? "/workspace/organisation" : "/");
     }
-  }, [status, isPlatformAdmin, router]);
+  }, [hasTenantAccess, status, isPlatformAdmin, router, data]);
 
   if (status !== "authenticated" || !isPlatformAdmin) {
     return null;

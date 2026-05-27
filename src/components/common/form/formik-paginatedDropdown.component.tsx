@@ -30,19 +30,31 @@ const FormikPaginatedDropdown = ({
   label,
   url,
   formikField,
+  disablePortal,
+  excludeIds = [],
 }: {
   label: string;
   url: string;
   formikField: string; // The Formik field to update with only the ID
+  disablePortal?: boolean;
+  excludeIds?: number[];
 }) => {
   const { values, setFieldValue, errors } = useFormikContext<any>();
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<{
     id: number;
     name: string;
+    email?: string;
   } | null>(null);
   const selectedValue = values[formikField];
+
+  const getItemLabel = (item: {
+    id: number;
+    name?: string | null;
+    email?: string | null;
+  }) => item.name || item.email || `#${item.id}`;
 
   useEffect(() => {
     const initializeSelectedItem = async () => {
@@ -51,7 +63,11 @@ const FormikPaginatedDropdown = ({
         const response = await privateRequest.get(`${url}/${id}`);
         const item = response.data?.data;
         if (item) {
-          setSelectedItem({ id: item.id, name: item.name });
+          setSelectedItem({
+            id: item.id,
+            name: getItemLabel(item),
+            email: item.email ?? undefined,
+          });
         }
       }
     };
@@ -65,16 +81,21 @@ const FormikPaginatedDropdown = ({
 
   // Fetch paginated data from API
   const fetchPaginatedData = async (page: number) => {
-    const response = await privateRequest.get(`${url}?page=${page}&limit=10`);
+    const response = await privateRequest.get(`${url}?page=${page}&limit=10`, {
+      params: search ? { search } : undefined,
+    });
     return response.data ?? { collection: [], pagination: {} };
   };
 
   // Fetch data using React Query
   const { data, isFetching } = useQuery({
-    queryKey: [url, page],
+    queryKey: [url, page, search],
     queryFn: () => fetchPaginatedData(page),
     staleTime: 5 * 60 * 1000,
   });
+  const items = data?.data?.collection?.filter(
+    (item: { id: number }) => !excludeIds.includes(item.id)
+  );
 
   return (
     <div className="space-y-2">
@@ -87,19 +108,31 @@ const FormikPaginatedDropdown = ({
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-full p-0">
+        <PopoverContent className="w-full p-0" disablePortal={disablePortal}>
           <Command>
-            <CommandInput placeholder={`Search ${label}...`} />
+            <CommandInput
+              placeholder={`Search ${label}...`}
+              value={search}
+              onValueChange={(value) => {
+                setSearch(value);
+                setPage(1);
+              }}
+            />
             <CommandList>
               <CommandEmpty>No {label.toLowerCase()} found.</CommandEmpty>
               <CommandGroup>
-                {data?.data?.collection?.map(
-                  (item: { id: number; name: string }) => (
+                {items?.map(
+                  (item: { id: number; name?: string | null; email?: string | null }) => (
                     <CommandItem
                       key={item.id}
+                      value={`${getItemLabel(item)} ${item.id}`}
                       onSelect={() => {
-                        setSelectedItem(item); // ✅ Store Full Item in Local State
-                        setFieldValue(formikField, item.id); // ✅ Store Only ID in Formik
+                        setSelectedItem({
+                          id: item.id,
+                          name: getItemLabel(item),
+                          email: item.email ?? undefined,
+                        });
+                        setFieldValue(formikField, item.id);
                         setOpen(false);
                       }}
                     >
@@ -111,7 +144,7 @@ const FormikPaginatedDropdown = ({
                             : "opacity-0"
                         )}
                       />
-                      {item.name}
+                      {getItemLabel(item)}
                     </CommandItem>
                   )
                 )}
@@ -125,7 +158,7 @@ const FormikPaginatedDropdown = ({
                       <PaginationPrevious
                         onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
                         className={
-                          data?.pagination?.hasPrevPage
+                          data?.data?.pagination?.hasPrevPage
                             ? "cursor-pointer"
                             : "pointer-events-none opacity-50"
                         }
@@ -133,15 +166,15 @@ const FormikPaginatedDropdown = ({
                     </PaginationItem>
                     <PaginationItem>
                       <span className="text-sm">
-                        Page {data?.pagination?.currentPage} of{" "}
-                        {data?.pagination?.totalPages}
+                        Page {data?.data?.pagination?.currentPage} of{" "}
+                        {data?.data?.pagination?.totalPages}
                       </span>
                     </PaginationItem>
                     <PaginationItem>
                       <PaginationNext
                         onClick={() => setPage((prev) => prev + 1)}
                         className={
-                          data?.pagination?.hasNextPage
+                          data?.data?.pagination?.hasNextPage
                             ? "cursor-pointer"
                             : "pointer-events-none opacity-50"
                         }

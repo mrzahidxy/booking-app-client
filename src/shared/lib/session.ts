@@ -36,4 +36,8 @@ export const isWorkspaceUserSession = (session?: Session | null) =>
   isPlatformAdminSession(session) || hasTenantMemberships(session);
 
 export const getWorkspaceProfileHref = (session?: Session | null) =>
-  isWorkspaceUserSession(session) ? "/admin/profile" : "/profile";
+  isPlatformAdminSession(session)
+    ? "/admin/profile"
+    : hasTenantMemberships(session)
+      ? "/workspace/profile"
+      : "/profile";
