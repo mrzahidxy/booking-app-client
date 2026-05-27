@@ -1,4 +1,4 @@
-import { publicRequest } from "@/shared/lib/api";
+import privateRequest, { publicRequest } from "@/shared/lib/api";
 
 export type ReviewListParams = {
   page?: number;
@@ -8,7 +8,7 @@ export type ReviewListParams = {
 };
 
 export type ReviewPayload = {
-  userId: number;
+  propertyId?: number;
   hotelId?: number;
   restaurantId?: number;
   rating: number;
@@ -23,16 +23,16 @@ export const fetchReviews = async (params?: ReviewListParams) => {
 };
 
 export const createReview = async (payload: ReviewPayload) => {
-  const response = await publicRequest.post("/reviews", payload);
+  const response = await privateRequest.post("/reviews", payload);
   return response.data;
 };
 
 export const updateReview = async (id: number, payload: ReviewUpdatePayload) => {
-  const response = await publicRequest.put(`/reviews/${id}`, payload);
+  const response = await privateRequest.put(`/reviews/${id}`, payload);
   return response.data;
 };
 
 export const deleteReview = async (id: number) => {
-  const response = await publicRequest.delete(`/reviews/${id}`);
+  const response = await privateRequest.delete(`/reviews/${id}`);
   return response.data;
 };

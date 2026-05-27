@@ -4,7 +4,10 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
-import { isWorkspaceUserSession } from "@/shared/lib/session";
+import {
+  getWorkspaceProfileHref,
+  isWorkspaceUserSession,
+} from "@/shared/lib/session";
 
 export const RequireUserArea = ({
   children,
@@ -14,6 +17,7 @@ export const RequireUserArea = ({
   const { data, status } = useSession();
   const router = useRouter();
   const isWorkspaceUser = isWorkspaceUserSession(data);
+  const workspaceProfileHref = getWorkspaceProfileHref(data);
 
   useEffect(() => {
     if (status === "loading") {
@@ -26,9 +30,9 @@ export const RequireUserArea = ({
     }
 
     if (isWorkspaceUser) {
-      router.replace("/admin/profile");
+      router.replace(workspaceProfileHref);
     }
-  }, [status, isWorkspaceUser, router]);
+  }, [status, isWorkspaceUser, router, workspaceProfileHref]);
 
   if (status !== "authenticated" || isWorkspaceUser) {
     return null;

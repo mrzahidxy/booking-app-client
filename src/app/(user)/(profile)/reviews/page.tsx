@@ -49,16 +49,16 @@ const ReviewsPage = () => {
   const reviews = (data?.review ?? []) as ReviewItem[];
 
   return (
-    <div className="container max-w-4xl mx-auto py-8">
-      <div className="mb-8">
+    <div className="space-y-6">
+      <div>
         <h1 className="text-3xl font-semibold tracking-tight">Review History</h1>
-        <p className="text-muted-foreground mt-1">
+        <p className="mt-1 text-sm text-muted-foreground">
           Your feedback on hotels and restaurants.
         </p>
       </div>
 
       {reviews.length === 0 ? (
-        <Card className="shadow-sm">
+        <Card className="border-border shadow-sm">
           <CardContent className="py-8 text-center text-muted-foreground">
             You have not written any reviews yet.
           </CardContent>
@@ -75,7 +75,7 @@ const ReviewsPage = () => {
             const date = new Date(review.createdAt).toLocaleDateString();
 
             return (
-              <Card key={review.id} className="shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
+              <Card key={review.id} className="border-border shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
                 <CardHeader className="space-y-2">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-lg">{target}</CardTitle>

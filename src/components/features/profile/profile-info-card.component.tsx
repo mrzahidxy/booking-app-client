@@ -10,6 +10,7 @@ interface UserData {
   email: string;
   phone?: string;
   createdAt?: string;
+  updatedAt?: string;
   updateAt?: string;
   role?: {
     id: number;
@@ -33,9 +34,11 @@ export const ProfileInfoCard = ({ userData }: ProfileInfoCardProps) => {
     });
   };
 
+  const lastUpdated = userData?.updatedAt ?? userData?.updateAt;
+
   return (
     <div className="grid gap-6 md:grid-cols-2">
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -66,7 +69,7 @@ export const ProfileInfoCard = ({ userData }: ProfileInfoCardProps) => {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-action/10 text-action">
@@ -95,13 +98,13 @@ export const ProfileInfoCard = ({ userData }: ProfileInfoCardProps) => {
               Member Since
             </label>
             <p className="text-lg text-foreground">
-              {userData?.createdAt ? formatDate(userData.createdAt) : "—"}
+              {userData?.createdAt ? formatDate(userData.createdAt) : "-"}
             </p>
           </div>
           <div className="space-y-2 py-3">
             <label className="text-sm font-medium text-muted-foreground">Last Updated</label>
             <p className="text-lg text-foreground">
-              {userData?.updateAt ? formatDate(userData.updateAt) : "—"}
+              {lastUpdated ? formatDate(lastUpdated) : "-"}
             </p>
           </div>
         </CardContent>

@@ -1,22 +1,15 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Bell, BellOff } from "lucide-react";
+import type { ReactNode } from "react";
 import { useState } from "react";
-import privateRequest from "@/shared/lib/api";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AxiosError } from "axios";
-import queryClient from "@/shared/lib/query-client";
-import { toast } from "@/shared/hooks/use-toast";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Bell, BellOff } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Pagination,
   PaginationContent,
@@ -25,13 +18,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import privateRequest from "@/shared/lib/api";
 import { Notification } from "@/entities";
+import queryClient from "@/shared/lib/query-client";
+import { toast } from "@/shared/hooks/use-toast";
 
-// Fetch data using react-query
 const fetchNotifications = async (page: number, limit: number) => {
-  const response = await privateRequest.get(
-    `/notifications?page=${page}&limit=${limit}`
-  );
+  const response = await privateRequest.get(`/notifications?page=${page}&limit=${limit}`);
   return response.data;
 };
 
@@ -39,6 +32,7 @@ export default function NotificationsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const { status } = useSession();
   const isSessionReady = status === "authenticated";
+
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["notifications", currentPage],
     queryFn: () => fetchNotifications(currentPage, 20),
@@ -46,17 +40,10 @@ export default function NotificationsPage() {
   });
 
   const notifications = data?.data?.collection ?? [];
-  const unreadNotifications = notifications.filter(
-    (n: Notification) => !n.read
-  );
-  const readNotifications = notifications.filter((n: Notification) => n.read);
+  const unreadNotifications = notifications.filter((notification: Notification) => !notification.read);
+  const readNotifications = notifications.filter((notification: Notification) => notification.read);
 
-  //Mutation for updating the user role
-  const { mutate, isPending } = useMutation<
-    {}, // Expected response type
-    AxiosError<{}>, // Error type with extended interface
-    { id: string } // Variables type
-  >({
+  const { mutate, isPending } = useMutation({
     mutationFn: async (values: { id: string }) => {
       return await privateRequest.patch(`/notifications/${values.id}/read`, {
         read: true,
@@ -67,24 +54,29 @@ export default function NotificationsPage() {
         queryKey: ["notifications"],
       });
     },
-    onError: (err) => {
+    onError: () => {
       toast({
         title: "Error",
-        description: "Failed. Please try again.",
+        description: "Failed to mark notification as read.",
         variant: "destructive",
       });
     },
   });
 
   const handleMarkAsRead = (id: string) => {
-    mutate({ id: id });
+    mutate({ id });
   };
 
-  // Handle error and loading states
   if (status === "loading" || isLoading) {
     return (
-      <div className="container max-w-4xl py-10">
-        <Card className="shadow-sm">
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-semibold tracking-tight">Notifications</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Stay updated on bookings and account activity.
+          </p>
+        </div>
+        <Card className="border-border shadow-sm">
           <CardContent className="py-8 text-center text-muted-foreground">
             Checking your session...
           </CardContent>
@@ -92,23 +84,19 @@ export default function NotificationsPage() {
       </div>
     );
   }
-  if (status === "unauthenticated") {
-    return (
-      <div className="container max-w-4xl py-10">
-        <Card className="shadow-sm">
-          <CardContent className="py-8 text-center text-muted-foreground">
-            Sign in to view notifications.
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+
   if (isError) {
     return (
-      <div className="container max-w-4xl py-10">
-        <Card className="shadow-sm">
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-semibold tracking-tight">Notifications</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Stay updated on bookings and account activity.
+          </p>
+        </div>
+        <Card className="border-border shadow-sm">
           <CardContent className="py-8 text-center text-destructive">
-            Error loading notifications: {error.message}
+            Error loading notifications: {(error as Error).message}
           </CardContent>
         </Card>
       </div>
@@ -116,11 +104,11 @@ export default function NotificationsPage() {
   }
 
   return (
-    <div className="container py-10 max-w-4xl">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6">
+    <div className="space-y-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Notifications</h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="mt-1 text-sm text-muted-foreground">
             Stay updated on bookings and account activity.
           </p>
         </div>
@@ -129,7 +117,7 @@ export default function NotificationsPage() {
         </Badge>
       </div>
 
-      <Card className="shadow-sm">
+      <Card className="border-border shadow-sm">
         <CardContent className="p-6">
           <Tabs defaultValue="all" className="w-full pt-2">
             <TabsList className="mb-6 h-auto w-full justify-start rounded-2xl bg-muted/60 p-1 sm:inline-flex sm:w-auto">
@@ -145,12 +133,12 @@ export default function NotificationsPage() {
             </TabsList>
 
             <TabsContent value="all" className="mt-0 space-y-4">
-              {renderNotifications(notifications, handleMarkAsRead)}
+              {renderNotifications(notifications, handleMarkAsRead, isPending)}
             </TabsContent>
 
             <TabsContent value="unread" className="mt-0 space-y-4">
               {unreadNotifications.length > 0 ? (
-                renderNotifications(unreadNotifications, handleMarkAsRead)
+                renderNotifications(unreadNotifications, handleMarkAsRead, isPending)
               ) : (
                 <EmptyState
                   icon={<Bell className="h-8 w-8 text-muted-foreground" />}
@@ -174,13 +162,12 @@ export default function NotificationsPage() {
           </Tabs>
         </CardContent>
       </Card>
+
       {data.data.pagination?.totalPages > 1 && (
         <Pagination>
           <PaginationContent>
             <PaginationItem>
-              <PaginationPrevious
-                onClick={() => setCurrentPage(currentPage - 1)}
-              />
+              <PaginationPrevious onClick={() => setCurrentPage(Math.max(1, currentPage - 1))} />
             </PaginationItem>
             {[...Array(data.data.pagination.totalPages)].map((_, index) => (
               <PaginationItem key={index}>
@@ -193,7 +180,11 @@ export default function NotificationsPage() {
               </PaginationItem>
             ))}
             <PaginationItem>
-              <PaginationNext onClick={() => setCurrentPage(currentPage + 1)} />
+              <PaginationNext
+                onClick={() =>
+                  setCurrentPage(Math.min(data.data.pagination.totalPages, currentPage + 1))
+                }
+              />
             </PaginationItem>
           </PaginationContent>
         </Pagination>
@@ -202,64 +193,70 @@ export default function NotificationsPage() {
   );
 }
 
-// Render notifications
 function renderNotifications(
   notifications: Notification[],
-  handleMarkAsRead?: (id: string) => void
+  handleMarkAsRead?: (id: string) => void,
+  isPending?: boolean
 ) {
+  if (!notifications.length) {
+    return (
+      <Card className="border-dashed border-border">
+        <CardContent className="py-8 text-center text-sm text-muted-foreground">
+          No notifications available.
+        </CardContent>
+      </Card>
+    );
+  }
+
   return notifications.map((notification) => (
     <Card
       key={notification.id}
-      className="overflow-hidden shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+      className="overflow-hidden border-border shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
     >
       <CardContent className="p-0">
-        <div className="flex items-start p-6">
+        <div className="flex items-start justify-between gap-4 p-6">
           <div className="flex-1">
             <div className="flex items-center gap-2">
               <h3 className="font-medium">{notification.title}</h3>
-              {!notification.read && (
-                <span className="h-2 w-2 rounded-full bg-primary" />
-              )}
+              {!notification.read && <span className="h-2 w-2 rounded-full bg-primary" />}
             </div>
-            <p className="text-sm text-muted-foreground mt-1">
-              {notification.body}
-            </p>
-            <p className="text-xs text-muted-foreground mt-2">
+            <p className="mt-1 text-sm text-muted-foreground">{notification.body}</p>
+            <p className="mt-2 text-xs text-muted-foreground">
               {new Date(notification.createdAt).toLocaleString()}
             </p>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="ml-2"
-            onClick={() => handleMarkAsRead?.(notification.id.toString())}
-          >
-            {!notification.read && "Mark as read"}
-          </Button>
+          {!notification.read ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="shrink-0"
+              disabled={isPending}
+              onClick={() => handleMarkAsRead?.(notification.id.toString())}
+            >
+              Mark as read
+            </Button>
+          ) : null}
         </div>
       </CardContent>
     </Card>
   ));
 }
 
-// Empty state component
 function EmptyState({
   icon,
   title,
   description,
 }: {
-  icon: React.ReactNode;
+  icon: ReactNode;
   title: string;
   description: string;
 }) {
   return (
-    <Card>
+    <Card className="border-dashed border-border">
       <CardContent className="flex flex-col items-center justify-center py-10">
         {icon}
         <CardTitle className="mt-4">{title}</CardTitle>
-        <CardDescription className="mt-2 text-center max-w-md">
-          {description}
-        </CardDescription>
+        <CardDescription className="mt-2 max-w-md text-center">{description}</CardDescription>
       </CardContent>
     </Card>
   );

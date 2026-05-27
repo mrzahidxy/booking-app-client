@@ -1,82 +1,208 @@
 "use client";
 
-import privateRequest from "@/shared/lib/api";
-import useCartStore from "@/store/useStore";
-import CustomButton from "@/components/common/Button.component";
-import CartList from "@/components/features/cart/Cart-list.component";
+import type { ReactNode } from "react";
+import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
-import { PageLoader } from "@/components/common/PageLoader.component";
+import Link from "next/link";
+import { CalendarDays, CreditCard, Hotel, Utensils } from "lucide-react";
 
-const CartPage = () => {
-  const isLoading = useCartStore((state) => state.isLoading);
-  const message = useCartStore((state) => state.message);
-  const error = useCartStore((state) => state.error);
-  const placeOrder = useCartStore((state) => state.placeOrder);
+import privateRequest from "@/shared/lib/api";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import type { Booking } from "@/entities/booking";
 
-  const fetchCart = async () => {
-    const response = await privateRequest.get("/carts");
-    return response.data.data;
-  };
+const fetchBookings = async () => {
+  const response = await privateRequest.get("/bookings");
+  return response.data.data?.collection ?? response.data.data ?? [];
+};
 
-  // Fetch data using react-query
-  const {
-    data: carts,
-    isLoading: cartIsLoading,
-    isError,
-    refetch,
-  } = useQuery({
-    queryKey: ["cart"],
-    queryFn: () => fetchCart(),
+const statusTone = (status?: string) => {
+  switch (String(status ?? "").toUpperCase()) {
+    case "CONFIRMED":
+      return "bg-success/10 text-success";
+    case "PENDING":
+      return "bg-warning/15 text-warning";
+    case "CANCELLED":
+      return "bg-destructive/10 text-destructive";
+    case "COMPLETED":
+      return "bg-primary/10 text-primary";
+    default:
+      return "bg-muted text-muted-foreground";
+  }
+};
+
+const paymentTone = (status?: string) => {
+  switch (String(status ?? "").toUpperCase()) {
+    case "SUCCEEDED":
+      return "bg-success/10 text-success";
+    case "FAILED":
+      return "bg-destructive/10 text-destructive";
+    case "PENDING":
+      return "bg-warning/15 text-warning";
+    default:
+      return "bg-muted text-muted-foreground";
+  }
+};
+
+export default function BookingSummaryPage() {
+  const { status } = useSession();
+  const isSessionReady = status === "authenticated";
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["booking-summary"],
+    queryFn: fetchBookings,
+    enabled: isSessionReady,
   });
 
-  if (cartIsLoading) {
-    return <PageLoader isLoading={cartIsLoading} />;
+  const bookings: Booking[] = Array.isArray(data) ? data : [];
+  const activeBookings = bookings.filter((booking) =>
+    ["PENDING", "CONFIRMED"].includes(String(booking.status).toUpperCase())
+  );
+  const completedBookings = bookings.filter(
+    (booking) => String(booking.status).toUpperCase() === "COMPLETED"
+  );
+  const restaurantBookings = bookings.filter((booking) => booking.restaurantId);
+  const hotelBookings = bookings.filter((booking) => booking.roomId);
+
+  if (status === "loading" || isLoading) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-semibold tracking-tight">Booking Summary</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Keep track of current reservations, payments, and follow-up states.
+          </p>
+        </div>
+        <div className="grid gap-4 md:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <Skeleton key={index} className="h-28 w-full" />
+          ))}
+        </div>
+      </div>
+    );
   }
 
   if (isError) {
-    return <div>Error fetching data.</div>;
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-semibold tracking-tight">Booking Summary</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Keep track of current reservations, payments, and follow-up states.
+          </p>
+        </div>
+        <Card className="border-border shadow-sm">
+          <CardContent className="py-8 text-center text-muted-foreground">
+            Unable to load your booking summary.
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
-
-  let totalPrice = 0;
-
-  for (const item of carts) {
-    totalPrice += item.quantity * parseInt(item.product.price, 10);
-  }
-
-  const handleOrder = async () => {
-    await placeOrder();
-    refetch();
-  };
 
   return (
-    <div className="container grid grid-cols-3 gap-16">
-      <CartList carts={carts} />
-
-      <div className="space-y-12">
-        <h4 className="text-xl">Order Summary</h4>
-        <div className="grid grid-cols-2 space-y-2">
-          <span>Sub-total</span> <span>{totalPrice}</span>
-          <span>Shipping Charge</span> <span>0</span>
-          <span>Discount</span> <span>0</span>
-          <span className="font-semibold text-xl">Total</span>{" "}
-          <span className="font-semibold text-xl">{totalPrice}</span>
+    <div className="space-y-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="text-3xl font-semibold tracking-tight">Booking Summary</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Keep track of current reservations, payments, and follow-up states.
+          </p>
         </div>
+        <Button asChild variant="outline">
+          <Link href="/booking">Open booking history</Link>
+        </Button>
+      </div>
 
-        <div className="space-x-4 pt-4">
-          <CustomButton
-            onClick={handleOrder}
-            loading={isLoading}
-            title="Checkout Now"
-            className="w-44 py-2"
-          />
-        </div>
-        <p className="text-green-500">{message}</p>
-        <p className="text-red-500">
-          {error ?? ""}
-        </p>
+      <div className="grid gap-4 md:grid-cols-4">
+        <SummaryCard icon={<CalendarDays className="h-5 w-5" />} label="Total bookings" value={bookings.length} />
+        <SummaryCard icon={<Hotel className="h-5 w-5" />} label="Hotel bookings" value={hotelBookings.length} />
+        <SummaryCard icon={<Utensils className="h-5 w-5" />} label="Restaurant bookings" value={restaurantBookings.length} />
+        <SummaryCard icon={<CreditCard className="h-5 w-5" />} label="Active bookings" value={activeBookings.length} />
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card className="border-border shadow-sm">
+          <CardHeader>
+            <CardTitle>Active / Upcoming</CardTitle>
+            <CardDescription>Bookings that still need attention or travel.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {activeBookings.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No active bookings right now.</p>
+            ) : (
+              activeBookings.slice(0, 4).map((booking) => (
+                <BookingRow key={booking.id} booking={booking} />
+              ))
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="border-border shadow-sm">
+          <CardHeader>
+            <CardTitle>Completed</CardTitle>
+            <CardDescription>Recently finished bookings and reservations.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {completedBookings.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No completed bookings yet.</p>
+            ) : (
+              completedBookings.slice(0, 4).map((booking) => (
+                <BookingRow key={booking.id} booking={booking} />
+              ))
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
-};
+}
 
-export default CartPage;
+function SummaryCard({
+  icon,
+  label,
+  value,
+}: {
+  icon: ReactNode;
+  label: string;
+  value: number;
+}) {
+  return (
+    <Card className="border-border shadow-sm">
+      <CardContent className="flex items-start gap-4 p-4">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+          {icon}
+        </div>
+        <div>
+          <p className="text-2xl font-semibold">{value}</p>
+          <p className="text-sm text-muted-foreground">{label}</p>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function BookingRow({ booking }: { booking: Booking }) {
+  const target = booking.room?.hotel?.name ?? booking.restaurant?.name ?? "Booking";
+  const bookingType = booking.roomId ? "Hotel" : "Restaurant";
+  const paymentStatus = (booking as Booking & { paymentStatus?: string }).paymentStatus ?? "UNPAID";
+
+  return (
+    <div className="rounded-xl border border-border bg-white p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="font-medium text-foreground">{target}</p>
+          <p className="text-sm text-muted-foreground">
+            {bookingType} • {booking.bookingDate ? new Date(booking.bookingDate).toLocaleDateString() : "-"}
+          </p>
+        </div>
+        <div className="flex flex-col items-end gap-2">
+          <Badge className={statusTone(booking.status)}>{booking.status ?? "UNKNOWN"}</Badge>
+          <Badge className={paymentTone(paymentStatus)}>{paymentStatus}</Badge>
+        </div>
+      </div>
+    </div>
+  );
+}

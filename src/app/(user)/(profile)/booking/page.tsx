@@ -62,18 +62,22 @@ const BookingPage = () => {
       accessorKey: "bookingDate",
       header: "Booking Date",
       cell: ({ row }) => {
-        const date = new Date(row?.original?.createdAt ?? Date.now());
+        const date = new Date(row?.original?.bookingDate ?? row?.original?.createdAt ?? Date.now());
         return date.toLocaleString();
       }
     },
     {
       accessorKey: "status",
-      header: "Status",
+        header: "Status",
         cell: ({ row }) => {
         const status = row.original.status;
         const tone =
           status === "CONFIRMED"
             ? "border-success/20 bg-success/10 text-success"
+            : status === "COMPLETED"
+              ? "border-primary/20 bg-primary/10 text-primary"
+              : status === "CANCELLED"
+                ? "border-destructive/20 bg-destructive/10 text-destructive"
             : status === "PENDING"
               ? "border-warning/20 bg-warning/15 text-warning"
               : "border-border bg-muted text-muted-foreground";
@@ -83,15 +87,15 @@ const BookingPage = () => {
   ];
 
   return (
-    <div className="container max-w-5xl mx-auto py-8">
-      <div className="mb-8">
+    <div className="space-y-6">
+      <div>
         <h1 className="text-3xl font-semibold tracking-tight">Booking History</h1>
-        <p className="text-muted-foreground mt-1">
+        <p className="mt-1 text-sm text-muted-foreground">
           Track your hotel and restaurant bookings in one place.
         </p>
       </div>
 
-      <Card className="shadow-sm">
+      <Card className="border-border shadow-sm">
         <CardHeader>
           <CardTitle>Bookings</CardTitle>
           <CardDescription>View status, totals, and dates.</CardDescription>
