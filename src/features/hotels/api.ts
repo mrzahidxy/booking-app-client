@@ -1,6 +1,8 @@
 import privateRequest, { publicRequest } from "@/shared/lib/api";
 import type { Hotel, HotelAPIResponse } from "@/entities/hotel";
 
+const HOTELS_ROUTE = "/properties/hotels";
+
 export type HotelListParams = {
   page?: number;
   limit?: number;
@@ -28,44 +30,44 @@ export type HotelPayload = {
 };
 
 export const fetchHotels = async (params?: HotelListParams) => {
-  const response = await publicRequest.get<HotelAPIResponse>("/hotels", {
+  const response = await publicRequest.get<HotelAPIResponse>(HOTELS_ROUTE, {
     params,
   });
   return response.data.data;
 };
 
 export const fetchHotelById = async (id: string): Promise<Hotel> => {
-  const response = await publicRequest.get(`/hotels/${id}`);
+  const response = await publicRequest.get(`${HOTELS_ROUTE}/${id}`);
   return response.data.data;
 };
 
 export const searchHotels = async (params: HotelSearchParams) => {
   const response = await publicRequest.get<HotelAPIResponse>(
-    "/hotels/search/result",
+    `${HOTELS_ROUTE}/search/result`,
     { params }
   );
   return response.data.data;
 };
 
 export const fetchBookedHotels = async (params?: HotelListParams) => {
-  const response = await publicRequest.get<HotelAPIResponse>("/hotels/booked", {
+  const response = await publicRequest.get<HotelAPIResponse>(HOTELS_ROUTE, {
     params,
   });
   return response.data.data;
 };
 
 export const createHotel = async (payload: HotelPayload) => {
-  const response = await privateRequest.post("/hotels", payload);
+  const response = await privateRequest.post(HOTELS_ROUTE, payload);
   return response.data;
 };
 
 export const updateHotel = async (id: string, payload: HotelPayload) => {
-  const response = await privateRequest.put(`/hotels/${id}`, payload);
+  const response = await privateRequest.put(`${HOTELS_ROUTE}/${id}`, payload);
   return response.data;
 };
 
 export const deleteHotel = async (id: string) => {
-  const response = await privateRequest.delete(`/hotels/${id}`);
+  const response = await privateRequest.delete(`${HOTELS_ROUTE}/${id}`);
   return response.data;
 };
 

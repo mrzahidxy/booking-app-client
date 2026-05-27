@@ -9,13 +9,11 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/shared/hooks/use-toast";
 import { AssignedPermissionsForm } from "./assigned-permissions-form.component";
-import { Card } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import { TRolePermissionsByIdResponse } from "@/entities/role-permission";
 import {
   assignPermissionsToRole,
   fetchPermissionsForRole,
-  replacePermissionsForRole,
 } from "@/features/role-permission/api";
 
 export const AssignedPermissionsCreateUpdate = ({
@@ -41,11 +39,9 @@ export const AssignedPermissionsCreateUpdate = ({
     mutationFn: async (values: AssignedPermissionCreate) => {
       const payload = {
         roleId: values.roleId,
-        permissionIds: values.permissionIds.filter(id => id !== undefined) as number[],
+        permissionIds: values.permissionIds.filter((id) => id !== undefined) as number[],
       };
-      return isEditing
-        ? replacePermissionsForRole(payload)
-        : assignPermissionsToRole(payload);
+      return assignPermissionsToRole(payload);
     },
     onSuccess: () => {
       toast({
@@ -98,9 +94,7 @@ export const AssignedPermissionsCreateUpdate = ({
       onSubmit={handleSubmit}
       enableReinitialize
     >
-      <Card className="w-full max-w-6xl p-4">
-        <AssignedPermissionsForm />
-      </Card>
+      <AssignedPermissionsForm />
     </Formik>
   );
 };

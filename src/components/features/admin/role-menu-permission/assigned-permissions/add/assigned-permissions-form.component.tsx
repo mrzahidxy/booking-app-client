@@ -3,10 +3,7 @@
 import { useState } from "react";
 import { Form, useFormikContext } from "formik";
 import { useQuery } from "@tanstack/react-query";
-import {
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { CardContent, CardFooter } from "@/components/ui/card";
 import {
   Pagination,
   PaginationContent,
@@ -48,14 +45,12 @@ export const AssignedPermissionsForm = () => {
   return (
     <Form>
       <CardContent className="space-y-6">
-        {/* Role Selector */}
         <FormikPaginatedDropdown
-          label="Select Role"
+          label="Select role"
           url="/role-permission/roles"
           formikField="roleId"
         />
 
-        {/* Permissions List */}
         <div className="space-y-2">
           <label className="text-sm font-medium">Permissions</label>
           {isLoading ? (
@@ -64,14 +59,14 @@ export const AssignedPermissionsForm = () => {
             </div>
           ) : (
             <>
-              <div className="border rounded-md p-4 space-y-3">
+              <div className="space-y-3 rounded-md border border-border p-4">
                 {data?.collection.length === 0 ? (
-                  <p className="text-center text-muted-foreground py-4">
+                  <p className="py-4 text-center text-muted-foreground">
                     No permissions available
                   </p>
                 ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {data?.collection.map((permission:TPermission) => (
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    {data?.collection.map((permission: TPermission) => (
                       <div
                         key={permission.id}
                         className="flex items-center space-x-2"
@@ -87,7 +82,6 @@ export const AssignedPermissionsForm = () => {
                 )}
               </div>
 
-              {/* Pagination */}
               {data?.pagination?.totalPages && data?.pagination?.totalPages > 1 && (
                 <Pagination>
                   <PaginationContent>
@@ -130,7 +124,7 @@ export const AssignedPermissionsForm = () => {
       </CardContent>
 
       <CardFooter className="flex justify-end">
-        <FormikSubmitButton text="Assign Permissions" />
+        <FormikSubmitButton text="Assign permissions" />
       </CardFooter>
     </Form>
   );

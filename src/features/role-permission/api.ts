@@ -1,6 +1,6 @@
 import privateRequest from "@/shared/lib/api";
 import type {
-  TPermission,
+  TAssignedPermissionsResponse,
   TPermissionsResponse,
   TRolePermissionsByIdResponse,
 } from "@/entities/role-permission";
@@ -42,22 +42,26 @@ export type AssignPermissionsPayload = {
   permissionIds: number[];
 };
 
-export type RolePayload = {
-  name: string;
-};
-
-export type PermissionPayload = {
-  name: string;
-};
-
-export type RoleResponse = ApiResponse<Role>;
-export type PermissionResponse = ApiResponse<TPermission>;
-
 export type AssignedRole = {
   id: number;
   userId: number;
   roleId: number;
-  roleName?: string;
+  name: string;
+  role?: {
+    id: number;
+    name: string;
+  } | null;
+};
+
+export type AssignedRoleDetail = {
+  id: number;
+  name?: string;
+  email?: string;
+  roleId?: number | null;
+  role?: {
+    id: number;
+    name: string;
+  } | null;
 };
 
 export type AssignedRolesResponse = {
@@ -84,36 +88,6 @@ export const fetchRoles = async (params?: RolePermissionListParams) => {
   return response.data;
 };
 
-export const fetchRoleById = async (id: number) => {
-  const response = await privateRequest.get<RoleResponse>(
-    `/role-permission/roles/${id}`
-  );
-  return response.data;
-};
-
-export const createRole = async (payload: RolePayload) => {
-  const response = await privateRequest.post<RoleResponse>(
-    "/role-permission/roles",
-    payload
-  );
-  return response.data;
-};
-
-export const updateRole = async (id: number, payload: RolePayload) => {
-  const response = await privateRequest.put<RoleResponse>(
-    `/role-permission/roles/${id}`,
-    payload
-  );
-  return response.data;
-};
-
-export const deleteRole = async (id: number) => {
-  const response = await privateRequest.delete(
-    `/role-permission/roles/${id}`
-  );
-  return response.data;
-};
-
 export const fetchPermissions = async (params?: RolePermissionListParams) => {
   const response = await privateRequest.get<TPermissionsResponse>(
     "/role-permission/permissions",
@@ -122,40 +96,10 @@ export const fetchPermissions = async (params?: RolePermissionListParams) => {
   return response.data;
 };
 
-export const fetchPermissionById = async (id: number) => {
-  const response = await privateRequest.get<PermissionResponse>(
-    `/role-permission/permissions/${id}`
-  );
-  return response.data;
-};
-
-export const createPermission = async (payload: PermissionPayload) => {
-  const response = await privateRequest.post<PermissionResponse>(
-    "/role-permission/permissions",
-    payload
-  );
-  return response.data;
-};
-
-export const updatePermission = async (id: number, payload: PermissionPayload) => {
-  const response = await privateRequest.put<PermissionResponse>(
-    `/role-permission/permissions/${id}`,
-    payload
-  );
-  return response.data;
-};
-
-export const deletePermission = async (id: number) => {
-  const response = await privateRequest.delete(
-    `/role-permission/permissions/${id}`
-  );
-  return response.data;
-};
-
 export const fetchAssignedPermissions = async (
   params?: RolePermissionListParams
 ) => {
-  const response = await privateRequest.get<TRolePermissionsByIdResponse>(
+  const response = await privateRequest.get<TAssignedPermissionsResponse>(
     "/role-permission/assigned-permissions",
     { params }
   );
@@ -179,16 +123,6 @@ export const fetchPermissionsForRole = async (roleId: number) => {
   return response.data;
 };
 
-export const replacePermissionsForRole = async (
-  payload: AssignPermissionsPayload
-) => {
-  const response = await privateRequest.put(
-    "/role-permission/assigned-permissions/edit",
-    payload
-  );
-  return response.data;
-};
-
 export const fetchAssignedRoles = async (params?: RolePermissionListParams) => {
   const response = await privateRequest.get<AssignedRolesResponse>(
     "/role-permission/assigned-roles",
@@ -198,7 +132,7 @@ export const fetchAssignedRoles = async (params?: RolePermissionListParams) => {
 };
 
 export const fetchAssignedRoleForUser = async (userId: number) => {
-  const response = await privateRequest.get(
+  const response = await privateRequest.get<ApiResponse<AssignedRoleDetail>>(
     `/role-permission/assigned-roles/${userId}`
   );
   return response.data;
@@ -208,13 +142,6 @@ export const assignRoleToUser = async (userId: number, roleId: number) => {
   const response = await privateRequest.post(
     `/role-permission/assigned-roles/${userId}`,
     { roleId }
-  );
-  return response.data;
-};
-
-export const deleteAssignedRole = async (userId: number) => {
-  const response = await privateRequest.delete(
-    `/role-permission/assigned-roles/${userId}`
   );
   return response.data;
 };

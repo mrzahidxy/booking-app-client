@@ -5,7 +5,6 @@ import { AssignedRoleCreate, AssignedRoleSchema, InitialValues } from "./form.co
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/shared/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { Card } from "@/components/ui/card";
 import { AssignedRoleForm } from "./assigned-roles-form.component";
 import {
   assignRoleToUser,
@@ -56,7 +55,7 @@ export const AssignedRolesCreateUpdate = ({ id }: { id?: string }) => {
       initialValues={
         id
           ? {
-              roleId: data?.data?.Role?.id ?? 0,
+              roleId: data?.data?.role?.id ?? 0,
               userId: data?.data?.id ?? 0,
             }
           : InitialValues
@@ -65,9 +64,7 @@ export const AssignedRolesCreateUpdate = ({ id }: { id?: string }) => {
       onSubmit={handleSubmit}
       enableReinitialize
     >
-      <Card className="w-full max-w-6xl p-4">
-        <AssignedRoleForm />
-      </Card>
+      <AssignedRoleForm />
     </Formik>
   );
 };

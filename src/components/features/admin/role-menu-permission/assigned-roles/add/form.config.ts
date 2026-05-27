@@ -4,7 +4,7 @@ import * as yup from "yup";
 export const AssignedRoleSchema = yup.object({
   id: yup.number().nullable(),
   roleId: yup.number().min(1, "Select a role").required(),
-  userId:  yup.number().min(1, "Select a role").required(),
+  userId: yup.number().min(1, "Select a user").required(),
 });
 
 // Type Definitions

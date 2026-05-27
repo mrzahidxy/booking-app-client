@@ -5,6 +5,8 @@ export interface RestaurantMenuItem {
 
 export interface Restaurant {
   id: number;
+  tenantId?: number;
+  slug: string;
   name: string;
   location: string;
   image: string[];

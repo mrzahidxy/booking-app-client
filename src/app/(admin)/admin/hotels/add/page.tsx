@@ -1,13 +1,5 @@
-import { HotelCreateUpdate } from "@/components/features/admin/hotels/add/hotels-create-update.component";
-import CommonLayout from "@/components/common/CommonLayout.component";
+import { redirect } from "next/navigation";
 
 export default function AddHotel() {
-  return (
-    <CommonLayout
-      title="Add Hotel"
-      description="Enter the details of the new hotel you want to add to your system."
-    >
-      <HotelCreateUpdate />
-    </CommonLayout>
-  );
+  redirect("/admin/properties");
 }
