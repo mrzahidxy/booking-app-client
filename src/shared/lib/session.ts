@@ -15,6 +15,9 @@ const getTenantMembership = (session?: Session | null) =>
 export const hasTenantMemberships = (session?: Session | null) =>
   Boolean(getTenantMembership(session));
 
+export const getTenantMembershipRole = (session?: Session | null) =>
+  getTenantMembership(session)?.role ?? null;
+
 export const getPrimaryTenantId = (session?: Session | null) =>
   isPlatformAdminSession(session)
     ? null
@@ -25,6 +28,9 @@ export const isPlatformAdminSession = (session?: Session | null) =>
 
 export const isTenantMemberSession = (session?: Session | null) =>
   !isPlatformAdminSession(session) && hasTenantMemberships(session);
+
+export const isTenantOwnerSession = (session?: Session | null) =>
+  getTenantMembershipRole(session) === "OWNER";
 
 export const isWorkspaceUserSession = (session?: Session | null) =>
   isPlatformAdminSession(session) || hasTenantMemberships(session);

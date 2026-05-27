@@ -1,9 +1,7 @@
-import React from "react";
+import { ProfileView } from "@/components/features/profile/profile-view.component";
 
-type Props = {};
-
-const Profile = (props: Props) => {
-  return <div>Profile</div>;
+const Profile = () => {
+  return <ProfileView mode="admin" />;
 };
 
 export default Profile;

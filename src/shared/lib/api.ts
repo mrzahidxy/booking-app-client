@@ -1,5 +1,6 @@
 import axios from "axios";
 import { getSession, signOut } from "next-auth/react";
+import { getPrimaryTenantId } from "./session";
 
 export const publicRequest = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
@@ -29,6 +30,11 @@ privateRequest.interceptors.request.use(
     if (token) {
       const authValue = token.startsWith("Bearer ") ? token : `Bearer ${token}`;
       config.headers.Authorization = authValue;
+    }
+
+    const tenantId = getPrimaryTenantId(session);
+    if (tenantId) {
+      config.headers["X-Tenant-Id"] = String(tenantId);
     }
 
     return config;
