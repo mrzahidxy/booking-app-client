@@ -1,16 +1,11 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { StatusUpdateDialog } from "@/components/features/admin/users/user-role-update.component";
 import { DynamicTable } from "@/components/ui/dynamic-data-table.component";
 import { Suspense } from "react";
-import { useRouter } from "next/navigation";
+import { RequirePlatformAdmin } from "@/components/features/admin/RequirePlatformAdmin";
 
-type Props = {};
-
-const UserPage = (props: Props) => {
-  const router = useRouter();
-  // Table columns
+const UserPage = () => {
   const columns: ColumnDef<any>[] = [
     {
       accessorKey: "id",
@@ -44,17 +39,17 @@ const UserPage = (props: Props) => {
   ];
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <DynamicTable
-        columns={columns}
-        url="/users"
-        title="Users"
-        description="Manage all platform users"
-        queryKey="usersList"
-        // handleAdd={() => {router.push("/admin/users/add")}}
-        // buttonText="Add User"
-      />
-    </Suspense>
+    <RequirePlatformAdmin>
+      <Suspense fallback={<div>Loading...</div>}>
+        <DynamicTable
+          columns={columns}
+          url="/users"
+          title="Users"
+          description="Manage system users and their access profiles."
+          queryKey="usersList"
+        />
+      </Suspense>
+    </RequirePlatformAdmin>
   );
 };
 

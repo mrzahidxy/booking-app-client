@@ -1,5 +1,6 @@
 import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AssignedRolesCreateUpdate } from "@/components/features/admin/role-menu-permission/assigned-roles/add/assigned-roles-create-update.component";
+import { RequirePlatformAdmin } from "@/components/features/admin/RequirePlatformAdmin";
 
 export default function AssignPermission({
   params,
@@ -7,14 +8,16 @@ export default function AssignPermission({
   params: { slug: string };
 }) {
   return (
-    <div>
-      <CardHeader>
-        <CardTitle>Role Permission Assignment</CardTitle>
-        <CardDescription>
-          Select a role and assign permissions to it
-        </CardDescription>
-      </CardHeader>
-      <AssignedRolesCreateUpdate id={params.slug} />
-    </div>
+    <RequirePlatformAdmin>
+      <div>
+        <CardHeader>
+          <CardTitle>Platform Role Assignment</CardTitle>
+          <CardDescription>
+            Update the selected user&apos;s platform role. Tenant owner and staff membership are managed separately.
+          </CardDescription>
+        </CardHeader>
+        <AssignedRolesCreateUpdate id={params.slug} />
+      </div>
+    </RequirePlatformAdmin>
   );
 }

@@ -11,6 +11,8 @@ export interface HotelData {
 
 export interface Hotel {
   id: number;
+  tenantId?: number;
+  slug: string;
   name: string;
   location: string;
   image: string[];

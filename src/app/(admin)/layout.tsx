@@ -4,8 +4,11 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Navbar } from "@/components/common/Navbar.component";
-import Sidebar from "@/components/features/admin/Sidebar.component";
-import { Skeleton } from "@/components/ui/skeleton";
+import { AdminSidebar } from "@/components/features/admin/AdminSidebar.component";
+import {
+  hasTenantMemberships,
+  isPlatformAdminSession,
+} from "@/shared/lib/session";
 
 export default function DashboardLayout({
   children,
@@ -14,10 +17,8 @@ export default function DashboardLayout({
 }) {
   const { status, data } = useSession();
   const router = useRouter();
-  const userRole =
-    typeof data?.user?.role === "string"
-      ? data.user.role.toUpperCase()
-      : data?.user?.role;
+  const isPlatformAdmin = isPlatformAdminSession(data);
+  const hasTenantAccess = hasTenantMemberships(data);
 
   useEffect(() => {
     if (status === "loading") {
@@ -27,10 +28,14 @@ export default function DashboardLayout({
       router.replace("/auth/login");
       return;
     }
-    if (userRole !== "ADMIN") {
+    if (!isPlatformAdmin && !hasTenantAccess) {
       router.replace("/");
+      return;
     }
-  }, [status, userRole, router]);
+    if (!isPlatformAdmin && hasTenantAccess) {
+      router.replace("/workspace");
+    }
+  }, [status, isPlatformAdmin, hasTenantAccess, router]);
 
 
   return (
@@ -38,7 +43,7 @@ export default function DashboardLayout({
       <Navbar />
 
       <div className="flex flex-1">
-        <Sidebar />
+        <AdminSidebar />
 
         <main className="flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-10">
           <div className="mx-auto w-full max-w-[1200px]">{children}</div>

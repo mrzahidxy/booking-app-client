@@ -21,28 +21,18 @@ interface ReviewFormProps {
 
 // API call function
 const submitReview = async (data: {
-  userId: number;
   id: number;
   type: "hotel" | "restaurant";
   rating: number;
   review: string;
 }) => {
-  try {
-    const response = await privateRequest.post("/reviews", {
-      userId: data.userId,
-      rating: data.rating,
-      review: data.review,
-      [data.type + "Id"]: data.id,
-    });
+  const response = await privateRequest.post("/reviews", {
+    rating: data.rating,
+    review: data.review,
+    [`${data.type}Id`]: data.id,
+  });
 
-    if (!response || response.status !== 200) {
-      throw new Error("Failed to submit review");
-    }
-
-    return response.data;
-  } catch (error) {
-    console.error("Error submitting review:", error);
-  }
+  return response.data;
 };
 
 export function Review({ id, type }: ReviewFormProps) {
@@ -67,8 +57,11 @@ export function Review({ id, type }: ReviewFormProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!data?.user?.id) {
+      return;
+    }
+
     mutation.mutate({
-      userId: +data?.user.id,
       id: id,
       type,
       rating,

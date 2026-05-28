@@ -2,7 +2,7 @@
 
 import { Star } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import privateRequest from "@/shared/lib/api";
+import { publicRequest } from "@/shared/lib/api";
 import { Card, CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";
 import DefaultLoader from "./DefaultLoacer.component";
@@ -19,9 +19,13 @@ const fetchData = async (
   limit: number,
   id: number
 ) => {
-  const response = await privateRequest.get(
-    `/reviews?page=${page}&limit=${limit}?&${type}Id=${id}`
-  );
+  const response = await publicRequest.get("/reviews", {
+    params: {
+      page,
+      limit,
+      [`${type}Id`]: id,
+    },
+  });
 
   if (!response || response.status !== 200) {
     throw new Error(`Failed to fetch reviews for ${type}`);

@@ -48,13 +48,11 @@ export const metadata: Metadata = {
 
 const HomePage = () => {
   return (
-    <div className="container">
-      <div className="min-h-screen bg-background">
-        <HeroSection />
-        <PopularHotels />
-        <SpecialOffers />
-        <FeaturedRestaurants />
-      </div>
+    <div className="min-h-screen bg-background">
+      <HeroSection />
+      <PopularHotels />
+      <SpecialOffers />
+      <FeaturedRestaurants />
     </div>
   );
 };

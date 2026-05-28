@@ -12,9 +12,10 @@ interface UserData {
 
 interface ProfileStatsCardProps {
   userData: UserData;
+  showLinks?: boolean;
 }
 
-export const ProfileStatsCard = ({ userData }: ProfileStatsCardProps) => {
+export const ProfileStatsCard = ({ userData, showLinks = true }: ProfileStatsCardProps) => {
   const stats = [
     {
       title: "Total Bookings",
@@ -57,6 +58,30 @@ export const ProfileStatsCard = ({ userData }: ProfileStatsCardProps) => {
               action: "bg-action/10 text-action",
             }[stat.tone];
 
+            const content = (
+              <div className="space-y-4">
+                <span className={`inline-flex h-10 w-10 items-center justify-center rounded-xl ${toneClasses}`}>
+                  <Icon className="h-5 w-5" />
+                </span>
+                <div>
+                  <p className="text-3xl font-semibold text-foreground">{stat.value}</p>
+                  <p className="text-sm font-medium text-foreground">{stat.title}</p>
+                  <p className="text-xs text-muted-foreground">{stat.description}</p>
+                </div>
+              </div>
+            );
+
+            if (!showLinks) {
+              return (
+                <div
+                  key={index}
+                  className="rounded-2xl border border-border bg-white p-4"
+                >
+                  {content}
+                </div>
+              );
+            }
+
             return (
               <Link
                 key={index}
@@ -64,16 +89,7 @@ export const ProfileStatsCard = ({ userData }: ProfileStatsCardProps) => {
                 className="rounded-2xl border border-border bg-white p-4 transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-900/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 aria-label={`View ${stat.title.toLowerCase()}`}
               >
-                <div className="space-y-4">
-                  <span className={`inline-flex h-10 w-10 items-center justify-center rounded-xl ${toneClasses}`}>
-                    <Icon className="h-5 w-5" />
-                  </span>
-                  <div>
-                    <p className="text-3xl font-semibold text-foreground">{stat.value}</p>
-                    <p className="text-sm font-medium text-foreground">{stat.title}</p>
-                    <p className="text-xs text-muted-foreground">{stat.description}</p>
-                  </div>
-                </div>
+                {content}
               </Link>
             );
           })}

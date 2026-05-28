@@ -1,23 +1,22 @@
-import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import type { ReactNode } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function CommonLayout({
   children,
   title,
   description,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   title?: string;
   description?: string;
 }) {
   return (
-    <div>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>
-          {description}
-        </CardDescription>
+    <Card className="border-border shadow-sm">
+      <CardHeader className="space-y-2">
+        <CardTitle className="text-2xl tracking-tight">{title}</CardTitle>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
-      {children}
-    </div>
+      <CardContent className="pt-0">{children}</CardContent>
+    </Card>
   );
 }

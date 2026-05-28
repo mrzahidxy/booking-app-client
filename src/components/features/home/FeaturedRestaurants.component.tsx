@@ -102,7 +102,7 @@ export default function FeaturedRestaurants() {
               : restaurant.cuisine;
 
             return (
-              <Link href={`/restaurant/${restaurant.id}`} key={restaurant.id} className="h-full">
+              <Link href={`/restaurant/${restaurant.slug ?? restaurant.id}`} key={restaurant.id} className="h-full">
                 <Card className="group flex h-full flex-col overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10">
                   <Image
                     src={restaurant.image?.[0] ?? "/images/main-banner.jpg"}

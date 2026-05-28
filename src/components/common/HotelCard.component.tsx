@@ -10,7 +10,7 @@ export default function HotelCard({ hotel }: { hotel: Hotel }) {
   const imageSrc = hotel?.image?.[0] ?? "/images/main-banner.jpg";
 
   return (
-    <Link href={`/hotel/${hotel?.id}`} key={hotel?.name} className="h-full">
+    <Link href={`/hotel/${hotel?.slug ?? hotel?.id}`} key={hotel?.name} className="h-full">
       <Card className="group flex h-full flex-col overflow-hidden transition-all duration-200 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10">
         <Image
           src={imageSrc}
