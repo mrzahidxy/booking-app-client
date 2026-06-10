@@ -33,9 +33,9 @@ const BookingPage = () => {
       id: "bookingName",
       header: "Hotel / Restaurant",
       cell: ({ row }) => {
-        const hotelName = row.original?.room?.hotel?.name;
-        const restaurantName = row.original?.restaurant?.name;
-        return hotelName ?? restaurantName ?? "-";
+        const propertyName =
+          row.original?.property?.name ?? row.original?.room?.property?.name;
+        return propertyName ?? "-";
       },
     },
     {

@@ -1,13 +1,9 @@
-// store/useStore.ts
-import privateRequest from "@/shared/lib/api";
-import axios from "axios";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
 // Interfaces
 interface CartItem {
   id: number;
-  userId: number;
   productId: number;
   quantity: number;
 }
@@ -38,57 +34,24 @@ const useCartStore = create<CartState>()(
 
         addToCart: async (productId, quantity) => {
           set({ isLoading: true, error: null });
-          try {
-            const { data } = await privateRequest.post("/carts", {
-              productId,
-              quantity,
-            });
-            if (data?.data) {
-              set((state) => ({
-                cartItems: [...state.cartItems, data.data],
-                message: data.message,
-                isLoading: false,
-              }));
-              clearNotification(set);
-            }
-          } catch (error) {
-            set({
-              error: `Failed to add to cart: ${
-                axios.isAxiosError(error)
-                  ? error.response?.data?.message
-                  : (error as any).message
-              }`,
-              isLoading: false,
-            });
-            clearNotification(set);
-          }
+          set((state) => ({
+            cartItems: [
+              ...state.cartItems,
+              { id: Date.now(), productId, quantity },
+            ],
+            message: "Item added locally.",
+            isLoading: false,
+          }));
+          clearNotification(set);
         },
 
         placeOrder: async () => {
           set({ isLoading: true, error: null });
-          try {
-            const response = await privateRequest.post("/orders");
-            if ([200, 201].includes(response.status)) {
-              set({
-                cartItems: [],
-                message: "Order placed successfully!",
-                isLoading: false,
-              });
-            } else {
-              set({ message: "Failed to place order.", isLoading: false });
-            }
-            clearNotification(set);
-          } catch (error) {
-            set({
-              error: `Failed to place order: ${
-                axios.isAxiosError(error)
-                  ? error.response?.data?.message
-                  : (error as any).message
-              }`,
-              isLoading: false,
-            });
-            clearNotification(set);
-          }
+          set({
+            message: "Orders are created through booking checkout.",
+            isLoading: false,
+          });
+          clearNotification(set);
         },
       }),
       { name: "cart-storage" }
