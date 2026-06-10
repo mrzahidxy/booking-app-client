@@ -63,8 +63,12 @@ export default function BookingSummaryPage() {
   const completedBookings = bookings.filter(
     (booking) => String(booking.status).toUpperCase() === "COMPLETED"
   );
-  const restaurantBookings = bookings.filter((booking) => booking.restaurantId);
-  const hotelBookings = bookings.filter((booking) => booking.roomId);
+  const restaurantBookings = bookings.filter(
+    (booking) => booking.property?.kind === "RESTAURANT"
+  );
+  const hotelBookings = bookings.filter(
+    (booking) => booking.property?.kind === "HOTEL" || booking.roomId
+  );
 
   if (status === "loading" || isLoading) {
     return (
@@ -185,9 +189,11 @@ function SummaryCard({
 }
 
 function BookingRow({ booking }: { booking: Booking }) {
-  const target = booking.room?.hotel?.name ?? booking.restaurant?.name ?? "Booking";
-  const bookingType = booking.roomId ? "Hotel" : "Restaurant";
-  const paymentStatus = (booking as Booking & { paymentStatus?: string }).paymentStatus ?? "UNPAID";
+  const target =
+    booking.property?.name ?? booking.room?.property?.name ?? "Booking";
+  const bookingType =
+    booking.property?.kind === "RESTAURANT" ? "Restaurant" : "Hotel";
+  const paymentStatus = booking.paymentStatus ?? "UNPAID";
 
   return (
     <div className="rounded-xl border border-border bg-white p-4">

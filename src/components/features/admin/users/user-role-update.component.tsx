@@ -64,7 +64,8 @@ export const StatusUpdateDialog: React.FC<StatusUpdateDialogProps> = ({ id }) =>
     UpdateRoleVariables // Variables type
   >({
     mutationFn: async ({ role }) => {
-      return await privateRequest.put(`/users/role/${id}`, { role });
+      const response = await privateRequest.put(`/users/${id}`, { role });
+      return response.data;
     },
     onSuccess: () => {
       setIsOpen(false);
