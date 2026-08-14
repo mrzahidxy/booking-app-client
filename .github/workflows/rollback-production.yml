@@ -1,0 +1,65 @@
+name: Rollback Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      deployment_url:
+        description: Previous Vercel deployment URL to roll back to
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rollback-production
+  cancel-in-progress: false
+
+env:
+  VERCEL_CLI_VERSION: 59.0.0
+  PRODUCTION_URL: https://gontobbo-booking-app.vercel.app
+
+jobs:
+  rollback:
+    name: Rollback production deployment
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install pinned Vercel CLI
+        run: npm install --global "vercel@$VERCEL_CLI_VERSION"
+
+      - name: Roll back Vercel production
+        shell: bash
+        run: |
+          set -euo pipefail
+          vercel rollback "${{ inputs.deployment_url }}" --yes --token="$VERCEL_TOKEN"
+
+      - name: Verify production URL
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --location --retry 5 --retry-delay 5 --max-time 30 "$PRODUCTION_URL" >/dev/null
+
+      - name: Write rollback summary
+        shell: bash
+        run: |
+          {
+            echo "## Production rollback"
+            echo ""
+            echo "- Rolled back to: ${{ inputs.deployment_url }}"
+            echo "- Commit SHA: ${GITHUB_SHA}"
+            echo "- Production URL: $PRODUCTION_URL"
+          } >> "$GITHUB_STEP_SUMMARY"
