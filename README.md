@@ -24,7 +24,7 @@ Copy [`.env.example`](./.env.example) to `.env.local`.
 
 - `NEXT_PUBLIC_BASE_URL` - API base URL
 - Firebase keys - used for auth and push features
-- `NEXTAUTH_URL` and `AUTH_SECRET` - NextAuth runtime values
+- `AUTH_SECRET` - Auth.js runtime secret (`NEXTAUTH_URL` is not required; Auth.js uses `trustHost: true`)
 - `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` - Stripe client key
 
 ## Scripts
